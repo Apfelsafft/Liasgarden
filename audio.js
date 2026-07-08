@@ -381,6 +381,58 @@ const AudioKit = (() => {
 
   function isMusicOn() { return musicOn; }
 
+  /* ---------- Tierstimmen-Baukasten ----------
+     Einfache Ton-Gleiter klingen wie Glöckchen, nicht wie Tiere.
+     Echte Tierstimmen brauchen: einen Frequenz-VERLAUF (curve),
+     Schnarr-Modulation (am – das Raue bei Quaken und Bellen),
+     Formant-Filter (bp – der "Mund" der Stimme) und Vibrato. */
+  function beast({ dur, curve, type = "sawtooth", vol = 0.3, when = 0,
+                   am = 0, amDepth = 0.8, bp = null, bpEnd = null, bpQ = 1.5,
+                   lp = 3000, vib = 0, vibDepth = 8 }) {
+    if (!ctx) return;
+    const t0 = now() + when;
+    const osc = ctx.createOscillator();
+    osc.type = type;
+    osc.frequency.setValueCurveAtTime(new Float32Array(curve), t0, dur);
+    if (vib) {
+      const l = ctx.createOscillator();
+      l.frequency.value = vib;
+      const lg = ctx.createGain();
+      lg.gain.value = vibDepth;
+      l.connect(lg).connect(osc.frequency);
+      l.start(t0); l.stop(t0 + dur);
+    }
+    let node = osc;
+    if (bp) {
+      const f = ctx.createBiquadFilter();
+      f.type = "bandpass";
+      f.frequency.setValueAtTime(bp, t0);
+      if (bpEnd) f.frequency.linearRampToValueAtTime(bpEnd, t0 + dur);
+      f.Q.value = bpQ;
+      node.connect(f); node = f;
+    }
+    const lpf = ctx.createBiquadFilter();
+    lpf.type = "lowpass";
+    lpf.frequency.value = lp;
+    node.connect(lpf); node = lpf;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(vol, t0 + 0.035);
+    g.gain.setValueAtTime(vol, t0 + dur * 0.65);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    if (am) {
+      const l2 = ctx.createOscillator();
+      l2.frequency.value = am;
+      const lg2 = ctx.createGain();
+      lg2.gain.value = vol * amDepth * 0.5;
+      l2.connect(lg2).connect(g.gain);
+      l2.start(t0); l2.stop(t0 + dur);
+    }
+    node.connect(g).connect(master);
+    osc.start(t0);
+    osc.stop(t0 + dur + 0.05);
+  }
+
   /* ------------ Benannte Spielgeräusche ------------ */
 
   const sfx = {
@@ -394,45 +446,72 @@ const AudioKit = (() => {
       noise(0.5, { vol: 0.05, when: 0.9, freq: 3500 });
     },
     croak()   {
-      [0, 0.24].forEach((w) => {
-        tone(150, 0.2, { type: "square", glideTo: 85, vol: 0.22, when: w });
-        tone(300, 0.2, { type: "sawtooth", glideTo: 170, vol: 0.08, when: w });
+      /* "Ribbit": zwei schnarrende, ansteigende Pulse */
+      [0, 0.3].forEach((w, i) => {
+        beast({ dur: 0.24, curve: [85 + i * 20, 110 + i * 20, 135 + i * 25], vol: 0.8,
+                am: 23, amDepth: 1, bp: 480, bpQ: 1.2, lp: 1300, when: w });
       });
     },
-    buzz()    { tone(190, 0.5, { type: "sawtooth", vol: 0.14, glideTo: 240 }); tone(196, 0.5, { type: "sawtooth", vol: 0.11, glideTo: 250 }); },
-    chirp()   { [0, 0.16, 0.34].forEach(w => tone(1900, 0.11, { when: w, glideTo: 2700, vol: 0.18 })); },
-    hoot()    { tone(392, 0.32, { glideTo: 295, vol: 0.26 }); tone(392, 0.48, { glideTo: 275, vol: 0.26, when: 0.42 }); },
+    buzz()    { beast({ dur: 0.55, curve: [185, 205, 195, 215], vol: 0.3, am: 25, amDepth: 0.6, lp: 1200 }); },
+    chirp()   {
+      /* Zwitschern: tweet, tweet, Triller */
+      [[0, [2300, 3200, 2500]], [0.16, [2500, 3400, 2700]]].forEach(([w, c]) =>
+        beast({ dur: 0.09, curve: c, type: "sine", vol: 0.3, lp: 6000, when: w }));
+      [0.34, 0.4, 0.46, 0.52].forEach((w, i) =>
+        beast({ dur: 0.05, curve: i % 2 ? [2600, 3000] : [3000, 2600], type: "sine", vol: 0.24, lp: 6000, when: w }));
+    },
+    hoot()    {
+      /* weiches "hu-huu" mit rundem Ton */
+      beast({ dur: 0.3, curve: [430, 400, 385], type: "sine", vol: 0.32, lp: 900 });
+      beast({ dur: 0.5, curve: [405, 375, 335, 310], type: "sine", vol: 0.32, lp: 900, when: 0.4, vib: 5, vibDepth: 6 });
+    },
     splash()  { noise(0.35, { vol: 0.26, freq: 1400, q: 0.7 }); tone(300, 0.2, { glideTo: 120, vol: 0.12 }); },
     munch()   { [0, 0.18, 0.36].forEach(w => noise(0.1, { vol: 0.24, when: w, freq: 700, q: 2 })); },
     twinkle() { tone(1568, 0.3, { vol: 0.14 }); tone(2093, 0.4, { when: 0.08, vol: 0.12 }); },
     quack()   {
-      [0, 0.19, 0.38].forEach((w, i) => {
-        tone(330 - i * 25, 0.14, { type: "sawtooth", glideTo: 200 - i * 15, vol: 0.2, when: w });
+      /* das Schnarren (am=26) macht das echte Enten-Quaken */
+      [0, 0.2, 0.4].forEach((w, i) => {
+        beast({ dur: 0.15, curve: [265 - i * 15, 250 - i * 15, 195 - i * 15], vol: 0.85,
+                am: 26, amDepth: 1, bp: 1100, bpQ: 1.4, lp: 3200, when: w });
       });
     },
-    peep()    { [0, 0.18].forEach(w => tone(1046, 0.13, { glideTo: 1450, vol: 0.2, when: w })); },
-    snuffle() { noise(0.14, { vol: 0.18, freq: 450, q: 1.5 }); noise(0.12, { vol: 0.15, when: 0.2, freq: 400, q: 1.5 }); },
+    peep()    { [0, 0.2].forEach((w) => beast({ dur: 0.12, curve: [1300, 1750, 1500], type: "sine", vol: 0.32, lp: 5000, when: w })); },
+    snuffle() {
+      noise(0.12, { vol: 0.2, freq: 450, q: 1.5 });
+      noise(0.1, { vol: 0.16, when: 0.17, freq: 420, q: 1.5 });
+      beast({ dur: 0.14, curve: [115, 95, 85], vol: 0.3, am: 30, amDepth: 0.9, lp: 700, when: 0.32 });
+    },
     water()   { noise(0.7, { vol: 0.1, freq: 2500, q: 0.5 }); noise(0.5, { vol: 0.08, when: 0.3, freq: 3000, q: 0.5 }); },
     whoosh()  { noise(0.3, { vol: 0.1, freq: 800, q: 0.4 }); },
     hello()   { tone(660, 0.14, { vol: 0.14 }); tone(880, 0.2, { when: 0.14, vol: 0.14 }); },
-    meow()    { tone(520, 0.16, { type: "triangle", glideTo: 900, vol: 0.2 }); tone(900, 0.5, { type: "triangle", glideTo: 360, vol: 0.24, when: 0.16 }); },
+    meow()    {
+      /* Miau: Tonhöhe steigt und fällt, Formant wandert, Vibrato */
+      beast({ dur: 0.85, curve: [260, 470, 545, 525, 480, 360, 235], vol: 0.7,
+              bp: 900, bpEnd: 1500, bpQ: 2, lp: 2600, vib: 6, vibDepth: 14 });
+      beast({ dur: 0.85, curve: [520, 940, 1090, 1050, 960, 720, 470], vol: 0.14,
+              bp: 2800, bpQ: 3, lp: 4200 });
+    },
     woof()    {
-      [0, 0.26].forEach((w) => {
-        tone(170, 0.14, { type: "sawtooth", glideTo: 80, vol: 0.3, when: w });
-        noise(0.11, { vol: 0.2, when: w, freq: 480, q: 0.8 });
+      /* "Wuff": kurzer Bell-Puls, der Formant öffnet sich wie ein Maul */
+      [0, 0.28].forEach((w) => {
+        beast({ dur: 0.17, curve: [145, 100, 70], vol: 0.9,
+                bp: 350, bpEnd: 900, bpQ: 1.1, lp: 1500, when: w });
+        noise(0.12, { vol: 0.24, when: w, freq: 500, q: 0.7 });
       });
     },
     whee()    { tone(392, 0.5, { type: "triangle", glideTo: 900, vol: 0.14 }); tone(900, 0.25, { type: "triangle", glideTo: 660, vol: 0.1, when: 0.5 }); },
-    gull()    { [0, 0.3].forEach((w) => tone(1350, 0.28, { type: "sawtooth", glideTo: 750, vol: 0.12, when: w })); },
+    gull()    {
+      [0, 0.34].forEach((w) => beast({ dur: 0.3, curve: [1250, 1420, 1000, 730], vol: 0.5,
+        bp: 2100, bpQ: 2, lp: 5000, am: 9, amDepth: 0.5, when: w }));
+    },
     horn()    {
       tone(196, 0.55, { type: "triangle", vol: 0.26 });
       tone(147, 0.75, { type: "triangle", vol: 0.24, when: 0.18 });
       noise(0.4, { vol: 0.05, freq: 300, q: 0.6, when: 0.1 });
     },
     whistle() {
-      tone(1400, 0.18, { glideTo: 2300, vol: 0.15 });
-      tone(2300, 0.26, { glideTo: 1100, vol: 0.15, when: 0.2 });
-      [0.5, 0.58, 0.66].forEach((w) => noise(0.05, { vol: 0.11, freq: 3200, q: 3, when: w }));
+      beast({ dur: 0.5, curve: [1400, 2600, 3300, 2400, 1600], type: "sine", vol: 0.3, lp: 8000 });
+      [0.55, 0.62, 0.69, 0.76].forEach((w) => noise(0.035, { vol: 0.16, freq: 3400, q: 4, when: w }));
     },
     hop()     { tone(300, 0.12, { type: "triangle", glideTo: 600, vol: 0.14 }); tone(340, 0.12, { type: "triangle", glideTo: 640, vol: 0.12, when: 0.16 }); },
     thud()    { tone(140, 0.15, { type: "triangle", glideTo: 70, vol: 0.2 }); },
