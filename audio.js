@@ -15,33 +15,155 @@ const AudioKit = (() => {
   let musicTimer = null;
 
   let unlockEl = null;
+  let silentWavUri = null;
+
+  /* ---------- Ersatz-Wiedergabe über <audio>-Elemente ----------
+     In manchen eingebetteten Ansichten (z. B. App-Vorschauen auf
+     iPhone/iPad) bleibt die Web-Audio-Ausgabe dauerhaft blockiert,
+     während <audio>-Elemente und die Sprachausgabe funktionieren.
+     Dann rechnen wir jeden Klang offline in eine kleine WAV-Datei um
+     und spielen ihn über vorab freigeschaltete <audio>-Elemente ab. */
+  let elementMode = false;
+  let sfxPool = [];
+  let poolIdx = 0;
+  let musicEl = null;
+  const wavCache = {};
+
+  /* Ungefähre Länge jedes Klangs in Sekunden (fürs Offline-Rendern) */
+  const SFX_DUR = {
+    pop: 0.3, chime: 0.7, boing: 0.4, success: 1.0, fanfare: 1.7,
+    croak: 0.7, buzz: 0.7, chirp: 0.6, hoot: 1.1, splash: 0.7,
+    munch: 0.6, twinkle: 0.6, quack: 0.7, peep: 0.5, snuffle: 0.5,
+    water: 1.0, whoosh: 0.4, hello: 0.5, thud: 0.3, note: 0.6,
+    meow: 0.9, woof: 0.6, whee: 0.9, gull: 0.8, hop: 0.4,
+  };
+
+  function wavDataUri(buf) {
+    /* AudioBuffer (mono) → WAV als data-URI */
+    const data = buf.getChannelData(0);
+    const n = data.length;
+    const out = new ArrayBuffer(44 + n * 2);
+    const dv = new DataView(out);
+    const w = (o, str) => { for (let i = 0; i < str.length; i++) dv.setUint8(o + i, str.charCodeAt(i)); };
+    w(0, "RIFF"); dv.setUint32(4, 36 + n * 2, true); w(8, "WAVE"); w(12, "fmt ");
+    dv.setUint32(16, 16, true); dv.setUint16(20, 1, true); dv.setUint16(22, 1, true);
+    dv.setUint32(24, buf.sampleRate, true); dv.setUint32(28, buf.sampleRate * 2, true);
+    dv.setUint16(32, 2, true); dv.setUint16(34, 16, true);
+    w(36, "data"); dv.setUint32(40, n * 2, true);
+    for (let i = 0; i < n; i++) {
+      const v = Math.max(-1, Math.min(1, data[i]));
+      dv.setInt16(44 + i * 2, v * 32767, true);
+    }
+    const bytes = new Uint8Array(out);
+    let bin = "";
+    for (let i = 0; i < bytes.length; i += 4096) {
+      bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 4096));
+    }
+    return "data:audio/wav;base64," + btoa(bin);
+  }
+
+  /* Einen Klang offline rendern. Die tone/noise-Helfer greifen auf die
+     Modul-Variablen ctx/master zu – für die Dauer des (synchronen)
+     Einplanens werden sie auf den Offline-Kontext umgebogen. */
+  async function renderSfx(name, arg) {
+    const OAC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+    if (!OAC) return null;
+    const dur = (SFX_DUR[name] || 1.2) + 0.25;
+    const oc = new OAC(1, Math.ceil(44100 * dur), 44100);
+    const prevCtx = ctx, prevMaster = master;
+    ctx = oc;
+    master = oc.createGain();
+    master.gain.value = 1;
+    master.connect(oc.destination);
+    try { sfx[name](arg); } finally { ctx = prevCtx; master = prevMaster; }
+    const rendered = await oc.startRendering();
+    return wavDataUri(rendered);
+  }
+
+  async function renderMusicLoop() {
+    const OAC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+    if (!OAC) return null;
+    const loopDur = 32 * Q + 0.6;
+    const oc = new OAC(1, Math.ceil(44100 * loopDur), 44100);
+    const prevCtx = ctx, prevMusicGain = musicGain;
+    ctx = oc;
+    musicGain = oc.createGain();
+    musicGain.gain.value = 1;
+    musicGain.connect(oc.destination);
+    try { scheduleMusic(0.05); } finally { ctx = prevCtx; musicGain = prevMusicGain; }
+    const rendered = await oc.startRendering();
+    return wavDataUri(rendered);
+  }
+
+  async function playViaElement(name, arg) {
+    if (muted || !sfxPool.length) return;
+    const key = name + ":" + (arg == null ? "" : arg);
+    if (!wavCache[key]) wavCache[key] = renderSfx(name, arg);
+    const uri = await wavCache[key];
+    if (!uri) return;
+    const el = sfxPool[poolIdx];
+    poolIdx = (poolIdx + 1) % sfxPool.length;
+    try {
+      el.src = uri;
+      el.volume = 1;
+      el.play().catch(() => {});
+    } catch (e) { /* dann eben nicht */ }
+  }
+
+  async function enableElementMode() {
+    if (elementMode) return;
+    elementMode = true;
+    stopMusicTimer();
+    try {
+      const uri = await renderMusicLoop();
+      if (uri && musicEl) {
+        musicEl.src = uri;
+        musicEl.loop = true;
+        musicEl.volume = (musicOn && !muted) ? 0.6 : 0;
+        musicEl.play().catch(() => {});
+      }
+    } catch (e) { /* Musik ist optional */ }
+  }
+
+  function makeSilentWavUri() {
+    const n = 8000;
+    const buf = new ArrayBuffer(44 + n * 2);
+    const dv = new DataView(buf);
+    const w = (o, str) => { for (let i = 0; i < str.length; i++) dv.setUint8(o + i, str.charCodeAt(i)); };
+    w(0, "RIFF"); dv.setUint32(4, 36 + n * 2, true); w(8, "WAVE"); w(12, "fmt ");
+    dv.setUint32(16, 16, true); dv.setUint16(20, 1, true); dv.setUint16(22, 1, true);
+    dv.setUint32(24, 8000, true); dv.setUint32(28, 16000, true);
+    dv.setUint16(32, 2, true); dv.setUint16(34, 16, true);
+    w(36, "data"); dv.setUint32(40, n * 2, true);
+    const bytes = new Uint8Array(buf);
+    let bin = "";
+    for (let i = 0; i < bytes.length; i += 4096) {
+      bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 4096));
+    }
+    return "data:audio/wav;base64," + btoa(bin);
+  }
 
   /* iPhone/iPad: Der Stumm-Schalter schaltet Web-Audio normalerweise ab.
      Eine (stille) laufende <audio>-Spur hebt die Tonausgabe in den
-     Wiedergabe-Modus, dann sind auch die Spielgeräusche hörbar. */
+     Wiedergabe-Modus. Außerdem wird hier – noch innerhalb der echten
+     Tipp-Geste – ein Vorrat an <audio>-Elementen freigeschaltet, den
+     die Ersatz-Wiedergabe später wiederverwenden darf. */
   function makeSilentUnlock() {
     try {
-      const n = 8000;
-      const buf = new ArrayBuffer(44 + n * 2);
-      const dv = new DataView(buf);
-      const w = (o, str) => { for (let i = 0; i < str.length; i++) dv.setUint8(o + i, str.charCodeAt(i)); };
-      w(0, "RIFF"); dv.setUint32(4, 36 + n * 2, true); w(8, "WAVE"); w(12, "fmt ");
-      dv.setUint32(16, 16, true); dv.setUint16(20, 1, true); dv.setUint16(22, 1, true);
-      dv.setUint32(24, 8000, true); dv.setUint32(28, 16000, true);
-      dv.setUint16(32, 2, true); dv.setUint16(34, 16, true);
-      w(36, "data"); dv.setUint32(40, n * 2, true);
-      /* Als data-URI einbetten – blob-URLs sind in manchen strengen
-         Umgebungen (Content Security Policy) nicht erlaubt. */
-      const bytes = new Uint8Array(buf);
-      let bin = "";
-      for (let i = 0; i < bytes.length; i += 4096) {
-        bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 4096));
-      }
-      unlockEl = document.createElement("audio");
-      unlockEl.src = "data:audio/wav;base64," + btoa(bin);
+      silentWavUri = makeSilentWavUri();
+      const makeEl = () => {
+        const el = document.createElement("audio");
+        el.src = silentWavUri;
+        el.setAttribute("playsinline", "");
+        el.style.display = "none";
+        document.body.appendChild(el);
+        el.play().catch(() => {});
+        return el;
+      };
+      unlockEl = makeEl();
       unlockEl.loop = true;
-      unlockEl.setAttribute("playsinline", "");
-      unlockEl.play().catch(() => { /* dann eben nicht */ });
+      for (let i = 0; i < 6; i++) sfxPool.push(makeEl());
+      musicEl = makeEl();
     } catch (e) { /* optionaler Trick, kein Problem */ }
   }
 
@@ -62,12 +184,22 @@ const AudioKit = (() => {
     makeSilentUnlock();
     startAmbient();
     startMusic();
+    /* Bleibt die Web-Audio-Ausgabe blockiert (eingebettete Ansicht),
+       auf die Ersatz-Wiedergabe über <audio>-Elemente umschalten. */
+    [900, 2500, 6000].forEach((ms) => {
+      setTimeout(() => {
+        if (ctx && ctx.state !== "running" && !elementMode) enableElementMode();
+      }, ms);
+    });
   }
 
   /* Nach Tab-Wechseln oder Pausen den Ton wieder aufwecken. */
   function resume() {
     if (ctx && ctx.state === "suspended") ctx.resume();
     if (unlockEl && unlockEl.paused) unlockEl.play().catch(() => {});
+    if (elementMode && musicEl && musicEl.paused && musicOn && !muted) {
+      musicEl.play().catch(() => {});
+    }
   }
 
   function now() { return ctx ? ctx.currentTime : 0; }
@@ -225,6 +357,10 @@ const AudioKit = (() => {
   function setMusicOn(on) {
     musicOn = on;
     if (musicGain) musicGain.gain.value = on ? 1 : 0;
+    if (elementMode && musicEl) {
+      musicEl.volume = (on && !muted) ? 0.6 : 0;
+      if (on && musicEl.paused) musicEl.play().catch(() => {});
+    }
   }
 
   function isMusicOn() { return musicOn; }
@@ -281,17 +417,27 @@ const AudioKit = (() => {
   };
 
   function play(name, arg) {
-    if (!ctx || muted) return;
-    if (sfx[name]) sfx[name](arg);
+    if (!ctx || muted || !sfx[name]) return;
+    if (elementMode) {
+      playViaElement(name, arg);
+    } else {
+      sfx[name](arg);
+    }
   }
 
   function setMuted(m) {
     muted = m;
     if (master) master.gain.value = m ? 0 : 1;
+    if (elementMode && musicEl) musicEl.volume = (musicOn && !m) ? 0.6 : 0;
     if (m && window.speechSynthesis) window.speechSynthesis.cancel();
   }
 
   function isMuted() { return muted; }
 
-  return { init, resume, play, setMuted, isMuted, setMusicOn, isMusicOn };
+  return {
+    init, resume, play, setMuted, isMuted, setMusicOn, isMusicOn,
+    /* nur für Tests und Diagnose */
+    _forceElementMode: enableElementMode,
+    _isElementMode: () => elementMode,
+  };
 })();
