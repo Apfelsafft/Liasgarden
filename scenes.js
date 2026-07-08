@@ -1,5 +1,5 @@
 /* ================================================================
-   Lias Garten – Szenen und Zeichnungen
+   Lia’s Garten – Szenen und Zeichnungen
    Alle Bilder sind handgebaute SVG-Grafiken im weichen Comicstil.
    Konvention: Jede Figur ist ein äußeres <g> (Position per
    transform-Attribut) mit einem inneren <g class="inner"> für
@@ -871,7 +871,7 @@ function wireLia(svg, api) {
   const actions = [
     () => {
       api.play("hello");
-      api.speak("Hallo, ich bin Lia!");
+      api.speak("Hallo, ich bin Lia!", "kind");
       const arm = liaEl.querySelector(".liaArm");
       if (arm) arm.animate(
         [{ transform: "rotate(0deg)" }, { transform: "rotate(-16deg)" }, { transform: "rotate(0deg)" }, { transform: "rotate(-16deg)" }, { transform: "rotate(0deg)" }],
@@ -879,14 +879,14 @@ function wireLia(svg, api) {
     },
     () => {
       api.play("boing");
-      api.speak("Hurra!");
+      api.speak("Hurra!", "kind");
       liaInner.animate(
         [{ transform: "translateY(0)" }, { transform: "translateY(-55px)" }, { transform: "translateY(0)" }, { transform: "translateY(-30px)" }, { transform: "translateY(0)" }],
         { duration: 1100, easing: "ease-in-out" });
     },
     () => {
       api.play("whee");
-      api.speak("Juhu, ein Purzelbaum!");
+      api.speak("Juhu, ein Purzelbaum!", "kind");
       liaInner.style.transformBox = "fill-box";
       liaInner.style.transformOrigin = "center";
       liaInner.animate(
@@ -895,7 +895,7 @@ function wireLia(svg, api) {
     },
     () => {
       api.play("chime");
-      api.speak("Hihi, das kitzelt!");
+      api.speak("Hihi, das kitzelt!", "kind");
       liaInner.animate(
         [{ transform: "rotate(0deg)" }, { transform: "rotate(-8deg)" }, { transform: "rotate(8deg)" }, { transform: "rotate(-6deg)" }, { transform: "rotate(0deg)" }],
         { duration: 800 });
@@ -990,7 +990,7 @@ const sceneGarden = {
       ${t1 ? `<g transform="translate(0,-128)">${flower("#ffb3c8", "#ffd23e", 1.15)}</g>` : ""}
     </g>
     ${t1 ? butterfly(660, 470, 1, "#b892e0", "") : ""}
-    ${t2 ? `<g transform="translate(524,540)"><g class="inner floaty">${bee(0.8)}</g></g>` : ""}
+    ${t2 ? wrap(524, 540, 0.8, `class="pokeable" data-sound="buzz"`, bee(1), "floaty") : ""}
 
     ${!t2 ? wrap(760, 300, 1, `id="bee" class="grabbable"`, bee(1), "floaty") : ""}
     ${wrap(870, 600, 1, `id="can" class="grabbable"`, wateringCan(1))}
@@ -1222,7 +1222,7 @@ const sceneTree = {
 
     ${wrap(310, 440, 1, `id="treetop" class="pokeable" data-sound="whoosh"`, appleTree(1.15))}
 
-    <g transform="translate(430,388)">${wrap(0, 0, 1, `id="nest"`, nestChick(1))}</g>
+    <g transform="translate(430,388)">${wrap(0, 0, 1, `id="nest" class="pokeable" data-sound="peep"`, nestChick(1))}</g>
 
     ${wrap(316, 590, 1, `id="squirrel" class="pokeable" data-sound="chirp"`, squirrel(1))}
 

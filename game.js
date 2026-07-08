@@ -1,5 +1,5 @@
 /* ================================================================
-   Lias Garten – Spiel-Engine
+   Lia’s Garten – Spiel-Engine
    Szenenwechsel, Ziehen & Ablegen, Glühwürmchen-Hilfe,
    Wissens-Karten, Sterne-Fortschritt und Speichern.
    ================================================================ */
@@ -46,20 +46,56 @@
   const helperFly = document.getElementById("helperFly");
   const cardOverlay = document.getElementById("cardOverlay");
 
-  /* ---------- Sprachausgabe ---------- */
+  /* ---------- Sprachausgabe ----------
+     Wir suchen die menschlichste deutsche Stimme, die das Gerät
+     anbietet (Siri-, Premium- und Google-Stimmen klingen deutlich
+     natürlicher als die Roboter-Ersatzstimmen), und sprechen in zwei
+     Rollen: die Vorlesestimme wie eine Mama, Lia wie ein Kind. */
 
-  function speak(text) {
+  let bestVoice = null;
+
+  function rateVoice(v) {
+    const n = v.name.toLowerCase();
+    let score = 0;
+    if (/siri/.test(n)) score += 60;
+    if (/enhanced|premium|erweitert|natural|neural|plus/.test(n)) score += 50;
+    if (/google/.test(n)) score += 40;
+    if (/anna|petra|helena|katja|hedda|marlene|vicki|amala/.test(n)) score += 20;
+    if (/eloquence|compact|espeak|robot/.test(n)) score -= 40;
+    if (v.lang.toLowerCase() === "de-de") score += 5;
+    return score;
+  }
+
+  function chooseVoice() {
+    if (!window.speechSynthesis) return;
+    const german = speechSynthesis.getVoices().filter((v) => v.lang.toLowerCase().startsWith("de"));
+    if (!german.length) return;
+    german.sort((a, b) => rateVoice(b) - rateVoice(a));
+    bestVoice = german[0];
+  }
+
+  if (window.speechSynthesis) {
+    chooseVoice();
+    speechSynthesis.addEventListener("voiceschanged", chooseVoice);
+  }
+
+  const VOICE_ROLES = {
+    mama: { rate: 0.95, pitch: 1.05 },
+    kind: { rate: 1.05, pitch: 1.5 },
+  };
+
+  function speak(text, role = "mama") {
     if (AudioKit.isMuted() || !window.speechSynthesis) return;
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
+    const r = VOICE_ROLES[role] || VOICE_ROLES.mama;
     u.lang = "de-DE";
-    u.rate = 0.86;
-    u.pitch = 1.15;
-    const voice = speechSynthesis.getVoices().find((v) => v.lang.startsWith("de"));
-    if (voice) u.voice = voice;
+    u.rate = r.rate;
+    u.pitch = r.pitch;
+    if (!bestVoice) chooseVoice();
+    if (bestVoice) u.voice = bestVoice;
     speechSynthesis.speak(u);
   }
-  if (window.speechSynthesis) speechSynthesis.getVoices();
 
   /* ---------- Szene anzeigen ---------- */
 
@@ -309,7 +345,7 @@
       setTimeout(() => g.remove(), 4400);
     }
     setTimeout(() => {
-      showCard({ icon: "rainbow", text: "Hurra! Du hast Lias ganzen Garten zum Leben erweckt!" });
+      showCard({ icon: "rainbow", text: "Hurra! Du hast Lia’s ganzen Garten zum Leben erweckt!" });
     }, 2600);
   }
 
@@ -460,7 +496,10 @@
     }, 16000);
   }
 
-  window.addEventListener("pointerdown", resetIdle, true);
+  window.addEventListener("pointerdown", () => {
+    AudioKit.resume();
+    resetIdle();
+  }, true);
 
   /* ---------- Startbildschirm ---------- */
 
@@ -489,7 +528,7 @@
 
       <text x="500" y="200" text-anchor="middle" font-size="95" font-weight="bold"
         fill="#4a7c2f" stroke="#fff" stroke-width="10" paint-order="stroke"
-        style="font-family:inherit">Lias Garten</text>
+        style="font-family:inherit">Lia’s Garten</text>
       <text x="500" y="265" text-anchor="middle" font-size="30" fill="#5a7a3f"
         stroke="#fff" stroke-width="6" paint-order="stroke"
         style="font-family:inherit">Tippe auf die Sonnenblume!</text>

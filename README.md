@@ -1,4 +1,4 @@
-# 🌻 Lias Garten
+# 🌻 Lia’s Garten
 
 Ein liebevolles Entdecker- und Lernspiel für Kinder von **2 bis 5 Jahren**.
 Das Kind erkundet einen handgezeichneten Garten voller süßer Tiere und
