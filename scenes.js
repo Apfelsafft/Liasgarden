@@ -177,7 +177,7 @@ function grassTuft(x, y, s = 1, col = "#7cbf55") {
 }
 
 function butterfly(x, y, s, color, cls = "") {
-  return wrap(x, y, s, `class="pokeable ${cls}" data-sound="pop" data-action="loop"`, `
+  return wrap(x, y, s, `data-free="1" class="pokeable ${cls}" data-sound="pop" data-action="loop"`, `
     ${hit(46)}
     <g class="flapping">
       <ellipse cx="-16" cy="-8" rx="16" ry="13" fill="${color}"/>
@@ -632,7 +632,7 @@ function autumnTree(s = 1) {
 }
 
 function pumpkin(x, y, s = 1) {
-  return wrap(x, y, s, `class="pokeable" data-sound="boing" data-action="roll"`, `
+  return wrap(x, y, s, `data-free="1" class="pokeable" data-sound="boing" data-action="roll"`, `
     ${hit(46, 0, -14)}
     <ellipse cx="0" cy="-12" rx="30" ry="24" fill="#e8963e" stroke="#c4713a" stroke-width="3"/>
     <ellipse cx="-14" cy="-12" rx="12" ry="22" fill="none" stroke="#c4713a" stroke-width="2.5"/>
@@ -863,7 +863,7 @@ function palm(s = 1) {
 }
 
 function beachBall(x, y, s = 1) {
-  return wrap(x, y, s, `class="pokeable" data-sound="boing" data-action="flyArc"`, `
+  return wrap(x, y, s, `data-free="1" class="pokeable" data-sound="boing" data-action="flyArc"`, `
     ${hit(44)}
     <circle r="24" fill="#fff"/>
     <path d="M 0 -24 A 24 24 0 0 1 20.8 12 L 0 0 Z" fill="#e0634e"/>
@@ -1020,12 +1020,12 @@ function wireLia(svg, api) {
     },
   ];
   let last = -1;
-  liaEl.addEventListener("pointerdown", () => {
+  liaEl._tapAction = () => {
     let i;
     do { i = Math.floor(Math.random() * actions.length); } while (i === last);
     last = i;
     actions[i]();
-  });
+  };
 }
 
 /* ---------- Karten-Symbole für die Wissens-Karten ---------- */
@@ -1087,19 +1087,19 @@ const sceneGarden = {
     ${grassTuft(950, 580, 1.1)}
     ${grassTuft(360, 480, 1)}
 
-    ${wrap(160, 470, 1, `id="lia" class="pokeable"`, lia(1))}
-    ${wrap(735, 470, 1, `id="cat" class="pokeable" data-sound="meow" data-action="pounce"`, cat(1))}
+    ${wrap(160, 470, 1, `id="lia" data-free="1" class="pokeable"`, lia(1))}
+    ${wrap(735, 470, 1, `id="cat" data-free="1" class="pokeable" data-sound="meow" data-action="pounce"`, cat(1))}
 
     ${wrap(300, 640, 1, `class="pokeable" data-sound="pop" data-action="bloom"`, flower("#ff8fab"), "swaying")}
     ${wrap(390, 655, 0.85, `class="pokeable" data-sound="pop" data-action="bloom"`, flower("#b892e0", "#fff3b0"), "swaying")}
     ${wrap(240, 660, 0.7, `class="pokeable" data-sound="pop" data-action="bloom"`, tulip("#f5a340", 1.3))}
     ${wrap(460, 648, 0.75, `class="pokeable" data-sound="pop" data-action="bloom"`, tulip("#e84c3d", 1.3))}
 
-    ${wrap(430, 500, 1, `id="ladybug" class="pokeable" data-sound="chirp" data-action="loop"`, `
+    ${wrap(430, 500, 1, `id="ladybug" data-free="1" class="pokeable" data-sound="chirp" data-action="loop"`, `
       <path d="M -30 14 Q 0 2 34 12 Q 20 26 -6 24 Z" fill="#74b95a"/>
       <g transform="translate(0,-2)">${ladybug(1)}</g>
     `)}
-    ${wrap(700, 665, 0.9, `id="snail" class="pokeable" data-sound="boing" data-action="peek"`, snail(1))}
+    ${wrap(700, 665, 0.9, `id="snail" data-free="1" class="pokeable" data-sound="boing" data-action="peek"`, snail(1))}
 
     <g id="mound" transform="translate(560,640)">
       <ellipse rx="46" ry="16" fill="#6e4526"/>
@@ -1110,7 +1110,7 @@ const sceneGarden = {
       ${t1 ? `<g transform="translate(0,-128)">${flower("#ffb3c8", "#ffd23e", 1.15)}</g>` : ""}
     </g>
     ${t1 ? butterfly(660, 470, 1, "#b892e0", "") : ""}
-    ${t2 ? wrap(524, 540, 0.8, `class="pokeable" data-sound="buzz" data-action="loop"`, bee(1), "floaty") : ""}
+    ${t2 ? wrap(524, 540, 0.8, `data-free="1" class="pokeable" data-sound="buzz" data-action="loop"`, bee(1), "floaty") : ""}
 
     ${!t2 ? wrap(760, 300, 1, `id="bee" class="grabbable"`, bee(1), "floaty") : ""}
     ${wrap(870, 600, 1, `id="can" class="grabbable"`, wateringCan(1))}
@@ -1167,7 +1167,7 @@ const sceneGarden = {
 
     /* Die Katze wedelt mit dem Schwanz */
     const catEl = svg.querySelector("#cat");
-    if (catEl) catEl.addEventListener("pointerdown", () => {
+    if (catEl) catEl._tapAction = () => {
       const tail = catEl.querySelector(".catTail");
       if (tail) {
         tail.style.transformBox = "fill-box";
@@ -1176,7 +1176,7 @@ const sceneGarden = {
           [{ transform: "rotate(0deg)" }, { transform: "rotate(24deg)" }, { transform: "rotate(-8deg)" }, { transform: "rotate(18deg)" }, { transform: "rotate(0deg)" }],
           { duration: 1100, easing: "ease-in-out" });
       }
-    });
+    };
   },
 };
 
@@ -1218,23 +1218,23 @@ const scenePond = {
     ${grassTuft(60, 460, 1.3)}
     ${grassTuft(950, 620, 1.4)}
     ${grassTuft(260, 430, 1)}
-    ${wrap(80, 545, 0.95, `id="dog" class="pokeable" data-sound="woof"`, dog(1))}
+    ${wrap(80, 545, 0.95, `id="dog" data-free="1" class="pokeable" data-sound="woof"`, dog(1))}
 
     ${lilypad(330, 620, 1, true)}
     ${lilypad(760, 620, 0.85)}
     <g transform="translate(640,505)">${lilypad(0, 32, 1.1)}</g>
 
-    ${wrap(640, 505, 1, `id="frog" class="pokeable" data-sound="croak" data-action="bigBounce"`, frog(1), t3 ? "" : "")}
+    ${wrap(640, 505, 1, `id="frog" data-free="1" class="pokeable" data-sound="croak" data-action="bigBounce"`, frog(1), t3 ? "" : "")}
 
-    ${wrap(450, 555, 1, `id="mama" class="pokeable" data-sound="quack" data-action="dip"`, duck(1.1), "bobbing")}
+    ${wrap(450, 555, 1, `id="mama" data-free="1" class="pokeable" data-sound="quack" data-action="dip"`, duck(1.1), "bobbing")}
     ${t4
-      ? wrap(535, 570, 1, `class="pokeable" data-sound="peep"`, duck(0.6, "#ffdf5e", "#f5a340"), "bobbing")
+      ? wrap(535, 570, 1, `data-free="1" class="pokeable" data-sound="peep"`, duck(0.6, "#ffdf5e", "#f5a340"), "bobbing")
       : wrap(150, 620, 1, `id="duckling" class="grabbable"`, duck(0.6, "#ffdf5e", "#f5a340"), "bobbing")}
 
     ${!t3 ? wrap(380, 330, 1, `id="flies" class="grabbable"`, flySwarm(1.1)) : ""}
 
-    ${wrap(830, 270, 1, `id="dragonfly" class="pokeable" data-sound="whoosh"`, dragonfly(1.1), "floaty")}
-    ${wrap(560, 640, 1, `id="fish" class="pokeable" data-sound="splash"`, fish(1), "bobbing")}
+    ${wrap(830, 270, 1, `id="dragonfly" data-free="1" class="pokeable" data-sound="whoosh"`, dragonfly(1.1), "floaty")}
+    ${wrap(560, 640, 1, `id="fish" data-free="1" class="pokeable" data-sound="splash"`, fish(1), "bobbing")}
     ${butterfly(240, 300, 0.8, "#f5a340")}
     `;
   },
@@ -1285,7 +1285,7 @@ const scenePond = {
 
     /* Der Hund wedelt und hüpft */
     const dogEl = svg.querySelector("#dog");
-    if (dogEl) dogEl.addEventListener("pointerdown", () => {
+    if (dogEl) dogEl._tapAction = () => {
       const tail = dogEl.querySelector(".dogTail");
       if (tail) {
         tail.style.transformBox = "fill-box";
@@ -1299,19 +1299,19 @@ const scenePond = {
       void inner.getBoundingClientRect();
       inner.classList.add("happyBounce");
       setTimeout(() => inner.classList.remove("happyBounce"), 1500);
-    });
+    };
     const fishEl = svg.querySelector("#fish");
-    if (fishEl) fishEl.addEventListener("pointerdown", () => {
+    if (fishEl) fishEl._tapAction = () => {
       fishEl.querySelector(":scope > .inner").animate(
         [{ transform: "translateY(0) rotate(0deg)" }, { transform: "translateY(-90px) rotate(-20deg)" }, { transform: "translateY(0) rotate(0deg)" }],
         { duration: 800, easing: "ease-out" });
-    });
+    };
     const df = svg.querySelector("#dragonfly");
-    if (df) df.addEventListener("pointerdown", () => {
+    if (df) df._tapAction = () => {
       df.querySelector(":scope > .inner").animate(
         [{ transform: "translate(0,0)" }, { transform: "translate(-120px,-40px)" }, { transform: "translate(60px,-80px)" }, { transform: "translate(0,0)" }],
         { duration: 1600, easing: "ease-in-out" });
-    });
+    };
   },
 };
 
@@ -1344,7 +1344,7 @@ const sceneTree = {
 
     <g transform="translate(430,388)">${wrap(0, 0, 1, `id="nest" class="pokeable" data-sound="peep"`, nestChick(1))}</g>
 
-    ${wrap(316, 590, 1, `id="squirrel" class="pokeable" data-sound="chirp" data-action="bigBounce"`, squirrel(1))}
+    ${wrap(316, 590, 1, `id="squirrel" data-free="1" class="pokeable" data-sound="chirp" data-action="bigBounce"`, squirrel(1))}
 
     ${mushroom(150, 660, 1.1)}
     ${mushroom(197, 668, 0.75)}
@@ -1354,7 +1354,7 @@ const sceneTree = {
     ${grassTuft(700, 680, 1.2)}
     ${wrap(610, 480, 0.8, `class="pokeable" data-sound="pop" data-action="bloom"`, flower("#f5a340", "#fff3b0"), "swaying")}
 
-    ${wrap(830, 610, 1, `id="hedgehog" class="pokeable" data-sound="snuffle" data-action="bigBounce"`, hedgehog(1))}
+    ${wrap(830, 610, 1, `id="hedgehog" data-free="1" class="pokeable" data-sound="snuffle" data-action="bigBounce"`, hedgehog(1))}
 
     ${!t5 ? wrap(500, 640, 1, `id="apple1" class="grabbable"`, apple(1)) : ""}
     ${wrap(575, 660, 0.9, `id="apple2" class="grabbable"`, apple(1))}
@@ -1403,7 +1403,7 @@ const sceneTree = {
     }
 
     const tree = svg.querySelector("#treetop");
-    if (tree) tree.addEventListener("pointerdown", () => {
+    if (tree) tree._tapAction = () => {
       const apples = tree.querySelectorAll(".treeApple");
       const pick = apples[Math.floor(Math.random() * apples.length)];
       if (pick) {
@@ -1412,14 +1412,14 @@ const sceneTree = {
           { duration: 1100, easing: "cubic-bezier(0.4,0,1,1)" });
         setTimeout(() => api.play("thud"), 700);
       }
-    });
+    };
     const sq = svg.querySelector("#squirrel");
-    if (sq) sq.addEventListener("pointerdown", () => {
+    if (sq) sq._tapAction = () => {
       const tail = sq.querySelector(".sqTail");
       if (tail) tail.animate(
         [{ transform: "rotate(0deg)" }, { transform: "rotate(16deg)" }, { transform: "rotate(-6deg)" }, { transform: "rotate(0deg)" }],
         { duration: 700 });
-    });
+    };
   },
 };
 
@@ -1466,11 +1466,11 @@ const sceneAutumn = {
     ${grassTuft(700, 680, 1.3, "#a8823c")}
     ${grassTuft(960, 590, 1.1, "#a8823c")}
 
-    ${wrap(250, 620, 1.35, `id="squirrel2" class="pokeable" data-sound="chirp" data-action="bigBounce"`, squirrel(1))}
+    ${wrap(250, 620, 1.35, `id="squirrel2" data-free="1" class="pokeable" data-sound="chirp" data-action="bigBounce"`, squirrel(1))}
     ${t8 ? `<g transform="translate(300,635)">${acorn(0.85)}</g>` : ""}
     ${!t8 ? wrap(490, 660, 1, `id="acorn" class="grabbable"`, acorn(1), "bobbing") : ""}
 
-    ${wrap(790, 620, 1.05, `id="hedgehog2" class="pokeable" data-sound="snuffle" data-action="bigBounce"`, hedgehog(1))}
+    ${wrap(790, 620, 1.05, `id="hedgehog2" data-free="1" class="pokeable" data-sound="snuffle" data-action="bigBounce"`, hedgehog(1))}
     ${t9 ? `<g transform="translate(796,596)">
         ${leaf("#e8963e", 1.1, -30)}
         <g transform="translate(26,8)">${leaf("#d9772e", 1, 35)}</g>
@@ -1560,13 +1560,13 @@ const sceneWinter = {
 
     ${wrap(760, 655, 1, `id="feeder"`, birdFeeder(1, t10))}
     ${t10
-      ? `${wrap(714, 572, 0.8, `class="pokeable" data-sound="chirp" data-action="flutter"`, winterBird(1), "bobbing")}
-         ${wrap(806, 572, 0.8, `class="pokeable" data-sound="chirp" data-action="flutter"`, winterBird(1, "#f0b04a"), "bobbing")}`
-      : `${wrap(650, 665, 0.9, `id="wbird1" class="pokeable" data-sound="chirp" data-action="flutter"`, winterBird(1), "bobbing")}
-         ${wrap(870, 668, 0.9, `id="wbird2" class="pokeable" data-sound="chirp" data-action="flutter"`, winterBird(1, "#f0b04a"), "bobbing")}`}
+      ? `${wrap(714, 572, 0.8, `data-free="1" class="pokeable" data-sound="chirp" data-action="flutter"`, winterBird(1), "bobbing")}
+         ${wrap(806, 572, 0.8, `data-free="1" class="pokeable" data-sound="chirp" data-action="flutter"`, winterBird(1, "#f0b04a"), "bobbing")}`
+      : `${wrap(650, 665, 0.9, `id="wbird1" data-free="1" class="pokeable" data-sound="chirp" data-action="flutter"`, winterBird(1), "bobbing")}
+         ${wrap(870, 668, 0.9, `id="wbird2" data-free="1" class="pokeable" data-sound="chirp" data-action="flutter"`, winterBird(1, "#f0b04a"), "bobbing")}`}
     ${!t10 ? wrap(560, 660, 1, `id="seeds" class="grabbable"`, seedBag(1)) : ""}
 
-    ${wrap(170, 640, 1, `id="bunny" class="pokeable" data-sound="hop"`, bunny(1))}
+    ${wrap(170, 640, 1, `id="bunny" data-free="1" class="pokeable" data-sound="hop"`, bunny(1))}
     ${snowflakes(12)}
     `;
   },
@@ -1614,11 +1614,11 @@ const sceneWinter = {
       });
     }
     const bun = svg.querySelector("#bunny");
-    if (bun) bun.addEventListener("pointerdown", () => {
+    if (bun) bun._tapAction = () => {
       bun.querySelector(":scope > .inner").animate(
         [{ transform: "translate(0,0)" }, { transform: "translate(-30px,-55px)" }, { transform: "translate(-60px,0)" }, { transform: "translate(-30px,-45px)" }, { transform: "translate(0,0)" }],
         { duration: 1400, easing: "ease-in-out" });
-    });
+    };
   },
 };
 
@@ -1654,12 +1654,12 @@ const sceneBeach = {
     <path d="M 0 640 Q 400 615 1000 635 L 1000 700 L 0 700 Z" fill="#e8cf9a"/>
 
     ${wrap(160, 415, 1, ``, sailboat(1), "bobbing")}
-    ${wrap(600, 210, 1, `id="seagull" class="pokeable" data-sound="gull"`, seagull(1), "floaty")}
+    ${wrap(600, 210, 1, `id="seagull" data-free="1" class="pokeable" data-sound="gull"`, seagull(1), "floaty")}
     ${wrap(75, 435, 1.05, `class="pokeable" data-sound="whoosh"`, palm(1), "swaying")}
 
     <rect x="160" y="600" width="150" height="66" rx="10" fill="#ff8fab" transform="rotate(-3 235 633)"/>
     <path d="M 175 606 L 185 664 M 205 603 L 215 661 M 235 601 L 245 659 M 265 600 L 275 658 M 292 600 L 300 656" stroke="#fff" stroke-width="7" transform="rotate(-3 235 633)" opacity="0.7"/>
-    ${wrap(235, 512, 0.95, `id="lia" class="pokeable"`, lia(1))}
+    ${wrap(235, 512, 0.95, `id="lia" data-free="1" class="pokeable"`, lia(1))}
 
     ${wrap(840, 650, 1, `class="pokeable" data-sound="thud" data-action="bigBounce"`, sandcastle(1))}
     ${beachBall(645, 655, 0.95)}
@@ -1668,10 +1668,10 @@ const sceneBeach = {
       ? `<g transform="translate(540,480)"><g class="inner bobbing">${starfishFig(0.95)}</g></g>`
       : wrap(340, 650, 1, `id="starfish" class="grabbable"`, starfishFig(1), "bobbing")}
 
-    ${wrap(740, 615, 1, `id="crab" class="pokeable" data-sound="pop" data-action="scuttle"`, crabFig(1, t12))}
+    ${wrap(740, 615, 1, `id="crab" data-free="1" class="pokeable" data-sound="pop" data-action="scuttle"`, crabFig(1, t12))}
     ${!t12 ? wrap(470, 660, 1, `id="shell" class="grabbable"`, spiralShell(1), "bobbing") : ""}
 
-    ${wrap(660, 450, 0.9, `id="seafish" class="pokeable" data-sound="splash"`, fish(1, "#79c850"), "bobbing")}
+    ${wrap(660, 450, 0.9, `id="seafish" data-free="1" class="pokeable" data-sound="splash"`, fish(1, "#79c850"), "bobbing")}
     `;
   },
   init(svg, api) {
@@ -1707,17 +1707,17 @@ const sceneBeach = {
       });
     }
     const gullEl = svg.querySelector("#seagull");
-    if (gullEl) gullEl.addEventListener("pointerdown", () => {
+    if (gullEl) gullEl._tapAction = () => {
       gullEl.querySelector(":scope > .inner").animate(
         [{ transform: "translate(0,0)" }, { transform: "translate(-160px,-50px)" }, { transform: "translate(80px,-90px)" }, { transform: "translate(0,0)" }],
         { duration: 2400, easing: "ease-in-out" });
-    });
+    };
     const sf = svg.querySelector("#seafish");
-    if (sf) sf.addEventListener("pointerdown", () => {
+    if (sf) sf._tapAction = () => {
       sf.querySelector(":scope > .inner").animate(
         [{ transform: "translateY(0) rotate(0deg)" }, { transform: "translateY(-80px) rotate(-20deg)" }, { transform: "translateY(0) rotate(0deg)" }],
         { duration: 800, easing: "ease-out" });
-    });
+    };
   },
 };
 
@@ -1757,16 +1757,16 @@ const sceneAmerica = {
       ${wrap(838, 574, 1, `id="liberty" class="pokeable" data-sound="chime"`, libertyStatue(1))}
     </g>
 
-    ${wrap(390, 200, 0.9, `class="pokeable" data-sound="gull" data-action="loop"`, seagull(1), "floaty")}
-    ${wrap(660, 260, 0.65, `class="pokeable" data-sound="gull" data-action="loop"`, seagull(1), "floaty")}
+    ${wrap(390, 200, 0.9, `data-free="1" class="pokeable" data-sound="gull" data-action="loop"`, seagull(1), "floaty")}
+    ${wrap(660, 260, 0.65, `data-free="1" class="pokeable" data-sound="gull" data-action="loop"`, seagull(1), "floaty")}
     ${wrap(60, 470, 0.6, ``, sailboat(1), "bobbing")}
-    ${wrap(600, 500, 0.9, `id="buoy" class="pokeable" data-sound="chime" data-action="dance"`, buoy(1), "bobbing")}
+    ${wrap(600, 500, 0.9, `id="buoy" data-free="1" class="pokeable" data-sound="chime" data-action="dance"`, buoy(1), "bobbing")}
 
     ${t14
       ? wrap(680, 570, 0.9, `id="boatDone" class="pokeable" data-sound="horn"`, ferryBoat(1, true), "bobbing")
       : wrap(225, 550, 0.9, `id="boat" class="grabbable"`, ferryBoat(1, true), "bobbing")}
 
-    ${wrap(430, 620, 1, `id="dolphin" class="pokeable" data-sound="whistle"`, dolphinFig(1), "bobbing")}
+    ${wrap(430, 620, 1, `id="dolphin" data-free="1" class="pokeable" data-sound="whistle"`, dolphinFig(1), "bobbing")}
     ${!t15 ? wrap(180, 660, 1, `id="snack" class="grabbable"`, fish(0.9, "#f5a340"), "bobbing") : ""}
     `;
   },
@@ -1791,12 +1791,12 @@ const sceneAmerica = {
     } else {
       /* Angedockt: Tippen lässt das Horn tuten und Lia winken */
       const boat = svg.querySelector("#boatDone");
-      if (boat) boat.addEventListener("pointerdown", () => {
+      if (boat) boat._tapAction = () => {
         const arm = boat.querySelector(".liaArm");
         if (arm) arm.animate(
           [{ transform: "rotate(0deg)" }, { transform: "rotate(-16deg)" }, { transform: "rotate(0deg)" }, { transform: "rotate(-16deg)" }, { transform: "rotate(0deg)" }],
           { duration: 1000 });
-      });
+      };
     }
 
     if (!api.done("t15")) {
@@ -1823,18 +1823,18 @@ const sceneAmerica = {
 
     /* Delfin springt beim Antippen */
     const dol = svg.querySelector("#dolphin");
-    if (dol) dol.addEventListener("pointerdown", () => {
+    if (dol) dol._tapAction = () => {
       dol.querySelector(":scope > .inner").animate(
         [{ transform: "translate(0,0) rotate(0deg)" },
          { transform: "translate(-30px,-150px) rotate(-20deg)", offset: 0.45 },
          { transform: "translate(0,0) rotate(0deg)" }],
         { duration: 1400, easing: "ease-in-out" });
       setTimeout(() => api.play("splash"), 1100);
-    });
+    };
 
     /* Die Fackel funkelt, wenn man die Freiheitsstatue antippt */
     const lib = svg.querySelector("#liberty");
-    if (lib) lib.addEventListener("pointerdown", () => {
+    if (lib) lib._tapAction = () => {
       const torch = lib.querySelector(".torch");
       if (torch) {
         torch.style.transformBox = "fill-box";
@@ -1844,7 +1844,7 @@ const sceneAmerica = {
           { duration: 900, easing: "ease-in-out" });
       }
       api.sparkleBurst(878, 388);
-    });
+    };
   },
 };
 
@@ -1890,7 +1890,7 @@ const sceneNight = {
     <path d="M 130 700 L 138 400 Q 140 360 160 350 L 168 355 Q 162 380 164 420 L 178 700 Z" fill="#173021"/>
     <path d="M 158 430 Q 240 388 350 375" stroke="#173021" stroke-width="16" fill="none" stroke-linecap="round"/>
 
-    ${wrap(312, 322, 1, `id="owl" class="pokeable" data-sound="hoot" data-action="flutter"`, owl(1))}
+    ${wrap(312, 322, 1, `id="owl" data-free="1" class="pokeable" data-sound="hoot" data-action="flutter"`, owl(1))}
 
     ${grassTuft(500, 640, 1.3, "#3a6647")}
     ${grassTuft(700, 600, 1.1, "#3a6647")}

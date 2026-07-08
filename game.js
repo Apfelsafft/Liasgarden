@@ -270,30 +270,144 @@
     ], { duration: 1900, easing: "ease-in-out" }),
   };
 
+  function pokeFeedback(svg, el, e) {
+    const snd = el.dataset.sound;
+    if (snd) AudioKit.play(snd);
+    try {
+      const pt = new DOMPoint(e.clientX, e.clientY).matrixTransform(svg.getScreenCTM().inverse());
+      sparkleAt(svg, pt.x, pt.y, 5, 46);
+    } catch (err) { /* ohne Funkeln geht es auch */ }
+  }
+
+  function runPokeAction(el) {
+    const inner = el.querySelector(":scope > .inner") || el;
+    const action = el.dataset.action;
+    if (action && POKE_ACTIONS[action]) {
+      inner.style.transformBox = "fill-box";
+      inner.style.transformOrigin = "center";
+      POKE_ACTIONS[action](inner, el);
+    } else {
+      inner.classList.remove("wiggling");
+      void inner.getBBox && inner.getBoundingClientRect();
+      inner.classList.add("wiggling");
+      setTimeout(() => inner.classList.remove("wiggling"), 600);
+    }
+    if (el._tapAction) el._tapAction();
+  }
+
   function wirePokes(svg) {
     svg.querySelectorAll(".pokeable").forEach((el) => {
-      el.addEventListener("pointerdown", (e) => {
-        const inner = el.querySelector(":scope > .inner") || el;
-        const action = el.dataset.action;
-        if (action && POKE_ACTIONS[action]) {
-          inner.style.transformBox = "fill-box";
-          inner.style.transformOrigin = "center";
-          POKE_ACTIONS[action](inner, el);
-        } else {
-          inner.classList.remove("wiggling");
-          void inner.getBBox && inner.getBoundingClientRect();
-          inner.classList.add("wiggling");
-          setTimeout(() => inner.classList.remove("wiggling"), 600);
-        }
-        const snd = el.dataset.sound;
-        if (snd) AudioKit.play(snd);
-        /* kleines Funkeln am Finger – jede Berührung gibt Rückmeldung */
-        try {
-          const pt = new DOMPoint(e.clientX, e.clientY).matrixTransform(svg.getScreenCTM().inverse());
-          sparkleAt(svg, pt.x, pt.y, 5, 46);
-        } catch (err) { /* ohne Funkeln geht es auch */ }
-      });
+      if (el.dataset.free === "1") {
+        wireFreePokeable(svg, el);
+      } else {
+        el.addEventListener("pointerdown", (e) => {
+          pokeFeedback(svg, el, e);
+          runPokeAction(el);
+        });
+      }
     });
+  }
+
+  /* ---------- Frei bewegliche Figuren ----------
+     Kurzes Tippen löst die Aktion aus; Ziehen trägt die Figur über
+     den Bildschirm. Wird sie bei einer anderen Figur abgesetzt,
+     begrüßen sich die beiden – ganz ohne Aufgabe, nur zum Erkunden. */
+
+  function wireFreePokeable(svg, el) {
+    el.classList.add("grabbable");
+    let base = parseTranslate(el.getAttribute("transform"));
+    let startPt = null;
+    let dragging = false;
+    let dx = 0, dy = 0;
+
+    const svgScale = () => {
+      const r = svg.getBoundingClientRect();
+      return Math.max(r.width / 1000, r.height / 700);
+    };
+
+    el.addEventListener("pointerdown", (e) => {
+      e.stopPropagation();
+      startPt = { x: e.clientX, y: e.clientY };
+      dragging = false;
+      dx = 0; dy = 0;
+      /* Erst nach vorne holen, DANN den Finger einfangen – ein
+         DOM-Umzug nach setPointerCapture bricht die Verfolgung ab. */
+      el.parentNode.appendChild(el);
+      try { el.setPointerCapture(e.pointerId); } catch (err) { /* ok */ }
+      pokeFeedback(svg, el, e);
+      resetIdle();
+    });
+
+    el.addEventListener("pointermove", (e) => {
+      if (!startPt) return;
+      const s = svgScale();
+      dx = (e.clientX - startPt.x) / s;
+      dy = (e.clientY - startPt.y) / s;
+      if (!dragging && Math.hypot(dx, dy) > 14) dragging = true;
+      if (dragging) {
+        el.setAttribute("transform", `translate(${base.x + dx},${base.y + dy}) scale(${base.s})`);
+      }
+    });
+
+    const end = () => {
+      if (!startPt) return;
+      startPt = null;
+      if (!dragging) {
+        /* kurzes Tippen → große Aktion */
+        runPokeAction(el);
+        return;
+      }
+      /* abgesetzt: dort bleiben (im Bild halten) und Freunde treffen */
+      base = {
+        x: Math.min(980, Math.max(20, base.x + dx)),
+        y: Math.min(690, Math.max(20, base.y + dy)),
+        s: base.s,
+      };
+      el.setAttribute("transform", `translate(${base.x},${base.y}) scale(${base.s})`);
+      meetFriend(svg, el);
+    };
+    el.addEventListener("pointerup", end);
+    el.addEventListener("pointercancel", end);
+  }
+
+  const GREETINGS = ["Hallo, du!", "Hihi, das ist schön!", "Na, kleiner Freund?", "Ich hab dich lieb!"];
+
+  function meetFriend(svg, el) {
+    const a = el.getBoundingClientRect();
+    const acx = a.left + a.width / 2, acy = a.top + a.height / 2;
+    let best = null, bestDist = Infinity, bcx = 0, bcy = 0;
+    svg.querySelectorAll(".pokeable, .grabbable").forEach((other) => {
+      if (other === el || el.contains(other) || other.contains(el)) return;
+      const b = other.getBoundingClientRect();
+      if (a.right < b.left || a.left > b.right || a.bottom < b.top || a.top > b.bottom) return;
+      const cx = b.left + b.width / 2, cy = b.top + b.height / 2;
+      const d = Math.hypot(acx - cx, acy - cy);
+      if (d < bestDist) { bestDist = d; best = other; bcx = cx; bcy = cy; }
+    });
+    if (!best) {
+      AudioKit.play("pop");
+      return;
+    }
+    /* Die beiden begrüßen sich: Aktionen, Laute und Herzchen */
+    runPokeAction(el);
+    const partner = best;
+    setTimeout(() => {
+      const snd = partner.dataset.sound;
+      if (snd) AudioKit.play(snd);
+      runPokeAction(partner);
+    }, 280);
+    try {
+      const mid = new DOMPoint((acx + bcx) / 2, Math.min(acy, bcy) - 20)
+        .matrixTransform(svg.getScreenCTM().inverse());
+      const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+      g.innerHTML = heart(mid.x - 18, mid.y, 1) + heart(mid.x + 22, mid.y + 8, 0.7);
+      svg.appendChild(g);
+      sparkleAt(svg, mid.x, mid.y + 30, 6, 55);
+      setTimeout(() => g.remove(), 1600);
+    } catch (err) { /* Herzchen sind optional */ }
+    if (el.id === "lia" || partner.id === "lia") {
+      speak(GREETINGS[Math.floor(Math.random() * GREETINGS.length)], "kind");
+    }
   }
 
   const SPARKLE_COLORS = ["#ffe95c", "#ffd23e", "#fff6c8", "#ffb3c8"];
