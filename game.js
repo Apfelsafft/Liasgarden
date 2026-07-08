@@ -146,14 +146,145 @@
     }, 700);
   }
 
+  /* ---------- Große Reaktionen beim Antippen ----------
+     Jeder feste Gegenstand kann eine richtig sichtbare Aktion
+     ausführen – nicht nur wackeln. Alle Animationen kehren von
+     selbst zur Ausgangsposition zurück. */
+
+  const POKE_ACTIONS = {
+    /* hoher Hüpfer mit Quetsch-Landung (Pilze, Sandburg, Igel, Frosch) */
+    bigBounce: (inner) => inner.animate([
+      { transform: "translateY(0) scale(1,1)" },
+      { transform: "translateY(-120px) scale(0.92,1.1)", offset: 0.3 },
+      { transform: "translateY(0) scale(1.18,0.82)", offset: 0.55 },
+      { transform: "translateY(-55px) scale(1,1)", offset: 0.75 },
+      { transform: "translateY(0) scale(1,1)" },
+    ], { duration: 1400, easing: "ease-in-out" }),
+    /* großer Bogenflug über den Bildschirm und zurück (Wasserball) */
+    flyArc: (inner) => inner.animate([
+      { transform: "translate(0,0) rotate(0deg)" },
+      { transform: "translate(-240px,-220px) rotate(-160deg)", offset: 0.25 },
+      { transform: "translate(-460px,-20px) rotate(-320deg)", offset: 0.5 },
+      { transform: "translate(-240px,-200px) rotate(-160deg)", offset: 0.75 },
+      { transform: "translate(0,0) rotate(0deg)" },
+    ], { duration: 2600, easing: "ease-in-out" }),
+    /* wegrollen und zurück (Kürbis) */
+    roll: (inner) => inner.animate([
+      { transform: "translateX(0) rotate(0deg)" },
+      { transform: "translateX(-110px) rotate(-200deg)", offset: 0.4 },
+      { transform: "translateX(60px) rotate(120deg)", offset: 0.75 },
+      { transform: "translateX(0) rotate(0deg)" },
+    ], { duration: 1800, easing: "ease-in-out" }),
+    /* einmal ganz herumdrehen (Sonne) */
+    spin: (inner) => inner.animate([
+      { transform: "rotate(0deg)" },
+      { transform: "rotate(360deg)" },
+    ], { duration: 1500, easing: "ease-in-out" }),
+    /* aufplustern und davonschweben (Wolken) */
+    puff: (inner) => inner.animate([
+      { transform: "translate(0,0) scale(1)" },
+      { transform: "translate(70px,-20px) scale(1.3)", offset: 0.5 },
+      { transform: "translate(0,0) scale(1)" },
+    ], { duration: 1600, easing: "ease-in-out" }),
+    /* wie eine Sternschnuppe flitzen (Sterne) */
+    zip: (inner) => inner.animate([
+      { transform: "translate(0,0) scale(1)" },
+      { transform: "translate(140px,-70px) scale(1.5)", offset: 0.4 },
+      { transform: "translate(70px,30px) scale(1.2)", offset: 0.7 },
+      { transform: "translate(0,0) scale(1)" },
+    ], { duration: 1100, easing: "ease-in-out" }),
+    /* sanft aufleuchten und größer werden (Mond) */
+    pulse: (inner) => inner.animate([
+      { transform: "scale(1)", filter: "brightness(1)" },
+      { transform: "scale(1.3)", filter: "brightness(1.35)", offset: 0.4 },
+      { transform: "scale(1)", filter: "brightness(1)" },
+    ], { duration: 1300, easing: "ease-in-out" }),
+    /* fröhlicher Wackeltanz (Schneemann) */
+    dance: (inner) => inner.animate([
+      { transform: "rotate(0deg) translateY(0)" },
+      { transform: "rotate(-13deg) translateY(-24px)", offset: 0.2 },
+      { transform: "rotate(12deg) translateY(0)", offset: 0.4 },
+      { transform: "rotate(-10deg) translateY(-20px)", offset: 0.6 },
+      { transform: "rotate(9deg) translateY(0)", offset: 0.8 },
+      { transform: "rotate(0deg) translateY(0)" },
+    ], { duration: 1600, easing: "ease-in-out" }),
+    /* kräftig schütteln (Bäume, Beerenbusch) */
+    shiver: (inner) => inner.animate([
+      { transform: "rotate(0deg)" }, { transform: "rotate(-7deg)" },
+      { transform: "rotate(7deg)" }, { transform: "rotate(-6deg)" },
+      { transform: "rotate(5deg)" }, { transform: "rotate(0deg)" },
+    ], { duration: 800, easing: "ease-in-out" }),
+    /* verstecken und wieder hervorschauen (Schnecke) */
+    peek: (inner) => inner.animate([
+      { transform: "scale(1,1) translateY(0)" },
+      { transform: "scale(0.65,0.7) translateY(10px)", offset: 0.25 },
+      { transform: "scale(0.65,0.7) translateY(10px)", offset: 0.6 },
+      { transform: "scale(1.15,1.1) translateY(-6px)", offset: 0.85 },
+      { transform: "scale(1,1) translateY(0)" },
+    ], { duration: 2000, easing: "ease-in-out" }),
+    /* eine Flugrunde drehen (Marienkäfer) */
+    loop: (inner) => inner.animate([
+      { transform: "translate(0,0) rotate(0deg)" },
+      { transform: "translate(90px,-110px) rotate(30deg)", offset: 0.3 },
+      { transform: "translate(180px,-30px) rotate(-20deg)", offset: 0.55 },
+      { transform: "translate(80px,30px) rotate(15deg)", offset: 0.8 },
+      { transform: "translate(0,0) rotate(0deg)" },
+    ], { duration: 2200, easing: "ease-in-out" }),
+    /* seitwärts flitzen wie ein echter Krebs */
+    scuttle: (inner) => inner.animate([
+      { transform: "translateX(0)" },
+      { transform: "translateX(-130px)", offset: 0.3 },
+      { transform: "translateX(-130px)", offset: 0.45 },
+      { transform: "translateX(90px)", offset: 0.75 },
+      { transform: "translateX(0)" },
+    ], { duration: 1700, easing: "ease-in-out" }),
+    /* freudig aufblühen (Blumen) */
+    bloom: (inner) => inner.animate([
+      { transform: "scale(1) rotate(0deg)" },
+      { transform: "scale(1.4) rotate(-12deg)", offset: 0.35 },
+      { transform: "scale(1.25) rotate(10deg)", offset: 0.65 },
+      { transform: "scale(1) rotate(0deg)" },
+    ], { duration: 1100, easing: "ease-in-out" }),
+    /* kurz auffliegen und wieder landen (Wintervögel) */
+    flutter: (inner) => inner.animate([
+      { transform: "translate(0,0) rotate(0deg)" },
+      { transform: "translate(-30px,-90px) rotate(-15deg)", offset: 0.35 },
+      { transform: "translate(30px,-70px) rotate(15deg)", offset: 0.65 },
+      { transform: "translate(0,0) rotate(0deg)" },
+    ], { duration: 1500, easing: "ease-in-out" }),
+    /* kopfüber abtauchen (Entenmama) */
+    dip: (inner) => inner.animate([
+      { transform: "rotate(0deg) translateY(0)" },
+      { transform: "rotate(38deg) translateY(14px)", offset: 0.35 },
+      { transform: "rotate(38deg) translateY(14px)", offset: 0.6 },
+      { transform: "rotate(0deg) translateY(0)" },
+    ], { duration: 1600, easing: "ease-in-out" }),
+    /* Katzensprung */
+    pounce: (inner) => inner.animate([
+      { transform: "translate(0,0) rotate(0deg) scale(1,1)" },
+      { transform: "translate(0,6px) scale(1.1,0.85)", offset: 0.15 },
+      { transform: "translate(-60px,-100px) rotate(-12deg) scale(1,1)", offset: 0.45 },
+      { transform: "translate(-90px,0) scale(1.08,0.9)", offset: 0.65 },
+      { transform: "translate(-40px,-40px)", offset: 0.82 },
+      { transform: "translate(0,0) rotate(0deg) scale(1,1)" },
+    ], { duration: 1900, easing: "ease-in-out" }),
+  };
+
   function wirePokes(svg) {
     svg.querySelectorAll(".pokeable").forEach((el) => {
       el.addEventListener("pointerdown", (e) => {
         const inner = el.querySelector(":scope > .inner") || el;
-        inner.classList.remove("wiggling");
-        void inner.getBBox && inner.getBoundingClientRect();
-        inner.classList.add("wiggling");
-        setTimeout(() => inner.classList.remove("wiggling"), 600);
+        const action = el.dataset.action;
+        if (action && POKE_ACTIONS[action]) {
+          inner.style.transformBox = "fill-box";
+          inner.style.transformOrigin = "center";
+          POKE_ACTIONS[action](inner, el);
+        } else {
+          inner.classList.remove("wiggling");
+          void inner.getBBox && inner.getBoundingClientRect();
+          inner.classList.add("wiggling");
+          setTimeout(() => inner.classList.remove("wiggling"), 600);
+        }
         const snd = el.dataset.sound;
         if (snd) AudioKit.play(snd);
         /* kleines Funkeln am Finger – jede Berührung gibt Rückmeldung */
@@ -496,10 +627,18 @@
     }, 16000);
   }
 
+  /* Ton bei jeder Gelegenheit aufwecken. Wichtig: iPhone und iPad
+     schalten Audio erst bei einem VOLLSTÄNDIGEN Tipp frei (click/
+     touchend) – Finger-runter (pointerdown) reicht dort nicht. */
   window.addEventListener("pointerdown", () => {
     AudioKit.resume();
     resetIdle();
   }, true);
+  ["pointerup", "touchend", "click"].forEach((t) =>
+    window.addEventListener(t, () => AudioKit.resume(), true));
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) AudioKit.resume();
+  });
 
   /* ---------- Startbildschirm ---------- */
 
@@ -552,18 +691,36 @@
       </g>
     </svg>`;
 
-    ov.querySelector("#playBtn").addEventListener("pointerdown", () => {
+    /* "click" statt "pointerdown": Nur ein vollständiger Tipp zählt auf
+       iPhone/iPad als Freischalt-Geste für Ton und Sprachausgabe. */
+    let startDone = false;
+    const startGame = () => {
+      if (startDone) return;
+      startDone = true;
       AudioKit.init();
       AudioKit.setMuted(save.muted === true);
       AudioKit.setMusicOn(save.musicOff !== true);
       AudioKit.play("hello");
+      /* Sprachausgabe innerhalb der echten Nutzer-Geste entsperren,
+         damit die späteren automatischen Vorlese-Aufrufe funktionieren. */
+      if (window.speechSynthesis) {
+        try {
+          const primer = new SpeechSynthesisUtterance(" ");
+          primer.volume = 0;
+          primer.lang = "de-DE";
+          speechSynthesis.speak(primer);
+        } catch (e) { /* nicht schlimm */ }
+      }
       started = true;
       ov.style.transition = "opacity 0.7s ease";
       ov.style.opacity = "0";
       setTimeout(() => { ov.remove(); }, 700);
       topbar.style.display = "";
       showScene(0);
-    });
+    };
+    const btn = ov.querySelector("#playBtn");
+    btn.addEventListener("click", startGame);
+    btn.addEventListener("touchend", startGame);
   }
 
   /* ---------- Los geht's ---------- */

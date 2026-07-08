@@ -119,7 +119,7 @@ function sun(x, y) {
     rays += `<line x1="${Math.cos(a) * 62}" y1="${Math.sin(a) * 62}" x2="${Math.cos(a) * 86}" y2="${Math.sin(a) * 86}"
       stroke="#ffd23e" stroke-width="11" stroke-linecap="round"/>`;
   }
-  return wrap(x, y, 1, `class="pokeable" data-sound="chime"`, `
+  return wrap(x, y, 1, `class="pokeable" data-sound="chime" data-action="spin"`, `
     ${rays}
     <circle r="55" fill="#ffdf5e" stroke="#f5b73e" stroke-width="5"/>
     ${face(1.5)}
@@ -127,7 +127,7 @@ function sun(x, y) {
 }
 
 function cloud(x, y, s) {
-  return wrap(x, y, s, `class="pokeable" data-sound="whoosh"`, `
+  return wrap(x, y, s, `class="pokeable" data-sound="whoosh" data-action="puff"`, `
     <ellipse cx="0" cy="0" rx="58" ry="30" fill="#ffffff"/>
     <ellipse cx="-38" cy="10" rx="34" ry="20" fill="#ffffff"/>
     <ellipse cx="40" cy="9" rx="36" ry="22" fill="#ffffff"/>
@@ -167,7 +167,7 @@ function grassTuft(x, y, s = 1, col = "#7cbf55") {
 }
 
 function butterfly(x, y, s, color, cls = "") {
-  return wrap(x, y, s, `class="pokeable ${cls}" data-sound="pop"`, `
+  return wrap(x, y, s, `class="pokeable ${cls}" data-sound="pop" data-action="loop"`, `
     ${hit(46)}
     <g class="flapping">
       <ellipse cx="-16" cy="-8" rx="16" ry="13" fill="${color}"/>
@@ -451,7 +451,7 @@ function squirrel(s = 1) {
 }
 
 function mushroom(x, y, s = 1) {
-  return wrap(x, y, s, `class="pokeable" data-sound="boing"`, `
+  return wrap(x, y, s, `class="pokeable" data-sound="boing" data-action="bigBounce"`, `
     ${hit(42, 0, -16)}
     <path d="M -8 0 Q -10 -14 0 -14 Q 10 -14 8 0 Z" fill="#f5ecd7"/>
     <path d="M -22 -12 Q -22 -34 0 -34 Q 22 -34 22 -12 Q 0 -6 -22 -12 Z" fill="#e84c3d" stroke="#b93425" stroke-width="2.5"/>
@@ -461,7 +461,7 @@ function mushroom(x, y, s = 1) {
 }
 
 function berryBush(x, y, s = 1) {
-  return wrap(x, y, s, `class="pokeable" data-sound="pop"`, `
+  return wrap(x, y, s, `class="pokeable" data-sound="pop" data-action="shiver"`, `
     <circle cx="-24" cy="0" r="26" fill="#5faf51"/>
     <circle cx="20" cy="-4" r="30" fill="#6cbb58"/>
     <circle cx="-2" cy="-20" r="26" fill="#7cc763"/>
@@ -565,7 +565,7 @@ function fireflyBug(s = 1, lit = false) {
 }
 
 function star(x, y, s, cls = "twinkling") {
-  return `<g transform="translate(${x},${y}) scale(${s})" class="pokeable" data-sound="twinkle">
+  return `<g transform="translate(${x},${y}) scale(${s})" class="pokeable" data-sound="twinkle" data-action="zip">
     <g class="inner ${cls}">
       ${hit(30)}
       <path d="M 0 -12 L 3.5 -3.5 L 12 -3 L 5.5 3 L 7.5 12 L 0 7 L -7.5 12 L -5.5 3 L -12 -3 L -3.5 -3.5 Z" fill="#fff6c8"/>
@@ -622,7 +622,7 @@ function autumnTree(s = 1) {
 }
 
 function pumpkin(x, y, s = 1) {
-  return wrap(x, y, s, `class="pokeable" data-sound="boing"`, `
+  return wrap(x, y, s, `class="pokeable" data-sound="boing" data-action="roll"`, `
     ${hit(46, 0, -14)}
     <ellipse cx="0" cy="-12" rx="30" ry="24" fill="#e8963e" stroke="#c4713a" stroke-width="3"/>
     <ellipse cx="-14" cy="-12" rx="12" ry="22" fill="none" stroke="#c4713a" stroke-width="2.5"/>
@@ -853,7 +853,7 @@ function palm(s = 1) {
 }
 
 function beachBall(x, y, s = 1) {
-  return wrap(x, y, s, `class="pokeable" data-sound="boing"`, `
+  return wrap(x, y, s, `class="pokeable" data-sound="boing" data-action="flyArc"`, `
     ${hit(44)}
     <circle r="24" fill="#fff"/>
     <path d="M 0 -24 A 24 24 0 0 1 20.8 12 L 0 0 Z" fill="#e0634e"/>
@@ -968,18 +968,18 @@ const sceneGarden = {
     ${grassTuft(360, 480, 1)}
 
     ${wrap(160, 470, 1, `id="lia" class="pokeable"`, lia(1))}
-    ${wrap(735, 470, 1, `id="cat" class="pokeable" data-sound="meow"`, cat(1))}
+    ${wrap(735, 470, 1, `id="cat" class="pokeable" data-sound="meow" data-action="pounce"`, cat(1))}
 
-    ${wrap(300, 640, 1, `class="pokeable" data-sound="pop"`, flower("#ff8fab"), "swaying")}
-    ${wrap(390, 655, 0.85, `class="pokeable" data-sound="pop"`, flower("#b892e0", "#fff3b0"), "swaying")}
-    ${wrap(240, 660, 0.7, `class="pokeable" data-sound="pop"`, tulip("#f5a340", 1.3))}
-    ${wrap(460, 648, 0.75, `class="pokeable" data-sound="pop"`, tulip("#e84c3d", 1.3))}
+    ${wrap(300, 640, 1, `class="pokeable" data-sound="pop" data-action="bloom"`, flower("#ff8fab"), "swaying")}
+    ${wrap(390, 655, 0.85, `class="pokeable" data-sound="pop" data-action="bloom"`, flower("#b892e0", "#fff3b0"), "swaying")}
+    ${wrap(240, 660, 0.7, `class="pokeable" data-sound="pop" data-action="bloom"`, tulip("#f5a340", 1.3))}
+    ${wrap(460, 648, 0.75, `class="pokeable" data-sound="pop" data-action="bloom"`, tulip("#e84c3d", 1.3))}
 
-    ${wrap(430, 500, 1, `id="ladybug" class="pokeable" data-sound="chirp"`, `
+    ${wrap(430, 500, 1, `id="ladybug" class="pokeable" data-sound="chirp" data-action="loop"`, `
       <path d="M -30 14 Q 0 2 34 12 Q 20 26 -6 24 Z" fill="#74b95a"/>
       <g transform="translate(0,-2)">${ladybug(1)}</g>
     `)}
-    ${wrap(700, 665, 0.9, `id="snail" class="pokeable" data-sound="boing"`, snail(1))}
+    ${wrap(700, 665, 0.9, `id="snail" class="pokeable" data-sound="boing" data-action="peek"`, snail(1))}
 
     <g id="mound" transform="translate(560,640)">
       <ellipse rx="46" ry="16" fill="#6e4526"/>
@@ -990,7 +990,7 @@ const sceneGarden = {
       ${t1 ? `<g transform="translate(0,-128)">${flower("#ffb3c8", "#ffd23e", 1.15)}</g>` : ""}
     </g>
     ${t1 ? butterfly(660, 470, 1, "#b892e0", "") : ""}
-    ${t2 ? wrap(524, 540, 0.8, `class="pokeable" data-sound="buzz"`, bee(1), "floaty") : ""}
+    ${t2 ? wrap(524, 540, 0.8, `class="pokeable" data-sound="buzz" data-action="loop"`, bee(1), "floaty") : ""}
 
     ${!t2 ? wrap(760, 300, 1, `id="bee" class="grabbable"`, bee(1), "floaty") : ""}
     ${wrap(870, 600, 1, `id="can" class="grabbable"`, wateringCan(1))}
@@ -1104,9 +1104,9 @@ const scenePond = {
     ${lilypad(760, 620, 0.85)}
     <g transform="translate(640,505)">${lilypad(0, 32, 1.1)}</g>
 
-    ${wrap(640, 505, 1, `id="frog" class="pokeable" data-sound="croak"`, frog(1), t3 ? "" : "")}
+    ${wrap(640, 505, 1, `id="frog" class="pokeable" data-sound="croak" data-action="bigBounce"`, frog(1), t3 ? "" : "")}
 
-    ${wrap(450, 555, 1, `id="mama" class="pokeable" data-sound="quack"`, duck(1.1), "bobbing")}
+    ${wrap(450, 555, 1, `id="mama" class="pokeable" data-sound="quack" data-action="dip"`, duck(1.1), "bobbing")}
     ${t4
       ? wrap(535, 570, 1, `class="pokeable" data-sound="peep"`, duck(0.6, "#ffdf5e", "#f5a340"), "bobbing")
       : wrap(150, 620, 1, `id="duckling" class="grabbable"`, duck(0.6, "#ffdf5e", "#f5a340"), "bobbing")}
@@ -1220,11 +1220,11 @@ const sceneTree = {
     <path d="M 0 400 Q 300 340 600 400 Q 830 445 1000 390 L 1000 700 L 0 700 Z" fill="#a8de7c"/>
     <path d="M 0 520 Q 400 470 1000 530 L 1000 700 L 0 700 Z" fill="#8ccb60"/>
 
-    ${wrap(310, 440, 1, `id="treetop" class="pokeable" data-sound="whoosh"`, appleTree(1.15))}
+    ${wrap(310, 440, 1, `id="treetop" class="pokeable" data-sound="whoosh" data-action="shiver"`, appleTree(1.15))}
 
     <g transform="translate(430,388)">${wrap(0, 0, 1, `id="nest" class="pokeable" data-sound="peep"`, nestChick(1))}</g>
 
-    ${wrap(316, 590, 1, `id="squirrel" class="pokeable" data-sound="chirp"`, squirrel(1))}
+    ${wrap(316, 590, 1, `id="squirrel" class="pokeable" data-sound="chirp" data-action="bigBounce"`, squirrel(1))}
 
     ${mushroom(150, 660, 1.1)}
     ${mushroom(197, 668, 0.75)}
@@ -1232,9 +1232,9 @@ const sceneTree = {
     ${grassTuft(560, 560, 1.2)}
     ${grassTuft(940, 600, 1.4)}
     ${grassTuft(700, 680, 1.2)}
-    ${wrap(610, 480, 0.8, `class="pokeable" data-sound="pop"`, flower("#f5a340", "#fff3b0"), "swaying")}
+    ${wrap(610, 480, 0.8, `class="pokeable" data-sound="pop" data-action="bloom"`, flower("#f5a340", "#fff3b0"), "swaying")}
 
-    ${wrap(830, 610, 1, `id="hedgehog" class="pokeable" data-sound="snuffle"`, hedgehog(1))}
+    ${wrap(830, 610, 1, `id="hedgehog" class="pokeable" data-sound="snuffle" data-action="bigBounce"`, hedgehog(1))}
 
     ${!t5 ? wrap(500, 640, 1, `id="apple1" class="grabbable"`, apple(1)) : ""}
     ${wrap(575, 660, 0.9, `id="apple2" class="grabbable"`, apple(1))}
@@ -1328,10 +1328,10 @@ const sceneAutumn = {
     <path d="M 0 410 Q 280 350 560 410 Q 810 455 1000 400 L 1000 700 L 0 700 Z" fill="#d9b25e"/>
     <path d="M 0 520 Q 400 470 1000 530 L 1000 700 L 0 700 Z" fill="#c49a4a"/>
 
-    ${wrap(170, 460, 1.25, `id="atree1" class="pokeable" data-sound="whoosh"`, autumnTree(1))}
-    ${wrap(880, 500, 0.9, `class="pokeable" data-sound="whoosh"`, autumnTree(1))}
+    ${wrap(170, 460, 1.25, `id="atree1" class="pokeable" data-sound="whoosh" data-action="shiver"`, autumnTree(1))}
+    ${wrap(880, 500, 0.9, `class="pokeable" data-sound="whoosh" data-action="shiver"`, autumnTree(1))}
 
-    ${wrap(560, 590, 1, `class="pokeable" data-sound="whoosh"`, `
+    ${wrap(560, 590, 1, `class="pokeable" data-sound="whoosh" data-action="shiver"`, `
       ${hit(60, 0, -6)}
       <ellipse cx="0" cy="4" rx="52" ry="18" fill="#d9772e"/>
       <ellipse cx="-20" cy="-8" rx="28" ry="14" fill="#e8963e"/>
@@ -1346,11 +1346,11 @@ const sceneAutumn = {
     ${grassTuft(700, 680, 1.3, "#a8823c")}
     ${grassTuft(960, 590, 1.1, "#a8823c")}
 
-    ${wrap(250, 620, 1.35, `id="squirrel2" class="pokeable" data-sound="chirp"`, squirrel(1))}
+    ${wrap(250, 620, 1.35, `id="squirrel2" class="pokeable" data-sound="chirp" data-action="bigBounce"`, squirrel(1))}
     ${t8 ? `<g transform="translate(300,635)">${acorn(0.85)}</g>` : ""}
     ${!t8 ? wrap(490, 660, 1, `id="acorn" class="grabbable"`, acorn(1), "bobbing") : ""}
 
-    ${wrap(790, 620, 1.05, `id="hedgehog2" class="pokeable" data-sound="snuffle"`, hedgehog(1))}
+    ${wrap(790, 620, 1.05, `id="hedgehog2" class="pokeable" data-sound="snuffle" data-action="bigBounce"`, hedgehog(1))}
     ${t9 ? `<g transform="translate(796,596)">
         ${leaf("#e8963e", 1.1, -30)}
         <g transform="translate(26,8)">${leaf("#d9772e", 1, 35)}</g>
@@ -1421,7 +1421,7 @@ const sceneWinter = {
       </linearGradient>
     </defs>
     <rect width="1000" height="700" fill="url(#wSky)"/>
-    ${wrap(880, 110, 1, `class="pokeable" data-sound="chime"`, `
+    ${wrap(880, 110, 1, `class="pokeable" data-sound="chime" data-action="pulse"`, `
       <circle r="48" fill="#fff8e0" stroke="#f0e4b8" stroke-width="4" opacity="0.9"/>
       ${face(1.3)}
     `)}
@@ -1430,20 +1430,20 @@ const sceneWinter = {
     <path d="M 0 420 Q 280 360 560 420 Q 810 465 1000 410 L 1000 700 L 0 700 Z" fill="#eef5fb"/>
     <path d="M 0 530 Q 400 480 1000 540 L 1000 700 L 0 700 Z" fill="#ffffff"/>
 
-    ${wrap(90, 640, 1.15, `class="pokeable" data-sound="whoosh"`, firTree(1))}
-    ${wrap(950, 620, 0.95, `class="pokeable" data-sound="whoosh"`, firTree(1))}
-    ${wrap(560, 560, 0.6, `class="pokeable" data-sound="whoosh"`, firTree(1))}
+    ${wrap(90, 640, 1.15, `class="pokeable" data-sound="whoosh" data-action="shiver"`, firTree(1))}
+    ${wrap(950, 620, 0.95, `class="pokeable" data-sound="whoosh" data-action="shiver"`, firTree(1))}
+    ${wrap(560, 560, 0.6, `class="pokeable" data-sound="whoosh" data-action="shiver"`, firTree(1))}
 
-    ${wrap(300, 655, 1, `id="snowmanFig" class="pokeable" data-sound="boing"`, snowman(1, t11))}
+    ${wrap(300, 655, 1, `id="snowmanFig" class="pokeable" data-sound="boing" data-action="dance"`, snowman(1, t11))}
     <g id="snowmanTarget" transform="translate(300,510)"><circle r="46" fill="transparent"/></g>
     ${!t11 ? wrap(470, 668, 1, `id="carrot" class="grabbable"`, carrot(1), "bobbing") : ""}
 
     ${wrap(760, 655, 1, `id="feeder"`, birdFeeder(1, t10))}
     ${t10
-      ? `${wrap(714, 572, 0.8, `class="pokeable" data-sound="chirp"`, winterBird(1), "bobbing")}
-         ${wrap(806, 572, 0.8, `class="pokeable" data-sound="chirp"`, winterBird(1, "#f0b04a"), "bobbing")}`
-      : `${wrap(650, 665, 0.9, `id="wbird1" class="pokeable" data-sound="chirp"`, winterBird(1), "bobbing")}
-         ${wrap(870, 668, 0.9, `id="wbird2" class="pokeable" data-sound="chirp"`, winterBird(1, "#f0b04a"), "bobbing")}`}
+      ? `${wrap(714, 572, 0.8, `class="pokeable" data-sound="chirp" data-action="flutter"`, winterBird(1), "bobbing")}
+         ${wrap(806, 572, 0.8, `class="pokeable" data-sound="chirp" data-action="flutter"`, winterBird(1, "#f0b04a"), "bobbing")}`
+      : `${wrap(650, 665, 0.9, `id="wbird1" class="pokeable" data-sound="chirp" data-action="flutter"`, winterBird(1), "bobbing")}
+         ${wrap(870, 668, 0.9, `id="wbird2" class="pokeable" data-sound="chirp" data-action="flutter"`, winterBird(1, "#f0b04a"), "bobbing")}`}
     ${!t10 ? wrap(560, 660, 1, `id="seeds" class="grabbable"`, seedBag(1)) : ""}
 
     ${wrap(170, 640, 1, `id="bunny" class="pokeable" data-sound="hop"`, bunny(1))}
@@ -1541,14 +1541,14 @@ const sceneBeach = {
     <path d="M 175 606 L 185 664 M 205 603 L 215 661 M 235 601 L 245 659 M 265 600 L 275 658 M 292 600 L 300 656" stroke="#fff" stroke-width="7" transform="rotate(-3 235 633)" opacity="0.7"/>
     ${wrap(235, 512, 0.95, `id="lia" class="pokeable"`, lia(1))}
 
-    ${wrap(840, 650, 1, `class="pokeable" data-sound="thud"`, sandcastle(1))}
+    ${wrap(840, 650, 1, `class="pokeable" data-sound="thud" data-action="bigBounce"`, sandcastle(1))}
     ${beachBall(645, 655, 0.95)}
 
     ${t13
       ? `<g transform="translate(540,480)"><g class="inner bobbing">${starfishFig(0.95)}</g></g>`
       : wrap(340, 650, 1, `id="starfish" class="grabbable"`, starfishFig(1), "bobbing")}
 
-    ${wrap(740, 615, 1, `id="crab" class="pokeable" data-sound="pop"`, crabFig(1, t12))}
+    ${wrap(740, 615, 1, `id="crab" class="pokeable" data-sound="pop" data-action="scuttle"`, crabFig(1, t12))}
     ${!t12 ? wrap(470, 660, 1, `id="shell" class="grabbable"`, spiralShell(1), "bobbing") : ""}
 
     ${wrap(660, 450, 0.9, `id="seafish" class="pokeable" data-sound="splash"`, fish(1, "#79c850"), "bobbing")}
@@ -1627,7 +1627,7 @@ const sceneNight = {
     <rect width="1000" height="700" fill="url(#nSky)"/>
     ${star(150, 100, 1.2)} ${star(320, 60, 0.9)} ${star(500, 130, 1.1)} ${star(680, 70, 0.8)}
     ${star(940, 200, 1)} ${star(80, 240, 0.9)} ${star(400, 220, 0.7)} ${star(600, 180, 1)}
-    ${wrap(850, 130, 1, `id="moon" class="pokeable" data-sound="chime"`, `
+    ${wrap(850, 130, 1, `id="moon" class="pokeable" data-sound="chime" data-action="pulse"`, `
       <circle r="58" fill="#fff3b0" stroke="#e8d67c" stroke-width="4"/>
       <circle cx="-18" cy="-14" r="9" fill="#efe0a0"/>
       <circle cx="14" cy="18" r="7" fill="#efe0a0"/>
@@ -1643,14 +1643,14 @@ const sceneNight = {
     <path d="M 130 700 L 138 400 Q 140 360 160 350 L 168 355 Q 162 380 164 420 L 178 700 Z" fill="#173021"/>
     <path d="M 158 430 Q 240 388 350 375" stroke="#173021" stroke-width="16" fill="none" stroke-linecap="round"/>
 
-    ${wrap(312, 322, 1, `id="owl" class="pokeable" data-sound="hoot"`, owl(1))}
+    ${wrap(312, 322, 1, `id="owl" class="pokeable" data-sound="hoot" data-action="flutter"`, owl(1))}
 
     ${grassTuft(500, 640, 1.3, "#3a6647")}
     ${grassTuft(700, 600, 1.1, "#3a6647")}
     ${grassTuft(880, 660, 1.4, "#3a6647")}
     ${grassTuft(100, 620, 1.2, "#3a6647")}
     ${mushroom(620, 640, 0.9)}
-    ${wrap(430, 620, 0.7, `class="pokeable" data-sound="pop"`, tulip("#b892e0", 1.3))}
+    ${wrap(430, 620, 0.7, `class="pokeable" data-sound="pop" data-action="bloom"`, tulip("#b892e0", 1.3))}
     ${ffs}
     `;
   },

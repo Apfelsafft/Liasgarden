@@ -30,8 +30,15 @@ const AudioKit = (() => {
       dv.setUint32(24, 8000, true); dv.setUint32(28, 16000, true);
       dv.setUint16(32, 2, true); dv.setUint16(34, 16, true);
       w(36, "data"); dv.setUint32(40, n * 2, true);
+      /* Als data-URI einbetten – blob-URLs sind in manchen strengen
+         Umgebungen (Content Security Policy) nicht erlaubt. */
+      const bytes = new Uint8Array(buf);
+      let bin = "";
+      for (let i = 0; i < bytes.length; i += 4096) {
+        bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 4096));
+      }
       unlockEl = document.createElement("audio");
-      unlockEl.src = URL.createObjectURL(new Blob([buf], { type: "audio/wav" }));
+      unlockEl.src = "data:audio/wav;base64," + btoa(bin);
       unlockEl.loop = true;
       unlockEl.setAttribute("playsinline", "");
       unlockEl.play().catch(() => { /* dann eben nicht */ });
