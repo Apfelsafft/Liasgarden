@@ -17,6 +17,48 @@ function hit(r = 44, x = 0, y = 0) {
   return `<circle cx="${x}" cy="${y}" r="${r}" fill="transparent"/>`;
 }
 
+/* ---------- Aufgaben: erst die Einladung, dann das Lob ----------
+   Die Karte VOR der Aufgabe erklärt den Natur-Fakt und lädt zum
+   Handeln ein; die Karte danach feiert den Erfolg. */
+
+const TASK_INFO = {
+  t1: {
+    icon: "flower",
+    prompt: "Pflanzen brauchen Wasser, um zu wachsen. Gießt du den kleinen Samen mit der Gießkanne?",
+    praise: "Super gemacht! Schau nur, wie groß die Blume geworden ist!",
+  },
+  t2: {
+    icon: "bee",
+    prompt: "Bienen lieben Blumen und machen aus Nektar Honig. Bringst du die Biene zur Blume?",
+    praise: "Toll! Die Biene sammelt jetzt süßen Nektar.",
+  },
+  t3: {
+    icon: "frog",
+    prompt: "Frösche fressen am liebsten Fliegen. Bringst du dem Frosch die Fliegen?",
+    praise: "Mmmh! Das hat dem Frosch richtig gut geschmeckt.",
+  },
+  t4: {
+    icon: "duck",
+    prompt: "Entenküken schwimmen immer dicht bei ihrer Mama. Bringst du das kleine Küken zu ihr?",
+    praise: "Wie schön! Jetzt ist das Küken wieder bei seiner Mama.",
+  },
+  t5: {
+    icon: "hedgehog",
+    prompt: "Igel lieben Äpfel! Bringst du dem Igel einen Apfel?",
+    praise: "Super gemacht! Der Igel freut sich riesig.",
+  },
+  t6: {
+    icon: "chick",
+    prompt: "Vogelkinder haben großen Hunger und fressen gerne Würmer. Bringst du dem Küken den Wurm?",
+    praise: "Piep, piep! Jetzt ist das Vogelkind satt und glücklich.",
+  },
+  t7: {
+    icon: "firefly",
+    prompt: "Glühwürmchen leuchten in der Nacht. Tippst du alle Glühwürmchen an, damit sie hell leuchten?",
+    praise: "Wunderschön! Alles leuchtet und die Eule ist aufgewacht.",
+  },
+};
+
 function face(s = 1, mood = "happy") {
   const mouth = mood === "happy"
     ? `<path d="M -6 6 Q 0 12 6 6" fill="none" stroke="#3a2c20" stroke-width="2.2" stroke-linecap="round"/>`
@@ -69,6 +111,7 @@ function flower(color, center = "#ffd23e", s = 1, withFace = true) {
     petals += `<ellipse rx="14" ry="27" fill="${color}" transform="rotate(${i * (360 / 7)}) translate(0,-27)"/>`;
   }
   return `<g transform="scale(${s})">
+    ${hit(62, 0, 20)}
     <path d="M 0 0 Q -6 60 0 108" fill="none" stroke="#5f9e45" stroke-width="8" stroke-linecap="round"/>
     <path d="M 0 60 Q -30 52 -36 30 Q -10 34 0 52 Z" fill="#74b95a"/>
     <path d="M 2 80 Q 30 74 38 52 Q 12 56 2 74 Z" fill="#74b95a"/>
@@ -79,6 +122,7 @@ function flower(color, center = "#ffd23e", s = 1, withFace = true) {
 
 function tulip(color, s = 1) {
   return `<g transform="scale(${s})">
+    ${hit(48, 0, 14)}
     <path d="M 0 0 Q 4 40 0 76" fill="none" stroke="#5f9e45" stroke-width="7" stroke-linecap="round"/>
     <path d="M 0 42 Q -24 38 -28 20 Q -8 24 0 38 Z" fill="#74b95a"/>
     <path d="M -20 -18 Q -20 8 0 10 Q 20 8 20 -18 Q 12 -8 6 -20 Q 0 -6 -6 -20 Q -12 -8 -20 -18 Z" fill="${color}"/>
@@ -94,6 +138,7 @@ function grassTuft(x, y, s = 1, col = "#7cbf55") {
 
 function butterfly(x, y, s, color, cls = "") {
   return wrap(x, y, s, `class="pokeable ${cls}" data-sound="pop"`, `
+    ${hit(46)}
     <g class="flapping">
       <ellipse cx="-16" cy="-8" rx="16" ry="13" fill="${color}"/>
       <ellipse cx="-14" cy="8" rx="12" ry="10" fill="${color}" opacity="0.8"/>
@@ -128,6 +173,7 @@ function bee(s = 1) {
 
 function ladybug(s = 1) {
   return `<g transform="scale(${s})">
+    ${hit(44)}
     <circle cx="14" cy="-3" r="8" fill="#4a3826"/>
     <ellipse rx="17" ry="13" fill="#e84c3d" stroke="#b93425" stroke-width="2"/>
     <line x1="2" y1="-13" x2="2" y2="13" stroke="#4a3826" stroke-width="2.5"/>
@@ -141,6 +187,7 @@ function ladybug(s = 1) {
 
 function snail(s = 1) {
   return `<g transform="scale(${s})">
+    ${hit(52, 0, -4)}
     <path d="M -28 12 Q -34 0 -26 -6 Q -20 -10 -16 -4 L -14 12 Q 10 18 34 12 Q 38 8 34 4 Q 20 8 0 4 Z" fill="#e8b04b"/>
     <circle cx="6" cy="-8" r="20" fill="#c77f3f" stroke="#a5652c" stroke-width="3"/>
     <path d="M 6 -8 m 0 -13 a 13 13 0 1 1 -13 13 a 9 9 0 1 0 9 -9 a 5 5 0 1 0 -5 5" fill="none" stroke="#a5652c" stroke-width="3" stroke-linecap="round"/>
@@ -153,6 +200,7 @@ function snail(s = 1) {
 
 function lia(s = 1) {
   return `<g transform="scale(${s})">
+    ${hit(75, 0, 40)}
     <ellipse cx="0" cy="118" rx="34" ry="8" fill="#000" opacity="0.1"/>
     <path d="M -16 70 L -13 112 L -5 112 L -6 74 M 16 70 L 13 112 L 5 112 L 6 74" fill="#e8a87c"/>
     <ellipse cx="-9" cy="114" rx="9" ry="5" fill="#e0634e"/>
@@ -172,6 +220,7 @@ function lia(s = 1) {
 
 function frog(s = 1) {
   return `<g transform="scale(${s})">
+    ${hit(60, 0, 6)}
     <ellipse cx="0" cy="14" rx="34" ry="26" fill="#79c850" stroke="#569436" stroke-width="3"/>
     <ellipse cx="0" cy="22" rx="22" ry="14" fill="#c8ecae"/>
     <circle class="frogThroat" cx="0" cy="26" r="0" fill="#e3f7d2" opacity="0.9"/>
@@ -204,6 +253,7 @@ function duck(s = 1, col = "#fff", beak = "#f5a340") {
 
 function fish(s = 1, col = "#f5a340") {
   return `<g transform="scale(${s})">
+    ${hit(46)}
     <ellipse rx="22" ry="13" fill="${col}" stroke="#d8862c" stroke-width="2.5"/>
     <path d="M 18 0 L 34 -12 L 32 0 L 34 12 Z" fill="${col}" stroke="#d8862c" stroke-width="2"/>
     <path d="M -2 -12 Q 4 -22 10 -14 Z" fill="${col}" stroke="#d8862c" stroke-width="2"/>
@@ -214,6 +264,7 @@ function fish(s = 1, col = "#f5a340") {
 
 function dragonfly(s = 1) {
   return `<g transform="scale(${s})">
+    ${hit(48)}
     <g class="flapping" style="animation-duration:0.12s">
       <ellipse cx="-14" cy="-10" rx="20" ry="7" fill="#bfe8f7" opacity="0.85" transform="rotate(-18)"/>
       <ellipse cx="14" cy="-10" rx="20" ry="7" fill="#bfe8f7" opacity="0.85" transform="rotate(18)"/>
@@ -311,6 +362,7 @@ function hedgehog(s = 1) {
     spikes += `<path d="M ${x1} ${y1} L ${x2} ${y2}" stroke="#7a5230" stroke-width="9" stroke-linecap="round"/>`;
   }
   return `<g transform="scale(${s})">
+    ${hit(62, -4, 2)}
     ${spikes}
     <ellipse cx="0" cy="6" rx="36" ry="28" fill="#96683c"/>
     <ellipse cx="-24" cy="12" rx="22" ry="18" fill="#e8c49a"/>
@@ -354,6 +406,7 @@ function worm(s = 1) {
 
 function squirrel(s = 1) {
   return `<g transform="scale(${s})">
+    ${hit(52, 6, -6)}
     <path class="sqTail" d="M 18 10 Q 44 6 42 -24 Q 40 -46 22 -44 Q 34 -30 26 -14 Q 22 -4 16 2 Z"
       fill="#c46a3f" stroke="#a04e28" stroke-width="2.5"/>
     <ellipse cx="0" cy="8" rx="18" ry="16" fill="#d8794a"/>
@@ -369,6 +422,7 @@ function squirrel(s = 1) {
 
 function mushroom(x, y, s = 1) {
   return wrap(x, y, s, `class="pokeable" data-sound="boing"`, `
+    ${hit(42, 0, -16)}
     <path d="M -8 0 Q -10 -14 0 -14 Q 10 -14 8 0 Z" fill="#f5ecd7"/>
     <path d="M -22 -12 Q -22 -34 0 -34 Q 22 -34 22 -12 Q 0 -6 -22 -12 Z" fill="#e84c3d" stroke="#b93425" stroke-width="2.5"/>
     <circle cx="-9" cy="-24" r="4" fill="#fff" opacity="0.85"/>
@@ -399,8 +453,53 @@ function wateringCan(s = 1) {
   </g>`;
 }
 
+function cat(s = 1) {
+  return `<g transform="scale(${s})">
+    ${hit(58, 0, -14)}
+    <path class="catTail" d="M 26 30 Q 52 24 50 -2 Q 49 -14 40 -12 Q 46 0 38 12 Q 32 22 24 24 Z" fill="#e8955e" stroke="#c4713a" stroke-width="2.5"/>
+    <ellipse cx="0" cy="22" rx="26" ry="20" fill="#f2a86e"/>
+    <path d="M -12 8 Q -14 26 -8 40 M 2 6 Q 0 26 4 40" stroke="#e08a4e" stroke-width="3" fill="none"/>
+    <circle cx="-2" cy="-16" r="20" fill="#f2a86e"/>
+    <path d="M -18 -28 L -22 -46 L -6 -34 Z" fill="#f2a86e" stroke="#c4713a" stroke-width="2"/>
+    <path d="M 14 -28 L 18 -46 L 2 -34 Z" fill="#f2a86e" stroke="#c4713a" stroke-width="2"/>
+    <path d="M -17 -40 L -12 -34 M 13 -40 L 8 -34" stroke="#ffd8ba" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="-9" cy="-18" r="2.8" fill="#3a2c20"/><circle cx="-8" cy="-19" r="1" fill="#fff"/>
+    <circle cx="6" cy="-18" r="2.8" fill="#3a2c20"/><circle cx="7" cy="-19" r="1" fill="#fff"/>
+    <path d="M -4 -12 L -2 -9 L 0 -12 Z" fill="#e0634e"/>
+    <path d="M -2 -9 Q -6 -5 -10 -7 M -2 -9 Q 2 -5 6 -7" stroke="#3a2c20" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <path d="M -16 -12 L -26 -14 M -16 -8 L -26 -7 M 12 -12 L 22 -14 M 12 -8 L 22 -7" stroke="#c4713a" stroke-width="1.6" stroke-linecap="round"/>
+    <circle cx="-14" cy="-10" r="3.4" fill="#ff9d9d" opacity="0.5"/>
+    <circle cx="11" cy="-10" r="3.4" fill="#ff9d9d" opacity="0.5"/>
+    <ellipse cx="-12" cy="41" rx="7" ry="4" fill="#e8955e"/>
+    <ellipse cx="6" cy="41" rx="7" ry="4" fill="#e8955e"/>
+  </g>`;
+}
+
+function dog(s = 1) {
+  return `<g transform="scale(${s})">
+    ${hit(58, 0, -12)}
+    <path class="dogTail" d="M 26 12 Q 44 4 46 -12 Q 46 -20 39 -18 Q 40 -6 30 2 Q 26 6 24 8 Z" fill="#b58452" stroke="#94683c" stroke-width="2.5"/>
+    <ellipse cx="0" cy="20" rx="28" ry="21" fill="#c99a64"/>
+    <ellipse cx="-2" cy="28" rx="16" ry="11" fill="#f0dcbc"/>
+    <circle cx="-4" cy="-16" r="21" fill="#c99a64"/>
+    <path d="M -22 -28 Q -34 -26 -32 -6 Q -31 4 -24 0 Q -26 -16 -20 -26 Z" fill="#94683c"/>
+    <path d="M 14 -28 Q 26 -26 24 -6 Q 23 4 16 0 Q 18 -16 12 -26 Z" fill="#94683c"/>
+    <circle cx="-11" cy="-18" r="3" fill="#3a2c20"/><circle cx="-10" cy="-19" r="1.1" fill="#fff"/>
+    <circle cx="4" cy="-18" r="3" fill="#3a2c20"/><circle cx="5" cy="-19" r="1.1" fill="#fff"/>
+    <ellipse cx="-4" cy="-8" rx="9" ry="7" fill="#f0dcbc"/>
+    <ellipse cx="-4" cy="-11" rx="4.5" ry="3.5" fill="#3a2c20"/>
+    <path d="M -4 -7 Q -4 -4 -4 -3 M -4 -3 Q -9 0 -12 -3 M -4 -3 Q 1 0 4 -3" stroke="#3a2c20" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <path class="dogTongue" d="M -6 -1 Q -4 6 -1 -1 Z" fill="#e0634e"/>
+    <circle cx="-16" cy="-10" r="3.4" fill="#ff9d9d" opacity="0.5"/>
+    <circle cx="9" cy="-10" r="3.4" fill="#ff9d9d" opacity="0.5"/>
+    <ellipse cx="-14" cy="40" rx="7" ry="4" fill="#b58452"/>
+    <ellipse cx="8" cy="40" rx="7" ry="4" fill="#b58452"/>
+  </g>`;
+}
+
 function owl(s = 1) {
   return `<g transform="scale(${s})">
+    ${hit(58, 0, 6)}
     <ellipse cx="0" cy="10" rx="34" ry="38" fill="#96683c" stroke="#7a5230" stroke-width="3"/>
     <path d="M -30 -20 Q -34 -36 -20 -30 Z M 30 -20 Q 34 -36 20 -30 Z" fill="#96683c" stroke="#7a5230" stroke-width="2.5"/>
     <ellipse cx="0" cy="18" rx="20" ry="22" fill="#e8c49a"/>
@@ -438,6 +537,7 @@ function fireflyBug(s = 1, lit = false) {
 function star(x, y, s, cls = "twinkling") {
   return `<g transform="translate(${x},${y}) scale(${s})" class="pokeable" data-sound="twinkle">
     <g class="inner ${cls}">
+      ${hit(30)}
       <path d="M 0 -12 L 3.5 -3.5 L 12 -3 L 5.5 3 L 7.5 12 L 0 7 L -7.5 12 L -5.5 3 L -12 -3 L -3.5 -3.5 Z" fill="#fff6c8"/>
     </g>
   </g>`;
@@ -501,7 +601,8 @@ const sceneGarden = {
     ${grassTuft(950, 580, 1.1)}
     ${grassTuft(360, 480, 1)}
 
-    ${wrap(160, 470, 1, `id="lia" class="pokeable" data-sound="hello"`, lia(1))}
+    ${wrap(160, 470, 1, `id="lia" class="pokeable"`, lia(1))}
+    ${wrap(735, 470, 1, `id="cat" class="pokeable" data-sound="meow"`, cat(1))}
 
     ${wrap(300, 640, 1, `class="pokeable" data-sound="pop"`, flower("#ff8fab"), "swaying")}
     ${wrap(390, 655, 0.85, `class="pokeable" data-sound="pop"`, flower("#b892e0", "#fff3b0"), "swaying")}
@@ -556,12 +657,7 @@ const sceneGarden = {
           const bf = svg.querySelector("#bigflower");
           bf.innerHTML = `<g class="growIn"><g transform="translate(0,-128)">${flower("#ffb3c8", "#ffd23e", 1.15)}</g></g>`;
           api.play("success");
-          setTimeout(() => {
-            api.complete("t1", {
-              icon: "flower",
-              text: "Pflanzen brauchen Wasser und Sonne, damit sie groß und stark werden können.",
-            });
-          }, 1500);
+          setTimeout(() => api.complete("t1"), 1500);
         }, 1500);
       });
     }
@@ -574,20 +670,67 @@ const sceneGarden = {
         api.sparkleBurst(560, 520);
         setTimeout(() => {
           api.play("success");
-          api.complete("t2", {
-            icon: "bee",
-            text: "Bienen sammeln süßen Nektar von den Blumen und machen daraus leckeren Honig.",
-          });
+          api.complete("t2");
         }, 700);
         return true;
       });
     }
-    const lia = svg.querySelector("#lia");
-    if (lia) lia.addEventListener("pointerdown", () => {
-      const arm = lia.querySelector(".liaArm");
-      if (arm) arm.animate(
-        [{ transform: "rotate(0deg)" }, { transform: "rotate(-14deg)" }, { transform: "rotate(0deg)" }, { transform: "rotate(-14deg)" }, { transform: "rotate(0deg)" }],
-        { duration: 900 });
+
+    /* Lia macht bei jedem Antippen etwas anderes */
+    const liaEl = svg.querySelector("#lia");
+    const liaInner = liaEl.querySelector(":scope > .inner");
+    const liaActions = [
+      () => { /* Winken */
+        api.play("hello");
+        api.speak("Hallo, ich bin Lia!");
+        const arm = liaEl.querySelector(".liaArm");
+        if (arm) arm.animate(
+          [{ transform: "rotate(0deg)" }, { transform: "rotate(-16deg)" }, { transform: "rotate(0deg)" }, { transform: "rotate(-16deg)" }, { transform: "rotate(0deg)" }],
+          { duration: 1000 });
+      },
+      () => { /* Springen */
+        api.play("boing");
+        api.speak("Hurra!");
+        liaInner.animate(
+          [{ transform: "translateY(0)" }, { transform: "translateY(-55px)" }, { transform: "translateY(0)" }, { transform: "translateY(-30px)" }, { transform: "translateY(0)" }],
+          { duration: 1100, easing: "ease-in-out" });
+      },
+      () => { /* Purzelbaum */
+        api.play("whee");
+        api.speak("Juhu, ein Purzelbaum!");
+        liaInner.style.transformBox = "fill-box";
+        liaInner.style.transformOrigin = "center";
+        liaInner.animate(
+          [{ transform: "translateY(0) rotate(0deg)" }, { transform: "translateY(-45px) rotate(180deg)" }, { transform: "translateY(0) rotate(360deg)" }],
+          { duration: 1200, easing: "ease-in-out" });
+      },
+      () => { /* Kichern */
+        api.play("chime");
+        api.speak("Hihi, das kitzelt!");
+        liaInner.animate(
+          [{ transform: "rotate(0deg)" }, { transform: "rotate(-8deg)" }, { transform: "rotate(8deg)" }, { transform: "rotate(-6deg)" }, { transform: "rotate(0deg)" }],
+          { duration: 800 });
+      },
+    ];
+    let lastLia = -1;
+    liaEl.addEventListener("pointerdown", () => {
+      let i;
+      do { i = Math.floor(Math.random() * liaActions.length); } while (i === lastLia);
+      lastLia = i;
+      liaActions[i]();
+    });
+
+    /* Die Katze wedelt mit dem Schwanz */
+    const catEl = svg.querySelector("#cat");
+    if (catEl) catEl.addEventListener("pointerdown", () => {
+      const tail = catEl.querySelector(".catTail");
+      if (tail) {
+        tail.style.transformBox = "fill-box";
+        tail.style.transformOrigin = "10% 95%";
+        tail.animate(
+          [{ transform: "rotate(0deg)" }, { transform: "rotate(24deg)" }, { transform: "rotate(-8deg)" }, { transform: "rotate(18deg)" }, { transform: "rotate(0deg)" }],
+          { duration: 1100, easing: "ease-in-out" });
+      }
     });
   },
 };
@@ -630,6 +773,7 @@ const scenePond = {
     ${grassTuft(60, 460, 1.3)}
     ${grassTuft(950, 620, 1.4)}
     ${grassTuft(260, 430, 1)}
+    ${wrap(80, 545, 0.95, `id="dog" class="pokeable" data-sound="woof"`, dog(1))}
 
     ${lilypad(330, 620, 1, true)}
     ${lilypad(760, 620, 0.85)}
@@ -672,10 +816,7 @@ const scenePond = {
           frogEl.querySelector(":scope > .inner").classList.add("happyBounce");
           setTimeout(() => {
             api.play("success");
-            api.complete("t3", {
-              icon: "frog",
-              text: "Frösche fangen Fliegen und Mücken mit ihrer langen, klebrigen Zunge.",
-            });
+            api.complete("t3");
           }, 900);
         }, 450);
         return true;
@@ -691,14 +832,29 @@ const scenePond = {
         api.svgAppend(heart(560, 490, 0.8));
         setTimeout(() => {
           api.play("success");
-          api.complete("t4", {
-            icon: "duck",
-            text: "Kleine Entenküken schwimmen immer ganz dicht bei ihrer Mama.",
-          });
+          api.complete("t4");
         }, 900);
         return true;
       });
     }
+
+    /* Der Hund wedelt und hüpft */
+    const dogEl = svg.querySelector("#dog");
+    if (dogEl) dogEl.addEventListener("pointerdown", () => {
+      const tail = dogEl.querySelector(".dogTail");
+      if (tail) {
+        tail.style.transformBox = "fill-box";
+        tail.style.transformOrigin = "10% 90%";
+        tail.animate(
+          [{ transform: "rotate(0deg)" }, { transform: "rotate(22deg)" }, { transform: "rotate(-10deg)" }, { transform: "rotate(22deg)" }, { transform: "rotate(0deg)" }],
+          { duration: 900, easing: "ease-in-out" });
+      }
+      const inner = dogEl.querySelector(":scope > .inner");
+      inner.classList.remove("happyBounce");
+      void inner.getBoundingClientRect();
+      inner.classList.add("happyBounce");
+      setTimeout(() => inner.classList.remove("happyBounce"), 1500);
+    });
     const fishEl = svg.querySelector("#fish");
     if (fishEl) fishEl.addEventListener("pointerdown", () => {
       fishEl.querySelector(":scope > .inner").animate(
@@ -774,10 +930,7 @@ const sceneTree = {
       if (taskId && !api.done(taskId)) {
         setTimeout(() => {
           api.play("success");
-          api.complete(taskId, {
-            icon: "hedgehog",
-            text: "Igel lieben Äpfel, Beeren und kleine Käfer zum Fressen.",
-          });
+          api.complete(taskId);
         }, 1000);
       }
       return true;
@@ -798,10 +951,7 @@ const sceneTree = {
         setTimeout(() => api.play("chirp"), 300);
         setTimeout(() => {
           api.play("success");
-          api.complete("t6", {
-            icon: "chick",
-            text: "Vogelkinder rufen laut piep, piep! Ihre Eltern bringen ihnen Futter ins Nest.",
-          });
+          api.complete("t6");
         }, 1200);
         return true;
       });
@@ -915,10 +1065,7 @@ const sceneNight = {
             });
             setTimeout(() => {
               api.play("fanfare");
-              api.complete("t7", {
-                icon: "firefly",
-                text: "Glühwürmchen leuchten in der Nacht, um ihre Freunde zu finden.",
-              });
+              api.complete("t7");
             }, 2000);
           }, 700);
         }

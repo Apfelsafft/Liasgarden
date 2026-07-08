@@ -23,8 +23,17 @@
           <circle cx="17.5" cy="12" r="1.4" fill="#fff"/><circle cx="22.5" cy="12" r="1.4" fill="#fff"/>
         </svg>
       </button>
+      <button id="btnMusic" class="roundBtn" title="Musik an/aus">
+        <svg id="musicIcon" viewBox="0 0 24 24"></svg>
+      </button>
       <button id="btnMute" class="roundBtn" title="Ton an/aus">
         <svg id="muteIcon" viewBox="0 0 24 24"></svg>
+      </button>
+      <button id="btnReset" class="roundBtn" title="Von vorne anfangen">
+        <svg viewBox="0 0 24 24">
+          <path d="M 19 12 a 7 7 0 1 1 -2.5 -5.4" fill="none" stroke="#e8955e" stroke-width="2.6" stroke-linecap="round"/>
+          <path d="M 17 2.5 L 17.2 7.2 L 12.5 6.6 Z" fill="#e8955e"/>
+        </svg>
       </button>
     </div>
   </div>
@@ -62,6 +71,26 @@
         </button>
         <button id="btnCardOk" class="cardBtn" title="Weiter">
           <svg viewBox="0 0 24 24"><path d="M 4 13 L 10 19 L 20 6" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="confirmOverlay">
+    <div id="confirmCard">
+      <div id="confirmIcon">
+        <svg viewBox="0 0 24 24">
+          <path d="M 19 12 a 7 7 0 1 1 -2.5 -5.4" fill="none" stroke="#e8955e" stroke-width="2.2" stroke-linecap="round"/>
+          <path d="M 17 2.5 L 17.2 7.2 L 12.5 6.6 Z" fill="#e8955e"/>
+        </svg>
+      </div>
+      <div id="confirmText">Noch einmal von vorne anfangen?</div>
+      <div class="confirmBtns">
+        <button id="btnResetYes" class="cardBtn" title="Ja, von vorne" style="background:#8fd45e">
+          <svg viewBox="0 0 24 24"><path d="M 4 13 L 10 19 L 20 6" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button id="btnResetNo" class="cardBtn" title="Nein, weiterspielen" style="background:#e88686">
+          <svg viewBox="0 0 24 24"><path d="M 6 6 L 18 18 M 18 6 L 6 18" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg>
         </button>
       </div>
     </div>

@@ -34,20 +34,29 @@ reagiert — es gibt kein Falsch, kein Verlieren und keinen Zeitdruck.
 
 ## Die wichtigsten Funktionen
 
+- **Aufgaben-Karten:** Beim Betreten einer Szene lädt eine Karte mit einem
+  Natur-Fakt zum Handeln ein („Igel lieben Äpfel! Bringst du dem Igel einen
+  Apfel?") und wird auf Deutsch vorgelesen. Nach dem Lösen folgt eine
+  Lob-Karte — perfekt für Kinder, die noch nicht lesen können.
 - **Glühwürmchen-Hilfe:** Nach kurzer Zeit ohne Fortschritt (oder per
   Knopfdruck oben rechts) fliegt ein Glühwürmchen zum nächsten möglichen
   Schritt und lässt Start und Ziel funkeln. Ein Festhängen ist dadurch
   unmöglich.
-- **Wissens-Karten:** Nach jeder gelösten Aufgabe erscheint eine Karte mit
-  einem kleinen Natur-Fakt, der per Sprachausgabe (deutsch) vorgelesen wird —
-  perfekt für Kinder, die noch nicht lesen können.
+- **Lia macht mit:** Wird Lia angetippt, winkt sie, springt, kichert oder
+  macht einen Purzelbaum — mit passender Sprachausgabe („Hallo, ich bin
+  Lia!", „Hurra!", „Juhu, ein Purzelbaum!").
+- **Tierstimmen:** Frosch quakt, Enten schnattern, die Eule ruft huhu,
+  Vögel zwitschern, die Katze miaut und der Hund bellt — jedes Tier
+  antwortet auf Berührung mit Bewegung, Funkeln und seinem Laut.
 - **Sterne-Fortschritt:** Sieben Sterne führen zum großen Finale mit
   Sternenregen. Mit sechs Sternen öffnet sich die geheime Nachtwiese.
-- **Klangwelt:** Alle Geräusche und die sanfte Hintergrundatmosphäre werden
-  live mit der Web-Audio-API erzeugt (abschaltbar über den Ton-Knopf).
+- **Klangwelt & Musik:** Alle Geräusche und eine sanfte, selbst komponierte
+  Hintergrundmelodie werden live mit der Web-Audio-API erzeugt. Musik und
+  Geräusche sind getrennt abschaltbar (Noten- und Lautsprecher-Knopf).
+- **Neustart-Knopf:** Der runde Pfeil oben rechts setzt das Spiel nach
+  einer kindgerechten Bestätigungsfrage auf den Anfang zurück.
 - **Speichern:** Der Fortschritt bleibt im Browser erhalten
-  (`localStorage`). Zum Zurücksetzen die Seite mit `?reset` öffnen,
-  z. B. `index.html?reset`.
+  (`localStorage`). Alternativ setzt auch `index.html?reset` zurück.
 
 ## Gestaltung für 2- bis 5-Jährige
 

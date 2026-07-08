@@ -9,16 +9,19 @@
 
   /* ---------- Spielstand ---------- */
 
-  let save = { done: {}, muted: false };
+  let save = { done: {}, muted: false, musicOff: false };
   try {
     const raw = localStorage.getItem(SAVE_KEY);
     if (raw) save = Object.assign(save, JSON.parse(raw));
   } catch (e) { /* Speicher nicht verfügbar – Spiel läuft trotzdem */ }
 
   if (location.search.includes("reset")) {
-    save = { done: {}, muted: false };
+    save.done = {};
     persist();
   }
+
+  /* Welche Aufgaben-Einladungen in dieser Sitzung schon gezeigt wurden */
+  const promptShown = {};
 
   function persist() {
     try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) { /* egal */ }
@@ -78,11 +81,38 @@
     scene.init(svg, makeApi(svg, scene));
     updateChrome();
     resetIdle();
+    maybeShowPrompt();
+  }
+
+  /* Erste offene Aufgabe der Szene (Reihenfolge beachten) */
+  function currentTaskOf(scene) {
+    for (const t of scene.tasks) {
+      if (save.done[t.id]) continue;
+      if (scene.id === "garden" && t.id === "t2" && !save.done.t1) continue;
+      return t;
+    }
+    return null;
+  }
+
+  /* Aufgaben-Einladung zeigen: der Natur-Fakt wird zur Aufgabe */
+  function maybeShowPrompt() {
+    if (!started || cardOverlay.classList.contains("show")) return;
+    const task = currentTaskOf(SCENES[currentScene]);
+    if (!task || promptShown[task.id]) return;
+    const sceneIdx = currentScene;
+    setTimeout(() => {
+      if (currentScene !== sceneIdx || cardOverlay.classList.contains("show")) return;
+      if (promptShown[task.id] || save.done[task.id]) return;
+      promptShown[task.id] = true;
+      const info = TASK_INFO[task.id];
+      showCard({ icon: info.icon, text: info.prompt });
+      AudioKit.play("chime");
+    }, 700);
   }
 
   function wirePokes(svg) {
     svg.querySelectorAll(".pokeable").forEach((el) => {
-      el.addEventListener("pointerdown", () => {
+      el.addEventListener("pointerdown", (e) => {
         const inner = el.querySelector(":scope > .inner") || el;
         inner.classList.remove("wiggling");
         void inner.getBBox && inner.getBoundingClientRect();
@@ -90,8 +120,30 @@
         setTimeout(() => inner.classList.remove("wiggling"), 600);
         const snd = el.dataset.sound;
         if (snd) AudioKit.play(snd);
+        /* kleines Funkeln am Finger – jede Berührung gibt Rückmeldung */
+        try {
+          const pt = new DOMPoint(e.clientX, e.clientY).matrixTransform(svg.getScreenCTM().inverse());
+          sparkleAt(svg, pt.x, pt.y, 5, 46);
+        } catch (err) { /* ohne Funkeln geht es auch */ }
       });
     });
+  }
+
+  const SPARKLE_COLORS = ["#ffe95c", "#ffd23e", "#fff6c8", "#ffb3c8"];
+
+  function sparkleAt(svg, x, y, n = 8, r = 70) {
+    for (let i = 0; i < n; i++) {
+      const a = (i / n) * Math.PI * 2 + Math.random() * 0.8;
+      const s = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      s.setAttribute("cx", x); s.setAttribute("cy", y);
+      s.setAttribute("r", 3.5 + Math.random() * 3);
+      s.setAttribute("fill", SPARKLE_COLORS[i % SPARKLE_COLORS.length]);
+      svg.appendChild(s);
+      s.animate(
+        [{ transform: "translate(0,0)", opacity: 1 }, { transform: `translate(${Math.cos(a) * r}px,${Math.sin(a) * r}px)`, opacity: 0 }],
+        { duration: 650 + Math.random() * 300, easing: "ease-out", fill: "forwards" });
+      setTimeout(() => s.remove(), 1000);
+    }
   }
 
   /* ---------- Schnittstelle für die Szenen ---------- */
@@ -106,26 +158,16 @@
         svg.appendChild(g);
         setTimeout(() => g.remove(), 2500);
       },
-      sparkleBurst(x, y) {
-        for (let i = 0; i < 8; i++) {
-          const a = (i / 8) * Math.PI * 2;
-          const s = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-          s.setAttribute("cx", x); s.setAttribute("cy", y);
-          s.setAttribute("r", 5); s.setAttribute("fill", "#ffe95c");
-          svg.appendChild(s);
-          s.animate(
-            [{ transform: "translate(0,0)", opacity: 1 }, { transform: `translate(${Math.cos(a) * 70}px,${Math.sin(a) * 70}px)`, opacity: 0 }],
-            { duration: 800, easing: "ease-out", fill: "forwards" });
-          setTimeout(() => s.remove(), 900);
-        }
-      },
+      sparkleBurst(x, y) { sparkleAt(svg, x, y, 8, 70); },
       drag: (srcSel, targetSel, radius, onSuccess) => makeDraggable(svg, srcSel, targetSel, radius, onSuccess),
-      complete(taskId, fact) {
+      speak,
+      complete(taskId) {
         if (save.done[taskId]) return;
         save.done[taskId] = true;
         persist();
         updateChrome();
-        showCard(fact, taskId);
+        const info = TASK_INFO[taskId];
+        showCard({ icon: info.icon, text: info.praise, taskId, praise: true });
       },
     };
   }
@@ -212,25 +254,28 @@
 
   /* ---------- Wissens-Karte ---------- */
 
-  function showCard(fact, taskId) {
+  function showCard({ icon, text, taskId = null, praise = false }) {
     stopHint();
-    document.getElementById("factIcon").innerHTML = CardIcons[fact.icon] || "";
-    document.getElementById("factText").textContent = fact.text;
-    const n = doneCount();
-    document.getElementById("factStars").innerHTML = starSvg(n);
+    document.getElementById("factIcon").innerHTML = CardIcons[icon] || "";
+    document.getElementById("factText").textContent = text;
+    document.getElementById("factStars").innerHTML = starSvg(doneCount());
     cardOverlay.classList.add("show");
-    AudioKit.play("fanfare");
-    setTimeout(() => speak(fact.text), 700);
+    if (praise) AudioKit.play("fanfare");
+    setTimeout(() => speak(text), praise ? 700 : 400);
 
-    document.getElementById("btnSpeak").onclick = () => speak(fact.text);
+    document.getElementById("btnSpeak").onclick = () => speak(text);
     document.getElementById("btnCardOk").onclick = () => {
       cardOverlay.classList.remove("show");
       if (window.speechSynthesis) speechSynthesis.cancel();
       AudioKit.play("pop");
-      /* Szene im Fertig-Zustand neu aufbauen (zeigt z. B. die Biene
-         auf der Blume oder das Küken bei seiner Mama) */
-      showScene(currentScene);
-      if (taskId === "t7") celebrate();
+      if (praise) {
+        /* Szene im Fertig-Zustand neu aufbauen (zeigt z. B. die Biene
+           auf der Blume) und danach die nächste Aufgabe einladen */
+        showScene(currentScene);
+        if (taskId === "t7") celebrate();
+      } else {
+        resetIdle();
+      }
     };
   }
 
@@ -264,7 +309,7 @@
       setTimeout(() => g.remove(), 4400);
     }
     setTimeout(() => {
-      showCard({ icon: "rainbow", text: "Hurra! Du hast Lias ganzen Garten zum Leben erweckt!" }, "final");
+      showCard({ icon: "rainbow", text: "Hurra! Du hast Lias ganzen Garten zum Leben erweckt!" });
     }, 2600);
   }
 
@@ -288,6 +333,10 @@
     document.getElementById("muteIcon").innerHTML = AudioKit.isMuted()
       ? `<path d="M4 9v6h4l5 4V5L8 9H4z" fill="#8a8a8a"/><line x1="16" y1="9" x2="21" y2="15" stroke="#e05a5a" stroke-width="2.5" stroke-linecap="round"/><line x1="21" y1="9" x2="16" y2="15" stroke="#e05a5a" stroke-width="2.5" stroke-linecap="round"/>`
       : `<path d="M4 9v6h4l5 4V5L8 9H4z" fill="#6aab48"/><path d="M16 8 Q 19 12 16 16 M 18 5.5 Q 22.5 12 18 18.5" stroke="#6aab48" stroke-width="2.2" fill="none" stroke-linecap="round"/>`;
+
+    document.getElementById("musicIcon").innerHTML = AudioKit.isMusicOn()
+      ? `<path d="M9 18 V6 l9 -2 v12" fill="none" stroke="#6aab48" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.5" cy="18" r="2.8" fill="#6aab48"/><circle cx="15.5" cy="16" r="2.8" fill="#6aab48"/>`
+      : `<path d="M9 18 V6 l9 -2 v12" fill="none" stroke="#8a8a8a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.5" cy="18" r="2.8" fill="#8a8a8a"/><circle cx="15.5" cy="16" r="2.8" fill="#8a8a8a"/><line x1="3" y1="3" x2="21" y2="21" stroke="#e05a5a" stroke-width="2.5" stroke-linecap="round"/>`;
   }
 
   navLeft.addEventListener("click", () => {
@@ -302,26 +351,58 @@
 
   document.getElementById("btnMute").addEventListener("click", () => {
     AudioKit.setMuted(!AudioKit.isMuted());
+    save.muted = AudioKit.isMuted();
+    persist();
+    AudioKit.play("pop");
+    updateChrome();
+  });
+
+  document.getElementById("btnMusic").addEventListener("click", () => {
+    AudioKit.setMusicOn(!AudioKit.isMusicOn());
+    save.musicOff = !AudioKit.isMusicOn();
+    persist();
     AudioKit.play("pop");
     updateChrome();
   });
 
   document.getElementById("btnHint").addEventListener("click", () => showHint());
 
+  /* ---------- Neustart mit Bestätigung ---------- */
+
+  const confirmOverlay = document.getElementById("confirmOverlay");
+
+  document.getElementById("btnReset").addEventListener("click", () => {
+    confirmOverlay.classList.add("show");
+    AudioKit.play("pop");
+    speak("Möchtest du noch einmal von vorne anfangen?");
+  });
+
+  document.getElementById("btnResetYes").addEventListener("click", () => {
+    confirmOverlay.classList.remove("show");
+    save.done = {};
+    Object.keys(promptShown).forEach((k) => delete promptShown[k]);
+    persist();
+    AudioKit.play("success");
+    speak("Los geht's!");
+    showScene(0);
+  });
+
+  document.getElementById("btnResetNo").addEventListener("click", () => {
+    confirmOverlay.classList.remove("show");
+    AudioKit.play("pop");
+    resetIdle();
+  });
+
   /* ---------- Glühwürmchen-Hilfe ---------- */
 
   function nextHintTarget() {
     /* 1. offene Aufgabe in der aktuellen Szene */
     const svg = stage.querySelector("svg.scene");
-    const scene = SCENES[currentScene];
-    for (const t of scene.tasks) {
-      if (!save.done[t.id]) {
-        /* Aufgaben der Reihe nach: t2 erst zeigen, wenn t1 fertig ist */
-        if (scene.id === "garden" && t.id === "t2" && !save.done.t1) continue;
-        const src = svg && svg.querySelector(t.source);
-        const tgt = svg && svg.querySelector(t.target);
-        if (src) return { el: src, tgt };
-      }
+    const task = currentTaskOf(SCENES[currentScene]);
+    if (task && svg) {
+      const src = svg.querySelector(task.source);
+      const tgt = svg.querySelector(task.target);
+      if (src) return { el: src, tgt };
     }
     /* 2. sonst: Pfeil zur nächsten Szene mit offener Aufgabe */
     for (let i = 0; i < SCENES.length; i++) {
@@ -435,6 +516,7 @@
     ov.querySelector("#playBtn").addEventListener("pointerdown", () => {
       AudioKit.init();
       AudioKit.setMuted(save.muted === true);
+      AudioKit.setMusicOn(save.musicOff !== true);
       AudioKit.play("hello");
       started = true;
       ov.style.transition = "opacity 0.7s ease";
