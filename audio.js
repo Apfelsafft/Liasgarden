@@ -427,8 +427,35 @@ const AudioKit = (() => {
     },
   };
 
+  /* ---------- Gesprochene Tierlaute ----------
+     Letzte Rettung für Umgebungen, in denen gar keine Klangausgabe
+     funktioniert, wohl aber die Sprachausgabe: Die Tierlaute werden
+     dann als Wörter gesprochen ("Miau!", "Wuff, wuff!"). */
+  let speakMode = false;
+  let speakHandler = null;
+
+  const SFX_WORDS = {
+    croak: "Quak, quak!", quack: "Quak, quak!", meow: "Miau!",
+    woof: "Wuff, wuff!", chirp: "Tschilp, tschilp!", peep: "Piep, piep!",
+    hoot: "Huhu! Huhu!", buzz: "Summ, summ!", gull: "Kräh, kräh!",
+    whistle: "Iek, iek!", snuffle: "Schnüff, schnüff!", hop: "Hops!",
+    munch: "Mampf, mampf!", splash: "Platsch!", horn: "Tut, tuuut!",
+    boing: "Boing!", whee: "Wiiie!", thud: "Plumps!", hello: "Hallo!",
+    success: "Super!", fanfare: "Hurra!",
+  };
+
+  function setSpeakMode(on) { speakMode = on; }
+  function isSpeakMode() { return speakMode; }
+  function setSpeakHandler(fn) { speakHandler = fn; }
+
   function play(name, arg) {
-    if (!ctx || muted || !sfx[name]) return;
+    if (muted || !sfx[name]) return;
+    if (speakMode) {
+      const word = SFX_WORDS[name];
+      if (word && speakHandler) speakHandler(word);
+      return;
+    }
+    if (!ctx) return;
     if (elementMode) {
       playViaElement(name, arg);
     } else {
@@ -447,7 +474,10 @@ const AudioKit = (() => {
 
   return {
     init, resume, play, setMuted, isMuted, setMusicOn, isMusicOn,
-    /* nur für Tests und Diagnose */
+    setSpeakMode, isSpeakMode, setSpeakHandler,
+    forceElementMode: enableElementMode,
+    isElementMode: () => elementMode,
+    /* alte Namen für Tests */
     _forceElementMode: enableElementMode,
     _isElementMode: () => elementMode,
   };

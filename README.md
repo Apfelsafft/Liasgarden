@@ -57,6 +57,11 @@ reagiert — es gibt kein Falsch, kein Verlieren und keinen Zeitdruck.
 - **Klangwelt & Musik:** Alle Geräusche und eine sanfte, selbst komponierte
   Hintergrundmelodie werden live mit der Web-Audio-API erzeugt. Musik und
   Geräusche sind getrennt abschaltbar (Noten- und Lautsprecher-Knopf).
+- **Ton-Prüfung:** Beim ersten Start fragt das Spiel, ob die Melodie zu
+  hören ist (die Frage wird vorgelesen). Bleibt der Ton stumm, probiert
+  es einen zweiten Wiedergabe-Weg — und zur Not sprechen die Tiere ihre
+  Laute mit der Kinderstimme („Miau!", „Wuff, wuff!"). Die Wahl wird
+  gespeichert; `?reset` fragt neu.
 - **Neustart-Knopf:** Der runde Pfeil oben rechts setzt das Spiel nach
   einer kindgerechten Bestätigungsfrage auf den Anfang zurück.
 - **Speichern:** Der Fortschritt bleibt im Browser erhalten

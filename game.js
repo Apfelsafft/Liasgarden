@@ -17,6 +17,7 @@
 
   if (location.search.includes("reset")) {
     save.done = {};
+    delete save.soundMode;
     persist();
   }
 
@@ -79,6 +80,14 @@
     speechSynthesis.addEventListener("voiceschanged", chooseVoice);
   }
 
+  /* Gesprochene Tierlaute ("Miau!") – aber nie in eine offene
+     Karten-Vorlesung hineinreden */
+  AudioKit.setSpeakHandler((word) => {
+    if (document.getElementById("cardOverlay").classList.contains("show")) return;
+    if (document.getElementById("confirmOverlay").classList.contains("show")) return;
+    speak(word, "kind");
+  });
+
   const VOICE_ROLES = {
     mama: { rate: 0.95, pitch: 1.05 },
     kind: { rate: 1.05, pitch: 1.5 },
@@ -138,6 +147,8 @@
     const sceneIdx = currentScene;
     setTimeout(() => {
       if (currentScene !== sceneIdx || cardOverlay.classList.contains("show")) return;
+      /* Während der Ton-Prüfung warten – sie ruft danach selbst auf */
+      if (!save.soundMode || confirmOverlay.classList.contains("show")) return;
       if (promptShown[task.id] || save.done[task.id]) return;
       promptShown[task.id] = true;
       const info = TASK_INFO[task.id];
@@ -648,31 +659,90 @@
 
   document.getElementById("btnHint").addEventListener("click", () => showHint());
 
-  /* ---------- Neustart mit Bestätigung ---------- */
+  /* ---------- Bestätigungs-Dialog (Neustart, Ton-Prüfung) ---------- */
 
   const confirmOverlay = document.getElementById("confirmOverlay");
 
-  document.getElementById("btnReset").addEventListener("click", () => {
+  const RESET_ICON = `<svg viewBox="0 0 24 24">
+    <path d="M 19 12 a 7 7 0 1 1 -2.5 -5.4" fill="none" stroke="#e8955e" stroke-width="2.2" stroke-linecap="round"/>
+    <path d="M 17 2.5 L 17.2 7.2 L 12.5 6.6 Z" fill="#e8955e"/>
+  </svg>`;
+  const NOTE_ICON = `<svg viewBox="0 0 24 24">
+    <path d="M9 18 V6 l9 -2 v12" fill="none" stroke="#6aab48" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="6.5" cy="18" r="2.6" fill="#6aab48"/><circle cx="15.5" cy="16" r="2.6" fill="#6aab48"/>
+  </svg>`;
+
+  function showConfirm(text, iconHtml, onYes, onNo) {
+    document.getElementById("confirmText").textContent = text;
+    document.getElementById("confirmIcon").innerHTML = iconHtml;
     confirmOverlay.classList.add("show");
+    document.getElementById("btnResetYes").onclick = () => {
+      confirmOverlay.classList.remove("show");
+      AudioKit.play("pop");
+      if (onYes) onYes();
+    };
+    document.getElementById("btnResetNo").onclick = () => {
+      confirmOverlay.classList.remove("show");
+      AudioKit.play("pop");
+      if (onNo) onNo();
+    };
+  }
+
+  document.getElementById("btnReset").addEventListener("click", () => {
     AudioKit.play("pop");
     speak("Möchtest du noch einmal von vorne anfangen?");
+    showConfirm("Noch einmal von vorne anfangen?", RESET_ICON, () => {
+      save.done = {};
+      Object.keys(promptShown).forEach((k) => delete promptShown[k]);
+      persist();
+      AudioKit.play("success");
+      speak("Los geht's!");
+      showScene(0);
+    }, resetIdle);
   });
 
-  document.getElementById("btnResetYes").addEventListener("click", () => {
-    confirmOverlay.classList.remove("show");
-    save.done = {};
-    Object.keys(promptShown).forEach((k) => delete promptShown[k]);
-    persist();
-    AudioKit.play("success");
-    speak("Los geht's!");
-    showScene(0);
-  });
+  /* ---------- Ton-Prüfung beim ersten Start ----------
+     Manche Umgebungen (z. B. App-Vorschauen) geben keinen Klang aus,
+     obwohl die Sprachausgabe funktioniert. Wir fragen deshalb einmal
+     nach: erst mit dem normalen Tonweg, dann mit der Ersatz-
+     Wiedergabe – und wenn beides stumm bleibt, sprechen wir die
+     Tierlaute mit der Kinderstimme ("Miau!", "Wuff, wuff!"). */
 
-  document.getElementById("btnResetNo").addEventListener("click", () => {
-    confirmOverlay.classList.remove("show");
-    AudioKit.play("pop");
-    resetIdle();
-  });
+  function runSoundCheck() {
+    let phase = 1;
+    const playTest = () => AudioKit.play("success");
+    const iv = setInterval(playTest, 2600);
+    playTest();
+
+    const finish = (mode) => {
+      clearInterval(iv);
+      save.soundMode = mode;
+      persist();
+      if (mode === "speak") {
+        AudioKit.setSpeakMode(true);
+        speak("Alles klar! Dann machen die Tiere ihre Geräusche mit meiner Stimme. Miau! Wuff, wuff!");
+        setTimeout(maybeShowPrompt, 5000);
+      } else {
+        setTimeout(maybeShowPrompt, 400);
+      }
+    };
+
+    const ask = (text) => {
+      speak(text);
+      showConfirm(text, NOTE_ICON, () => {
+        finish(AudioKit.isElementMode() ? "element" : "web");
+      }, () => {
+        if (phase === 1) {
+          phase = 2;
+          AudioKit.forceElementMode();
+          setTimeout(() => ask("Und jetzt? Hörst du die Melodie jetzt?"), 900);
+        } else {
+          finish("speak");
+        }
+      });
+    };
+    ask("Hörst du die fröhliche Melodie?");
+  }
 
   /* ---------- Glühwürmchen-Hilfe ---------- */
 
@@ -825,12 +895,16 @@
           speechSynthesis.speak(primer);
         } catch (e) { /* nicht schlimm */ }
       }
+      /* gespeicherte Ton-Entscheidung anwenden */
+      if (save.soundMode === "element") AudioKit.forceElementMode();
+      if (save.soundMode === "speak") AudioKit.setSpeakMode(true);
       started = true;
       ov.style.transition = "opacity 0.7s ease";
       ov.style.opacity = "0";
       setTimeout(() => { ov.remove(); }, 700);
       topbar.style.display = "";
       showScene(0);
+      if (!save.soundMode) setTimeout(runSoundCheck, 1500);
     };
     const btn = ov.querySelector("#playBtn");
     btn.addEventListener("click", startGame);
