@@ -57,7 +57,7 @@ html, body {
   box-shadow: 0 3px 8px rgba(60, 90, 40, 0.25);
 }
 
-#starRow svg { width: 26px; height: 26px; }
+#starRow svg { width: 19px; height: 19px; }
 
 .roundBtn {
   width: 58px;
@@ -116,6 +116,7 @@ html, body {
   background: rgba(255, 255, 255, 0.6);
   padding: 7px 14px;
   border-radius: 999px;
+  pointer-events: none; /* reine Anzeige – darf keine Berührungen schlucken */
 }
 
 .dot {
@@ -191,8 +192,8 @@ html, body {
   margin-bottom: 16px;
 }
 
-#factStars { height: 44px; margin-bottom: 6px; }
-#factStars svg { height: 44px; }
+#factStars { height: 30px; margin-bottom: 8px; }
+#factStars svg { height: 30px; width: 30px; }
 
 #cardBtns { display: flex; gap: 14px; justify-content: center; }
 
@@ -433,6 +434,30 @@ html, body {
 
 .confettiStar {
   animation: confettiFall 2.6s ease-in forwards;
+}
+
+/* ---------- Fallende Blätter und Schneeflocken ---------- */
+
+.fallingLeaf {
+  animation: leafFall linear infinite;
+}
+
+@keyframes leafFall {
+  0%   { transform: translate(0, -80px) rotate(0deg); opacity: 0; }
+  8%   { opacity: 1; }
+  50%  { transform: translate(-45px, 320px) rotate(160deg); }
+  100% { transform: translate(50px, 700px) rotate(320deg); opacity: 0.9; }
+}
+
+.snowflake {
+  animation: snowFall linear infinite;
+}
+
+@keyframes snowFall {
+  0%   { transform: translate(0, -60px); opacity: 0; }
+  8%   { opacity: 0.9; }
+  50%  { transform: translate(-30px, 340px); }
+  100% { transform: translate(35px, 720px); opacity: 0.85; }
 }
 
 /* ---------- Hinweis: Gerät bitte quer halten ---------- */

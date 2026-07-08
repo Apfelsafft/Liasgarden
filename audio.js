@@ -224,6 +224,8 @@ const AudioKit = (() => {
       });
     },
     whee()    { tone(392, 0.5, { type: "triangle", glideTo: 900, vol: 0.14 }); tone(900, 0.25, { type: "triangle", glideTo: 660, vol: 0.1, when: 0.5 }); },
+    gull()    { [0, 0.3].forEach((w) => tone(1350, 0.28, { type: "sawtooth", glideTo: 750, vol: 0.06, when: w })); },
+    hop()     { tone(300, 0.12, { type: "triangle", glideTo: 600, vol: 0.14 }); tone(340, 0.12, { type: "triangle", glideTo: 640, vol: 0.12, when: 0.16 }); },
     thud()    { tone(140, 0.15, { type: "triangle", glideTo: 70, vol: 0.2 }); },
     note(step = 0) {
       const scale = [523, 587, 659, 784, 880, 1046];

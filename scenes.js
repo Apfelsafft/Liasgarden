@@ -57,6 +57,36 @@ const TASK_INFO = {
     prompt: "Glühwürmchen leuchten in der Nacht. Tippst du alle Glühwürmchen an, damit sie hell leuchten?",
     praise: "Wunderschön! Alles leuchtet und die Eule ist aufgewacht.",
   },
+  t8: {
+    icon: "squirrel",
+    prompt: "Eichhörnchen sammeln im Herbst Eicheln und Nüsse für den Winter. Bringst du dem Eichhörnchen die Eichel?",
+    praise: "Klasse! Jetzt hat das Eichhörnchen einen Vorrat für den Winter.",
+  },
+  t9: {
+    icon: "hedgehog",
+    prompt: "Igel bauen sich aus Blättern ein kuscheliges Nest für den Winterschlaf. Bringst du dem Igel die Blätter?",
+    praise: "Wunderbar! Der Igel kuschelt sich in sein Blätternest. Schlaf gut!",
+  },
+  t10: {
+    icon: "bird",
+    prompt: "Im Winter finden Vögel kaum Futter. Streust du ihnen Körner ins Vogelhäuschen?",
+    praise: "Toll! Die hungrigen Vögel picken schon die Körner.",
+  },
+  t11: {
+    icon: "snowman",
+    prompt: "Der Schneemann hat noch gar keine Nase! Schenkst du ihm die Möhre?",
+    praise: "Hihi! Was für eine schöne Möhrennase.",
+  },
+  t12: {
+    icon: "crab",
+    prompt: "Einsiedlerkrebse wohnen in leeren Schneckenhäusern. Schenkst du dem kleinen Krebs das Häuschen?",
+    praise: "Juhu! Der Einsiedlerkrebs hat ein neues Zuhause.",
+  },
+  t13: {
+    icon: "starfish",
+    prompt: "Seesterne leben im Meer und brauchen Wasser. Bringst du den Seestern zurück ins Meer?",
+    praise: "Super! Der Seestern schwimmt wieder fröhlich im Meer.",
+  },
 };
 
 function face(s = 1, mood = "happy") {
@@ -549,6 +579,337 @@ function heart(x, y, s = 1) {
   </g>`;
 }
 
+/* ---------- Herbst, Winter und Strand ---------- */
+
+function acorn(s = 1) {
+  return `<g transform="scale(${s})">
+    ${hit(38)}
+    <ellipse cx="0" cy="6" rx="13" ry="16" fill="#c99a64" stroke="#94683c" stroke-width="2"/>
+    <path d="M -15 -4 Q 0 -14 15 -4 Q 15 4 0 4 Q -15 4 -15 -4 Z" fill="#7a5230"/>
+    <path d="M 0 -10 Q 2 -18 7 -20" stroke="#7a5230" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <circle cx="-4" cy="6" r="2" fill="#3a2c20"/><circle cx="4" cy="6" r="2" fill="#3a2c20"/>
+    <path d="M -3 11 Q 0 13 3 11" stroke="#3a2c20" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+  </g>`;
+}
+
+function leaf(color, s = 1, r = 0) {
+  return `<g transform="scale(${s}) rotate(${r})">
+    <path d="M 0 -18 Q 14 -8 12 6 Q 8 18 0 20 Q -8 18 -12 6 Q -14 -8 0 -18 Z" fill="${color}"/>
+    <path d="M 0 -14 L 0 24" stroke="#a5652c" stroke-width="2" stroke-linecap="round"/>
+  </g>`;
+}
+
+function leafBundle(s = 1) {
+  return `<g transform="scale(${s})">
+    ${hit(46)}
+    ${leaf("#e8963e", 1, -25)}
+    <g transform="translate(18,6)">${leaf("#d9772e", 0.9, 20)}</g>
+    <g transform="translate(-16,8)">${leaf("#f0b04a", 0.85, -50)}</g>
+  </g>`;
+}
+
+function autumnTree(s = 1) {
+  return `<g transform="scale(${s})">
+    <path d="M -18 160 Q -24 100 -12 50 L 12 50 Q 24 100 18 160 Q 0 168 -18 160 Z" fill="#96683c" stroke="#7a5230" stroke-width="3.5"/>
+    <g class="canopy">
+      <circle cx="-55" cy="30" r="50" fill="#d9772e"/>
+      <circle cx="55" cy="30" r="50" fill="#e8963e"/>
+      <circle cx="0" cy="-20" r="62" fill="#f0b04a"/>
+      <circle cx="-30" cy="0" r="48" fill="#e8963e"/>
+      <circle cx="34" cy="-2" r="46" fill="#d9772e"/>
+    </g>
+  </g>`;
+}
+
+function pumpkin(x, y, s = 1) {
+  return wrap(x, y, s, `class="pokeable" data-sound="boing"`, `
+    ${hit(46, 0, -14)}
+    <ellipse cx="0" cy="-12" rx="30" ry="24" fill="#e8963e" stroke="#c4713a" stroke-width="3"/>
+    <ellipse cx="-14" cy="-12" rx="12" ry="22" fill="none" stroke="#c4713a" stroke-width="2.5"/>
+    <ellipse cx="14" cy="-12" rx="12" ry="22" fill="none" stroke="#c4713a" stroke-width="2.5"/>
+    <path d="M 0 -34 Q -2 -44 6 -47" stroke="#5f9e45" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <circle cx="-8" cy="-16" r="2.6" fill="#3a2c20"/><circle cx="8" cy="-16" r="2.6" fill="#3a2c20"/>
+    <path d="M -6 -8 Q 0 -3 6 -8" stroke="#3a2c20" stroke-width="2" fill="none" stroke-linecap="round"/>
+  `);
+}
+
+function fallingLeaves(count = 6) {
+  const cols = ["#e8963e", "#d9772e", "#f0b04a", "#c9552e"];
+  let out = "";
+  for (let i = 0; i < count; i++) {
+    const x = 60 + Math.round((880 / count) * i + Math.random() * 60);
+    const dur = 9 + Math.random() * 7;
+    const delay = -Math.random() * dur;
+    out += `<g transform="translate(${x},0)">
+      <g class="fallingLeaf" style="animation-duration:${dur.toFixed(1)}s;animation-delay:${delay.toFixed(1)}s">
+        ${leaf(cols[i % cols.length], 0.8, Math.round(Math.random() * 360))}
+      </g></g>`;
+  }
+  return out;
+}
+
+function snowflakes(count = 10) {
+  let out = "";
+  for (let i = 0; i < count; i++) {
+    const x = 40 + Math.round((920 / count) * i + Math.random() * 50);
+    const dur = 8 + Math.random() * 6;
+    const delay = -Math.random() * dur;
+    const r = 3 + Math.random() * 4;
+    out += `<g transform="translate(${x},0)">
+      <g class="snowflake" style="animation-duration:${dur.toFixed(1)}s;animation-delay:${delay.toFixed(1)}s">
+        <circle r="${r.toFixed(1)}" fill="#fff" opacity="0.9"/>
+      </g></g>`;
+  }
+  return out;
+}
+
+function snowman(s = 1, hasNose = false) {
+  return `<g transform="scale(${s})">
+    ${hit(80, 0, -60)}
+    <ellipse cx="0" cy="4" rx="56" ry="12" fill="#dbeaf5"/>
+    <circle cx="0" cy="-34" r="44" fill="#ffffff" stroke="#c9dcea" stroke-width="3"/>
+    <circle cx="0" cy="-98" r="33" fill="#ffffff" stroke="#c9dcea" stroke-width="3"/>
+    <circle cx="0" cy="-146" r="25" fill="#ffffff" stroke="#c9dcea" stroke-width="3"/>
+    <path d="M -30 -100 L -56 -112 M 30 -100 L 56 -112" stroke="#94683c" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="0" cy="-106" r="3.5" fill="#3a2c20"/>
+    <circle cx="0" cy="-88" r="3.5" fill="#3a2c20"/>
+    <circle cx="0" cy="-40" r="3.5" fill="#3a2c20"/>
+    <path d="M -25 -170 Q 0 -182 25 -170 L 22 -158 Q 0 -166 -22 -158 Z" fill="#e0634e"/>
+    <path d="M -14 -176 L -12 -190 Q 0 -196 12 -190 L 14 -176" fill="#e0634e" stroke="#c14a38" stroke-width="2"/>
+    <circle cx="-9" cy="-152" r="3" fill="#3a2c20"/><circle cx="9" cy="-152" r="3" fill="#3a2c20"/>
+    ${hasNose
+      ? `<path class="snowNose" d="M 0 -144 L 26 -138 L 2 -134 Z" fill="#e8963e" stroke="#c4713a" stroke-width="1.5"/>
+         <path d="M -8 -136 Q 0 -130 8 -136" stroke="#3a2c20" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+         <circle cx="-14" cy="-140" r="3.4" fill="#ff9d9d" opacity="0.55"/><circle cx="14" cy="-140" r="3.4" fill="#ff9d9d" opacity="0.55"/>`
+      : `<ellipse cx="0" cy="-137" rx="3.4" ry="4.5" fill="#3a2c20"/>`}
+  </g>`;
+}
+
+function carrot(s = 1) {
+  return `<g transform="scale(${s})">
+    ${hit(40)}
+    <path d="M -20 -8 L 22 2 L -14 12 Q -24 4 -20 -8 Z" fill="#e8963e" stroke="#c4713a" stroke-width="2"/>
+    <path d="M -18 -6 Q -30 -12 -36 -8 M -19 -2 Q -32 -2 -36 2" stroke="#5f9e45" stroke-width="4" fill="none" stroke-linecap="round"/>
+  </g>`;
+}
+
+function firTree(s = 1) {
+  return `<g transform="scale(${s})">
+    ${hit(66, 0, -60)}
+    <rect x="-9" y="-12" width="18" height="26" rx="4" fill="#7a5230"/>
+    <path d="M 0 -150 L 38 -92 L -38 -92 Z" fill="#3a7050"/>
+    <path d="M 0 -118 L 48 -52 L -48 -52 Z" fill="#437c59"/>
+    <path d="M 0 -84 L 58 -10 L -58 -10 Z" fill="#4d8a63"/>
+    <path d="M -2 -148 Q 10 -132 24 -114 Q 8 -118 -2 -122 Z" fill="#eef7fd" opacity="0.9"/>
+    <path d="M -34 -60 Q -14 -54 8 -58 Q -8 -46 -30 -50 Z" fill="#eef7fd" opacity="0.9"/>
+    <path d="M 14 -28 Q 34 -24 50 -16 Q 28 -12 10 -18 Z" fill="#eef7fd" opacity="0.9"/>
+  </g>`;
+}
+
+function birdFeeder(s = 1, filled = false) {
+  return `<g transform="scale(${s})">
+    <rect x="-5" y="-60" width="10" height="130" rx="4" fill="#96683c"/>
+    <rect x="-46" y="-78" width="92" height="14" rx="6" fill="#b58452"/>
+    <path d="M -50 -78 L 0 -128 L 50 -78 Z" fill="#c9552e" stroke="#a5652c" stroke-width="3"/>
+    <rect x="-34" y="-76" width="68" height="8" fill="#e8c49a"/>
+    ${filled ? `<path d="M -30 -78 Q 0 -90 30 -78 Z" fill="#e8b04b"/>
+      <circle cx="-14" cy="-82" r="2.5" fill="#94683c"/><circle cx="2" cy="-84" r="2.5" fill="#94683c"/><circle cx="16" cy="-82" r="2.5" fill="#94683c"/>` : ""}
+  </g>`;
+}
+
+function winterBird(s = 1, col = "#e0634e") {
+  return `<g transform="scale(${s})">
+    ${hit(36, 0, -6)}
+    <ellipse cx="0" cy="0" rx="16" ry="13" fill="#8a7a68"/>
+    <circle cx="10" cy="-8" r="9" fill="#8a7a68"/>
+    <ellipse cx="-2" cy="3" rx="10" ry="8" fill="${col}"/>
+    <path d="M -14 -4 Q -24 -8 -26 0 Q -18 4 -12 2 Z" fill="#6d6053"/>
+    <path d="M 17 -9 L 25 -7 L 17 -4 Z" fill="#f5a340"/>
+    <circle cx="9" cy="-10" r="2.2" fill="#3a2c20"/><circle cx="10" cy="-11" r="0.8" fill="#fff"/>
+    <path d="M -4 12 L -4 16 M 4 12 L 4 16" stroke="#f5a340" stroke-width="2" stroke-linecap="round"/>
+  </g>`;
+}
+
+function seedBag(s = 1) {
+  return `<g transform="scale(${s})">
+    ${hit(44, 0, -10)}
+    <path d="M -22 12 Q -26 -18 -12 -26 L 12 -26 Q 26 -18 22 12 Q 0 20 -22 12 Z" fill="#e8d5b0" stroke="#bfa87c" stroke-width="2.5"/>
+    <path d="M -12 -26 Q -16 -34 -10 -38 M 12 -26 Q 16 -34 10 -38" stroke="#bfa87c" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M -14 -22 L 14 -22" stroke="#bfa87c" stroke-width="2"/>
+    <circle cx="-8" cy="-4" r="3" fill="#94683c"/><circle cx="6" cy="-8" r="3" fill="#94683c"/>
+    <circle cx="0" cy="4" r="3" fill="#94683c"/><circle cx="10" cy="2" r="3" fill="#94683c"/>
+  </g>`;
+}
+
+function bunny(s = 1) {
+  return `<g transform="scale(${s})">
+    ${hit(50, 0, -16)}
+    <ellipse cx="0" cy="6" rx="24" ry="19" fill="#f7f7f2"/>
+    <circle cx="-2" cy="-18" r="16" fill="#f7f7f2"/>
+    <path d="M -12 -30 Q -18 -56 -8 -56 Q -2 -52 -4 -32 Z" fill="#f7f7f2" stroke="#dcdcd2" stroke-width="2"/>
+    <path d="M 6 -30 Q 4 -58 14 -56 Q 20 -50 12 -30 Z" fill="#f7f7f2" stroke="#dcdcd2" stroke-width="2"/>
+    <path d="M -10 -48 Q -12 -40 -8 -36 M 10 -48 Q 12 -42 10 -36" stroke="#ffd8d8" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="-8" cy="-20" r="2.6" fill="#3a2c20"/><circle cx="4" cy="-20" r="2.6" fill="#3a2c20"/>
+    <ellipse cx="-2" cy="-13" rx="2.6" ry="2" fill="#ff9d9d"/>
+    <path d="M -2 -11 Q -2 -8 -2 -7 M -2 -7 Q -6 -4 -8 -7 M -2 -7 Q 2 -4 4 -7" stroke="#3a2c20" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    <circle cx="20" cy="10" r="9" fill="#ffffff"/>
+    <ellipse cx="-10" cy="24" rx="7" ry="4" fill="#eaeae2"/><ellipse cx="8" cy="24" rx="7" ry="4" fill="#eaeae2"/>
+  </g>`;
+}
+
+function seagull(s = 1) {
+  return `<g transform="scale(${s})">
+    ${hit(46, 0, -4)}
+    <g class="flapping" style="animation-duration:0.35s">
+      <path d="M -10 -8 Q -38 -26 -54 -18 Q -40 -4 -12 -2 Z" fill="#f2f6f8"/>
+      <path d="M 10 -8 Q 38 -26 54 -18 Q 40 -4 12 -2 Z" fill="#f2f6f8"/>
+    </g>
+    <ellipse cx="0" cy="0" rx="18" ry="11" fill="#ffffff" stroke="#d5dde2" stroke-width="2"/>
+    <circle cx="14" cy="-7" r="8" fill="#ffffff" stroke="#d5dde2" stroke-width="2"/>
+    <path d="M 21 -8 L 30 -6 L 21 -3 Z" fill="#f5a340"/>
+    <circle cx="13" cy="-9" r="2" fill="#3a2c20"/>
+    <path d="M -16 2 L -24 6 L -15 7 Z" fill="#d5dde2"/>
+  </g>`;
+}
+
+function sailboat(s = 1) {
+  return `<g transform="scale(${s})">
+    <path d="M -34 0 L 34 0 L 22 16 L -22 16 Z" fill="#c9552e" stroke="#a5432a" stroke-width="2"/>
+    <path d="M 0 -4 L 0 -58" stroke="#7a5230" stroke-width="4"/>
+    <path d="M 4 -54 Q 34 -34 6 -8 Z" fill="#ffffff" stroke="#d5dde2" stroke-width="2"/>
+    <path d="M -4 -48 Q -26 -30 -4 -10 Z" fill="#ffd23e" stroke="#e8a62c" stroke-width="2"/>
+  </g>`;
+}
+
+function sandcastle(s = 1) {
+  return `<g transform="scale(${s})">
+    ${hit(70, 0, -40)}
+    <rect x="-52" y="-38" width="30" height="42" rx="3" fill="#e8cf9a" stroke="#cfb277" stroke-width="2.5"/>
+    <rect x="22" y="-38" width="30" height="42" rx="3" fill="#e8cf9a" stroke="#cfb277" stroke-width="2.5"/>
+    <rect x="-30" y="-56" width="60" height="60" rx="3" fill="#f0dcae" stroke="#cfb277" stroke-width="2.5"/>
+    <path d="M -30 -56 L -30 -66 L -22 -66 L -22 -56 M -8 -56 L -8 -66 L 0 -66 L 0 -56 M 14 -56 L 14 -66 L 22 -66 L 22 -56 L 30 -56 L 30 -66" fill="#f0dcae" stroke="#cfb277" stroke-width="2.5"/>
+    <path d="M -52 -38 L -52 -46 L -46 -46 L -46 -38 M -34 -38 L -34 -46 L -28 -46 L -28 -38 M 28 -38 L 28 -46 L 34 -46 L 34 -38 M 46 -38 L 46 -46 L 52 -46 L 52 -38" fill="#e8cf9a" stroke="#cfb277" stroke-width="2"/>
+    <path d="M 0 -66 L 0 -88" stroke="#94683c" stroke-width="3"/>
+    <path class="castleFlag" d="M 0 -88 L 20 -82 L 0 -76 Z" fill="#e0634e"/>
+    <path d="M -12 -30 Q 0 -22 12 -30 L 12 -6 L -12 -6 Z" fill="#cfb277"/>
+  </g>`;
+}
+
+function crabFig(s = 1, withShell = false) {
+  return `<g transform="scale(${s})">
+    ${hit(54, 0, -6)}
+    ${withShell ? `<g transform="translate(2,-26)">
+      <circle r="17" fill="#c77f3f" stroke="#a5652c" stroke-width="2.5"/>
+      <path d="M 0 -13 a 13 13 0 1 1 -13 13 a 9 9 0 1 0 9 -9 a 5 5 0 1 0 -5 5" fill="none" stroke="#a5652c" stroke-width="2.5" stroke-linecap="round"/>
+    </g>` : ""}
+    <path d="M -18 -14 Q -34 -30 -28 -38 Q -20 -36 -14 -22 M -28 -38 Q -36 -36 -38 -30" stroke="#e0634e" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <path d="M 18 -14 Q 34 -30 28 -38 Q 20 -36 14 -22 M 28 -38 Q 36 -36 38 -30" stroke="#e0634e" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <ellipse cx="0" cy="0" rx="24" ry="17" fill="#e8755e" stroke="#c14a38" stroke-width="2.5"/>
+    <path d="M -20 12 L -28 20 M -8 15 L -12 24 M 8 15 L 12 24 M 20 12 L 28 20" stroke="#c14a38" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M -8 -14 Q -8 -24 -6 -26 M 8 -14 Q 8 -24 6 -26" stroke="#c14a38" stroke-width="2.5" fill="none"/>
+    <circle cx="-6" cy="-27" r="4.5" fill="#fff"/><circle cx="6" cy="-27" r="4.5" fill="#fff"/>
+    <circle cx="-6" cy="-27" r="2" fill="#3a2c20"/><circle cx="6" cy="-27" r="2" fill="#3a2c20"/>
+    <path d="M -5 -4 Q 0 0 5 -4" stroke="#8a3325" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <circle cx="-13" cy="-6" r="3" fill="#ffb3a0" opacity="0.7"/><circle cx="13" cy="-6" r="3" fill="#ffb3a0" opacity="0.7"/>
+  </g>`;
+}
+
+function spiralShell(s = 1) {
+  return `<g transform="scale(${s})">
+    ${hit(40)}
+    <circle r="18" fill="#e8b04b" stroke="#c48a3a" stroke-width="2.5"/>
+    <path d="M 0 -14 a 14 14 0 1 1 -14 14 a 10 10 0 1 0 10 -10 a 6 6 0 1 0 -6 6" fill="none" stroke="#c48a3a" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M 14 10 Q 24 14 26 20 Q 18 22 12 17 Z" fill="#e8b04b" stroke="#c48a3a" stroke-width="2"/>
+  </g>`;
+}
+
+function starfishFig(s = 1) {
+  let arms = "";
+  for (let i = 0; i < 5; i++) {
+    arms += `<path d="M 0 -6 Q 6 -20 0 -30 Q -6 -20 0 -6 Z" fill="#f5a05e" stroke="#d87f3c" stroke-width="2"
+      transform="rotate(${i * 72}) translate(0,-4)"/>`;
+  }
+  return `<g transform="scale(${s})">
+    ${hit(46)}
+    ${arms}
+    <circle r="13" fill="#f7b578"/>
+    <circle cx="-4" cy="-2" r="2.4" fill="#3a2c20"/><circle cx="4" cy="-2" r="2.4" fill="#3a2c20"/>
+    <path d="M -4 4 Q 0 7 4 4" stroke="#3a2c20" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <circle cx="-8" cy="2" r="2.4" fill="#ff9d9d" opacity="0.6"/><circle cx="8" cy="2" r="2.4" fill="#ff9d9d" opacity="0.6"/>
+  </g>`;
+}
+
+function palm(s = 1) {
+  return `<g transform="scale(${s})">
+    <path d="M -8 160 Q -14 80 4 10 L 20 14 Q 6 84 10 160 Z" fill="#b58452" stroke="#94683c" stroke-width="3"/>
+    <path d="M -4 12 L 0 2 L 8 10 L 14 2 L 16 12" fill="none" stroke="#94683c" stroke-width="2"/>
+    <path d="M 10 8 Q -50 -18 -76 8 Q -40 18 8 16 Z" fill="#4d9c60"/>
+    <path d="M 12 6 Q 0 -50 -30 -58 Q -16 -20 8 10 Z" fill="#5faf6e"/>
+    <path d="M 14 6 Q 40 -46 74 -42 Q 52 -8 16 12 Z" fill="#4d9c60"/>
+    <path d="M 14 10 Q 70 -8 92 16 Q 52 26 14 16 Z" fill="#5faf6e"/>
+    <circle cx="4" cy="16" r="8" fill="#96683c"/>
+    <circle cx="20" cy="20" r="7" fill="#96683c"/>
+  </g>`;
+}
+
+function beachBall(x, y, s = 1) {
+  return wrap(x, y, s, `class="pokeable" data-sound="boing"`, `
+    ${hit(44)}
+    <circle r="24" fill="#fff"/>
+    <path d="M 0 -24 A 24 24 0 0 1 20.8 12 L 0 0 Z" fill="#e0634e"/>
+    <path d="M 20.8 12 A 24 24 0 0 1 -20.8 12 L 0 0 Z" fill="#ffd23e"/>
+    <path d="M -20.8 12 A 24 24 0 0 1 0 -24 L 0 0 Z" fill="#5eb3d8"/>
+    <circle r="24" fill="none" stroke="#c9c2ae" stroke-width="2"/>
+  `);
+}
+
+/* Lia reagiert überall gleich – wird vom Blumenbeet und vom Strand genutzt */
+function wireLia(svg, api) {
+  const liaEl = svg.querySelector("#lia");
+  if (!liaEl) return;
+  const liaInner = liaEl.querySelector(":scope > .inner");
+  const actions = [
+    () => {
+      api.play("hello");
+      api.speak("Hallo, ich bin Lia!");
+      const arm = liaEl.querySelector(".liaArm");
+      if (arm) arm.animate(
+        [{ transform: "rotate(0deg)" }, { transform: "rotate(-16deg)" }, { transform: "rotate(0deg)" }, { transform: "rotate(-16deg)" }, { transform: "rotate(0deg)" }],
+        { duration: 1000 });
+    },
+    () => {
+      api.play("boing");
+      api.speak("Hurra!");
+      liaInner.animate(
+        [{ transform: "translateY(0)" }, { transform: "translateY(-55px)" }, { transform: "translateY(0)" }, { transform: "translateY(-30px)" }, { transform: "translateY(0)" }],
+        { duration: 1100, easing: "ease-in-out" });
+    },
+    () => {
+      api.play("whee");
+      api.speak("Juhu, ein Purzelbaum!");
+      liaInner.style.transformBox = "fill-box";
+      liaInner.style.transformOrigin = "center";
+      liaInner.animate(
+        [{ transform: "translateY(0) rotate(0deg)" }, { transform: "translateY(-45px) rotate(180deg)" }, { transform: "translateY(0) rotate(360deg)" }],
+        { duration: 1200, easing: "ease-in-out" });
+    },
+    () => {
+      api.play("chime");
+      api.speak("Hihi, das kitzelt!");
+      liaInner.animate(
+        [{ transform: "rotate(0deg)" }, { transform: "rotate(-8deg)" }, { transform: "rotate(8deg)" }, { transform: "rotate(-6deg)" }, { transform: "rotate(0deg)" }],
+        { duration: 800 });
+    },
+  ];
+  let last = -1;
+  liaEl.addEventListener("pointerdown", () => {
+    let i;
+    do { i = Math.floor(Math.random() * actions.length); } while (i === last);
+    last = i;
+    actions[i]();
+  });
+}
+
 /* ---------- Karten-Symbole für die Wissens-Karten ---------- */
 
 const CardIcons = {
@@ -559,6 +920,11 @@ const CardIcons = {
   hedgehog: `<svg viewBox="-75 -65 150 130">${hedgehog(1.2)}</svg>`,
   chick:    `<svg viewBox="-55 -75 110 120">${nestChick(1.3)}</svg>`,
   firefly:  `<svg viewBox="-55 -55 110 110">${fireflyBug(1.5, true)}</svg>`,
+  squirrel: `<svg viewBox="-60 -75 120 130">${squirrel(1.3)}</svg>`,
+  bird:     `<svg viewBox="-55 -45 110 90">${winterBird(1.8)}</svg>`,
+  snowman:  `<svg viewBox="-75 -205 150 230">${snowman(1, true)}</svg>`,
+  crab:     `<svg viewBox="-60 -70 120 115">${crabFig(1.3, true)}</svg>`,
+  starfish: `<svg viewBox="-55 -55 110 110">${starfishFig(1.5)}</svg>`,
   rainbow:  `<svg viewBox="-70 -60 140 110">
     <path d="M -56 40 A 56 56 0 0 1 56 40" fill="none" stroke="#e84c3d" stroke-width="10"/>
     <path d="M -45 40 A 45 45 0 0 1 45 40" fill="none" stroke="#f5a340" stroke-width="10"/>
@@ -677,48 +1043,7 @@ const sceneGarden = {
     }
 
     /* Lia macht bei jedem Antippen etwas anderes */
-    const liaEl = svg.querySelector("#lia");
-    const liaInner = liaEl.querySelector(":scope > .inner");
-    const liaActions = [
-      () => { /* Winken */
-        api.play("hello");
-        api.speak("Hallo, ich bin Lia!");
-        const arm = liaEl.querySelector(".liaArm");
-        if (arm) arm.animate(
-          [{ transform: "rotate(0deg)" }, { transform: "rotate(-16deg)" }, { transform: "rotate(0deg)" }, { transform: "rotate(-16deg)" }, { transform: "rotate(0deg)" }],
-          { duration: 1000 });
-      },
-      () => { /* Springen */
-        api.play("boing");
-        api.speak("Hurra!");
-        liaInner.animate(
-          [{ transform: "translateY(0)" }, { transform: "translateY(-55px)" }, { transform: "translateY(0)" }, { transform: "translateY(-30px)" }, { transform: "translateY(0)" }],
-          { duration: 1100, easing: "ease-in-out" });
-      },
-      () => { /* Purzelbaum */
-        api.play("whee");
-        api.speak("Juhu, ein Purzelbaum!");
-        liaInner.style.transformBox = "fill-box";
-        liaInner.style.transformOrigin = "center";
-        liaInner.animate(
-          [{ transform: "translateY(0) rotate(0deg)" }, { transform: "translateY(-45px) rotate(180deg)" }, { transform: "translateY(0) rotate(360deg)" }],
-          { duration: 1200, easing: "ease-in-out" });
-      },
-      () => { /* Kichern */
-        api.play("chime");
-        api.speak("Hihi, das kitzelt!");
-        liaInner.animate(
-          [{ transform: "rotate(0deg)" }, { transform: "rotate(-8deg)" }, { transform: "rotate(8deg)" }, { transform: "rotate(-6deg)" }, { transform: "rotate(0deg)" }],
-          { duration: 800 });
-      },
-    ];
-    let lastLia = -1;
-    liaEl.addEventListener("pointerdown", () => {
-      let i;
-      do { i = Math.floor(Math.random() * liaActions.length); } while (i === lastLia);
-      lastLia = i;
-      liaActions[i]();
-    });
+    wireLia(svg, api);
 
     /* Die Katze wedelt mit dem Schwanz */
     const catEl = svg.querySelector("#cat");
@@ -979,7 +1304,305 @@ const sceneTree = {
 };
 
 /* ================================================================
-   SZENE 4 – Die Nachtwiese  (wird freigespielt)
+   SZENE 4 – Der Herbstwald
+   ================================================================ */
+
+const sceneAutumn = {
+  id: "autumn",
+  tasks: [
+    { id: "t8", source: "#acorn", target: "#squirrel2" },
+    { id: "t9", source: "#leafpile", target: "#hedgehog2" },
+  ],
+  html(done) {
+    const t8 = done("t8"), t9 = done("t9");
+    return `
+    <defs>
+      <linearGradient id="aSky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#ffd9a0"/><stop offset="1" stop-color="#fff3dd"/>
+      </linearGradient>
+    </defs>
+    <rect width="1000" height="700" fill="url(#aSky)"/>
+    ${sun(880, 110)}
+    ${cloud(320, 80, 0.85)}
+    ${cloud(620, 130, 0.6)}
+    <path d="M 0 410 Q 280 350 560 410 Q 810 455 1000 400 L 1000 700 L 0 700 Z" fill="#d9b25e"/>
+    <path d="M 0 520 Q 400 470 1000 530 L 1000 700 L 0 700 Z" fill="#c49a4a"/>
+
+    ${wrap(170, 460, 1.25, `id="atree1" class="pokeable" data-sound="whoosh"`, autumnTree(1))}
+    ${wrap(880, 500, 0.9, `class="pokeable" data-sound="whoosh"`, autumnTree(1))}
+
+    ${wrap(560, 590, 1, `class="pokeable" data-sound="whoosh"`, `
+      ${hit(60, 0, -6)}
+      <ellipse cx="0" cy="4" rx="52" ry="18" fill="#d9772e"/>
+      <ellipse cx="-20" cy="-8" rx="28" ry="14" fill="#e8963e"/>
+      <ellipse cx="22" cy="-6" rx="26" ry="13" fill="#f0b04a"/>
+      <ellipse cx="0" cy="-16" rx="22" ry="11" fill="#c9552e"/>
+    `)}
+
+    ${pumpkin(920, 665, 1.1)}
+    ${mushroom(80, 655, 1)}
+    ${mushroom(120, 668, 0.7)}
+    ${grassTuft(420, 560, 1.2, "#a8823c")}
+    ${grassTuft(700, 680, 1.3, "#a8823c")}
+    ${grassTuft(960, 590, 1.1, "#a8823c")}
+
+    ${wrap(250, 620, 1.35, `id="squirrel2" class="pokeable" data-sound="chirp"`, squirrel(1))}
+    ${t8 ? `<g transform="translate(300,635)">${acorn(0.85)}</g>` : ""}
+    ${!t8 ? wrap(490, 660, 1, `id="acorn" class="grabbable"`, acorn(1), "bobbing") : ""}
+
+    ${wrap(790, 620, 1.05, `id="hedgehog2" class="pokeable" data-sound="snuffle"`, hedgehog(1))}
+    ${t9 ? `<g transform="translate(796,596)">
+        ${leaf("#e8963e", 1.1, -30)}
+        <g transform="translate(26,8)">${leaf("#d9772e", 1, 35)}</g>
+        <g transform="translate(-22,10)">${leaf("#f0b04a", 0.95, -60)}</g>
+        <g class="inner twinkling" transform="translate(46,-48)">
+          <circle r="4" fill="#fff" opacity="0.8"/><circle cx="12" cy="-12" r="6" fill="#fff" opacity="0.7"/>
+        </g>
+      </g>`
+      : wrap(400, 645, 1, `id="leafpile" class="grabbable"`, leafBundle(1), "bobbing")}
+
+    ${fallingLeaves(7)}
+    ${butterfly(660, 300, 0.8, "#d9772e")}
+    `;
+  },
+  init(svg, api) {
+    if (!api.done("t8")) {
+      api.drag("#acorn", "#squirrel2", 120, (acornEl) => {
+        const sq = svg.querySelector("#squirrel2");
+        api.play("munch");
+        acornEl.classList.add("fadeOut");
+        setTimeout(() => acornEl.remove(), 500);
+        sq.querySelector(":scope > .inner").classList.add("happyBounce");
+        const tail = sq.querySelector(".sqTail");
+        if (tail) tail.animate(
+          [{ transform: "rotate(0deg)" }, { transform: "rotate(18deg)" }, { transform: "rotate(-6deg)" }, { transform: "rotate(0deg)" }],
+          { duration: 800 });
+        setTimeout(() => {
+          api.play("success");
+          api.complete("t8");
+        }, 1000);
+        return true;
+      });
+    }
+    if (!api.done("t9")) {
+      api.drag("#leafpile", "#hedgehog2", 120, (leavesEl) => {
+        api.play("whoosh");
+        api.play("snuffle");
+        leavesEl.setAttribute("transform", "translate(796,596) scale(1)");
+        leavesEl.classList.remove("grabbable");
+        const hog = svg.querySelector("#hedgehog2");
+        hog.querySelector(":scope > .inner").classList.add("happyBounce");
+        setTimeout(() => {
+          api.play("success");
+          api.complete("t9");
+        }, 1000);
+        return true;
+      });
+    }
+  },
+};
+
+/* ================================================================
+   SZENE 5 – Der Winter
+   ================================================================ */
+
+const sceneWinter = {
+  id: "winter",
+  tasks: [
+    { id: "t10", source: "#seeds", target: "#feeder" },
+    { id: "t11", source: "#carrot", target: "#snowmanTarget" },
+  ],
+  html(done) {
+    const t10 = done("t10"), t11 = done("t11");
+    return `
+    <defs>
+      <linearGradient id="wSky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#b8d8ec"/><stop offset="1" stop-color="#e8f3fb"/>
+      </linearGradient>
+    </defs>
+    <rect width="1000" height="700" fill="url(#wSky)"/>
+    ${wrap(880, 110, 1, `class="pokeable" data-sound="chime"`, `
+      <circle r="48" fill="#fff8e0" stroke="#f0e4b8" stroke-width="4" opacity="0.9"/>
+      ${face(1.3)}
+    `)}
+    ${cloud(280, 80, 0.9)}
+    ${cloud(560, 120, 0.65)}
+    <path d="M 0 420 Q 280 360 560 420 Q 810 465 1000 410 L 1000 700 L 0 700 Z" fill="#eef5fb"/>
+    <path d="M 0 530 Q 400 480 1000 540 L 1000 700 L 0 700 Z" fill="#ffffff"/>
+
+    ${wrap(90, 640, 1.15, `class="pokeable" data-sound="whoosh"`, firTree(1))}
+    ${wrap(950, 620, 0.95, `class="pokeable" data-sound="whoosh"`, firTree(1))}
+    ${wrap(560, 560, 0.6, `class="pokeable" data-sound="whoosh"`, firTree(1))}
+
+    ${wrap(300, 655, 1, `id="snowmanFig" class="pokeable" data-sound="boing"`, snowman(1, t11))}
+    <g id="snowmanTarget" transform="translate(300,510)"><circle r="46" fill="transparent"/></g>
+    ${!t11 ? wrap(470, 668, 1, `id="carrot" class="grabbable"`, carrot(1), "bobbing") : ""}
+
+    ${wrap(760, 655, 1, `id="feeder"`, birdFeeder(1, t10))}
+    ${t10
+      ? `${wrap(714, 572, 0.8, `class="pokeable" data-sound="chirp"`, winterBird(1), "bobbing")}
+         ${wrap(806, 572, 0.8, `class="pokeable" data-sound="chirp"`, winterBird(1, "#f0b04a"), "bobbing")}`
+      : `${wrap(650, 665, 0.9, `id="wbird1" class="pokeable" data-sound="chirp"`, winterBird(1), "bobbing")}
+         ${wrap(870, 668, 0.9, `id="wbird2" class="pokeable" data-sound="chirp"`, winterBird(1, "#f0b04a"), "bobbing")}`}
+    ${!t10 ? wrap(560, 660, 1, `id="seeds" class="grabbable"`, seedBag(1)) : ""}
+
+    ${wrap(170, 640, 1, `id="bunny" class="pokeable" data-sound="hop"`, bunny(1))}
+    ${snowflakes(12)}
+    `;
+  },
+  init(svg, api) {
+    if (!api.done("t10")) {
+      api.drag("#seeds", "#feeder", 130, (bagEl) => {
+        api.play("pop");
+        const inner = bagEl.querySelector(":scope > .inner");
+        inner.style.transformOrigin = "center";
+        inner.animate(
+          [{ transform: "rotate(0deg)" }, { transform: "rotate(-120deg)" }, { transform: "rotate(-120deg)" }],
+          { duration: 900, fill: "forwards" });
+        bagEl.classList.add("fadeOut");
+        setTimeout(() => bagEl.remove(), 900);
+        /* Die Vögel fliegen sofort zum Häuschen */
+        const b1 = svg.querySelector("#wbird1");
+        const b2 = svg.querySelector("#wbird2");
+        if (b1) b1.querySelector(":scope > .inner").animate(
+          [{ transform: "translate(0,0)" }, { transform: "translate(70px,-100px)" }],
+          { duration: 1100, easing: "ease-in-out", fill: "forwards" });
+        if (b2) b2.querySelector(":scope > .inner").animate(
+          [{ transform: "translate(0,0)" }, { transform: "translate(-70px,-105px)" }],
+          { duration: 1200, easing: "ease-in-out", fill: "forwards" });
+        setTimeout(() => api.play("chirp"), 900);
+        setTimeout(() => {
+          api.play("success");
+          api.complete("t10");
+        }, 1400);
+        return true;
+      });
+    }
+    if (!api.done("t11")) {
+      api.drag("#carrot", "#snowmanTarget", 110, (carrotEl) => {
+        api.play("chime");
+        carrotEl.classList.add("fadeOut");
+        setTimeout(() => carrotEl.remove(), 400);
+        const sm = svg.querySelector("#snowmanFig");
+        api.sparkleBurst(300, 510);
+        sm.querySelector(":scope > .inner").classList.add("happyBounce");
+        setTimeout(() => {
+          api.play("success");
+          api.complete("t11");
+        }, 1000);
+        return true;
+      });
+    }
+    const bun = svg.querySelector("#bunny");
+    if (bun) bun.addEventListener("pointerdown", () => {
+      bun.querySelector(":scope > .inner").animate(
+        [{ transform: "translate(0,0)" }, { transform: "translate(-30px,-55px)" }, { transform: "translate(-60px,0)" }, { transform: "translate(-30px,-45px)" }, { transform: "translate(0,0)" }],
+        { duration: 1400, easing: "ease-in-out" });
+    });
+  },
+};
+
+/* ================================================================
+   SZENE 6 – Urlaub am Strand
+   ================================================================ */
+
+const sceneBeach = {
+  id: "beach",
+  tasks: [
+    { id: "t12", source: "#shell", target: "#crab" },
+    { id: "t13", source: "#starfish", target: "#seaTarget" },
+  ],
+  html(done) {
+    const t12 = done("t12"), t13 = done("t13");
+    return `
+    <defs>
+      <linearGradient id="bSky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#8ed4f7"/><stop offset="1" stop-color="#e0f5ff"/>
+      </linearGradient>
+      <linearGradient id="bSea" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#6fc2e0"/><stop offset="1" stop-color="#3f92ba"/>
+      </linearGradient>
+    </defs>
+    <rect width="1000" height="700" fill="url(#bSky)"/>
+    ${sun(880, 100)}
+    ${cloud(300, 80, 0.9)}
+    ${cloud(580, 120, 0.6)}
+    <path id="sea" d="M 0 380 Q 80 368 160 380 Q 240 392 320 380 Q 400 368 480 380 Q 560 392 640 380 Q 720 368 800 380 Q 880 392 1000 378 L 1000 620 L 0 620 Z" fill="url(#bSea)"/>
+    <path d="M 60 430 Q 150 420 240 430 M 420 470 Q 510 460 600 470 M 700 425 Q 780 417 860 425" stroke="#bfe8f7" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.7"/>
+    <g id="seaTarget" transform="translate(520,470)"><circle r="110" fill="transparent"/></g>
+    <path d="M 0 600 Q 250 560 500 585 Q 760 610 1000 575 L 1000 700 L 0 700 Z" fill="#f0dcae"/>
+    <path d="M 0 640 Q 400 615 1000 635 L 1000 700 L 0 700 Z" fill="#e8cf9a"/>
+
+    ${wrap(160, 415, 1, ``, sailboat(1), "bobbing")}
+    ${wrap(600, 210, 1, `id="seagull" class="pokeable" data-sound="gull"`, seagull(1), "floaty")}
+    ${wrap(75, 435, 1.05, `class="pokeable" data-sound="whoosh"`, palm(1), "swaying")}
+
+    <rect x="160" y="600" width="150" height="66" rx="10" fill="#ff8fab" transform="rotate(-3 235 633)"/>
+    <path d="M 175 606 L 185 664 M 205 603 L 215 661 M 235 601 L 245 659 M 265 600 L 275 658 M 292 600 L 300 656" stroke="#fff" stroke-width="7" transform="rotate(-3 235 633)" opacity="0.7"/>
+    ${wrap(235, 512, 0.95, `id="lia" class="pokeable"`, lia(1))}
+
+    ${wrap(840, 650, 1, `class="pokeable" data-sound="thud"`, sandcastle(1))}
+    ${beachBall(645, 655, 0.95)}
+
+    ${t13
+      ? `<g transform="translate(540,480)"><g class="inner bobbing">${starfishFig(0.95)}</g></g>`
+      : wrap(340, 650, 1, `id="starfish" class="grabbable"`, starfishFig(1), "bobbing")}
+
+    ${wrap(740, 615, 1, `id="crab" class="pokeable" data-sound="pop"`, crabFig(1, t12))}
+    ${!t12 ? wrap(470, 660, 1, `id="shell" class="grabbable"`, spiralShell(1), "bobbing") : ""}
+
+    ${wrap(660, 450, 0.9, `id="seafish" class="pokeable" data-sound="splash"`, fish(1, "#79c850"), "bobbing")}
+    `;
+  },
+  init(svg, api) {
+    wireLia(svg, api);
+    if (!api.done("t12")) {
+      api.drag("#shell", "#crab", 110, (shellEl) => {
+        api.play("pop");
+        shellEl.classList.add("fadeOut");
+        setTimeout(() => shellEl.remove(), 400);
+        const crabEl = svg.querySelector("#crab");
+        api.sparkleBurst(740, 590);
+        crabEl.querySelector(":scope > .inner").classList.add("happyBounce");
+        setTimeout(() => {
+          api.play("success");
+          api.complete("t12");
+        }, 1000);
+        return true;
+      });
+    }
+    if (!api.done("t13")) {
+      api.drag("#starfish", "#seaTarget", 300, (starEl) => {
+        api.play("splash");
+        starEl.classList.remove("grabbable");
+        starEl.animate(
+          [{ opacity: 1 }, { opacity: 0 }],
+          { duration: 500, delay: 300, fill: "forwards" });
+        api.sparkleBurst(520, 480);
+        setTimeout(() => {
+          api.play("success");
+          api.complete("t13");
+        }, 1000);
+        return true;
+      });
+    }
+    const gullEl = svg.querySelector("#seagull");
+    if (gullEl) gullEl.addEventListener("pointerdown", () => {
+      gullEl.querySelector(":scope > .inner").animate(
+        [{ transform: "translate(0,0)" }, { transform: "translate(-160px,-50px)" }, { transform: "translate(80px,-90px)" }, { transform: "translate(0,0)" }],
+        { duration: 2400, easing: "ease-in-out" });
+    });
+    const sf = svg.querySelector("#seafish");
+    if (sf) sf.addEventListener("pointerdown", () => {
+      sf.querySelector(":scope > .inner").animate(
+        [{ transform: "translateY(0) rotate(0deg)" }, { transform: "translateY(-80px) rotate(-20deg)" }, { transform: "translateY(0) rotate(0deg)" }],
+        { duration: 800, easing: "ease-out" });
+    });
+  },
+};
+
+/* ================================================================
+   SZENE 7 – Die Nachtwiese  (wird freigespielt)
    ================================================================ */
 
 const sceneNight = {
@@ -1074,6 +1697,6 @@ const sceneNight = {
   },
 };
 
-const SCENES = [sceneGarden, scenePond, sceneTree, sceneNight];
-const ALL_TASKS = ["t1", "t2", "t3", "t4", "t5", "t6", "t7"];
-const UNLOCK_NIGHT_AT = 6;
+const SCENES = [sceneGarden, scenePond, sceneTree, sceneAutumn, sceneWinter, sceneBeach, sceneNight];
+const ALL_TASKS = ["t1", "t2", "t3", "t4", "t5", "t6", "t8", "t9", "t10", "t11", "t12", "t13", "t7"];
+const UNLOCK_NIGHT_AT = 12;

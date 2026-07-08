@@ -26,7 +26,10 @@ python3 -m http.server 8000
 | 🌸 Blumenbeet | Samen gießen, Biene zur Blume bringen | Pflanzen brauchen Wasser & Sonne, Bienen machen Honig |
 | 🐸 Teich | Frosch füttern, Entenküken zur Mama bringen | Was Frösche fressen, Entenfamilien |
 | 🍎 Apfelbaum | Igel füttern, Vogelküken füttern | Was Igel mögen, wie Vogeleltern füttern |
-| 🌙 Nachtwiese *(wird freigespielt)* | Alle Glühwürmchen zum Leuchten bringen | Warum Glühwürmchen leuchten |
+| 🍂 Herbstwald | Eichel zum Eichhörnchen, Blätter zum Igel bringen | Wintervorräte, Winterschlaf im Blätternest |
+| ⛄ Winter | Körner ins Vogelhäuschen streuen, Schneemann-Nase | Vögel füttern im Winter |
+| 🏖️ Strand-Urlaub | Schneckenhaus zum Einsiedlerkrebs, Seestern ins Meer | Wo Einsiedlerkrebse wohnen, Seesterne brauchen Wasser |
+| 🌙 Nachtwiese *(großes Finale, wird freigespielt)* | Alle Glühwürmchen zum Leuchten bringen | Warum Glühwürmchen leuchten |
 
 Dazu ist **alles in jeder Szene antippbar**: Sonne, Wolken, Schnecke,
 Marienkäfer, Eichhörnchen, Fische, Sterne … alles wackelt, klingt und
