@@ -1,0 +1,434 @@
+/* ================================================================
+   Lias Garten – Stylesheet
+   Ein Wimmel-Entdeckerspiel für Kinder von 2–5 Jahren
+   ================================================================ */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #bde8ff;
+  font-family: "Comic Sans MS", "Chalkboard SE", "Marker Felt", "Segoe Print", sans-serif;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#stage {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#stage svg.scene {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ---------- Kopfleiste ---------- */
+
+#topbar {
+  position: fixed;
+  top: 10px;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  pointer-events: none;
+  z-index: 30;
+}
+
+#topbar > * { pointer-events: auto; }
+
+#starRow {
+  display: flex;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.75);
+  border-radius: 999px;
+  padding: 6px 12px;
+  box-shadow: 0 3px 8px rgba(60, 90, 40, 0.25);
+}
+
+#starRow svg { width: 26px; height: 26px; }
+
+.roundBtn {
+  width: 58px;
+  height: 58px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 4px 10px rgba(60, 90, 40, 0.3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease;
+}
+
+.roundBtn:active { transform: scale(0.88); }
+.roundBtn svg { width: 70%; height: 70%; }
+
+#btnGroup { display: flex; gap: 10px; }
+
+/* ---------- Navigation ---------- */
+
+.navArrow {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 64px;
+  height: 64px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 4px 10px rgba(60, 90, 40, 0.3);
+  cursor: pointer;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease;
+}
+
+.navArrow:active { transform: translateY(-50%) scale(0.88); }
+.navArrow svg { width: 60%; height: 60%; }
+.navArrow.hidden { display: none; }
+
+#navLeft { left: 10px; }
+#navRight { right: 10px; }
+
+#dots {
+  position: fixed;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 30;
+  background: rgba(255, 255, 255, 0.6);
+  padding: 7px 14px;
+  border-radius: 999px;
+}
+
+.dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2.5px solid #7aa85a;
+  position: relative;
+}
+
+.dot.active { background: #ffd23e; border-color: #e0a400; }
+
+.dot.locked { border-color: #b0b0b0; }
+.dot.locked::after {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="6" y="10" width="12" height="9" rx="2.5" fill="%23999"/><path d="M8.5 10V7.5a3.5 3.5 0 0 1 7 0V10" fill="none" stroke="%23999" stroke-width="2.4"/></svg>') center/contain no-repeat;
+}
+
+/* ---------- Startbildschirm ---------- */
+
+#startOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#startOverlay svg { width: 100%; height: 100%; }
+
+/* ---------- Wissens-Karte ---------- */
+
+#cardOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(70, 110, 60, 0.35);
+  backdrop-filter: blur(2px);
+}
+
+#cardOverlay.show { display: flex; }
+
+#factCard {
+  background: linear-gradient(#fffdf2, #fdf3d3);
+  border: 6px solid #f5b73e;
+  border-radius: 32px;
+  width: min(88vw, 480px);
+  padding: 22px 26px 20px;
+  text-align: center;
+  box-shadow: 0 16px 40px rgba(40, 60, 20, 0.4);
+  animation: cardPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes cardPop {
+  0% { transform: scale(0.3) rotate(-6deg); opacity: 0; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+#factIcon { width: 150px; height: 150px; margin: 0 auto 6px; }
+#factIcon svg { width: 100%; height: 100%; }
+
+#factText {
+  font-size: clamp(18px, 3.4vw, 24px);
+  color: #5a4419;
+  line-height: 1.35;
+  margin-bottom: 16px;
+}
+
+#factStars { height: 44px; margin-bottom: 6px; }
+#factStars svg { height: 44px; }
+
+#cardBtns { display: flex; gap: 14px; justify-content: center; }
+
+.cardBtn {
+  border: none;
+  border-radius: 50%;
+  width: 72px;
+  height: 72px;
+  cursor: pointer;
+  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease;
+}
+
+.cardBtn:active { transform: scale(0.88); }
+.cardBtn svg { width: 58%; height: 58%; }
+
+#btnSpeak { background: #7ec8f0; }
+#btnCardOk { background: #8fd45e; }
+
+/* ---------- Glühwürmchen-Hilfe ---------- */
+
+#helperFly {
+  position: fixed;
+  width: 74px;
+  height: 74px;
+  z-index: 40;
+  pointer-events: none;
+  opacity: 0;
+  transition: left 1.6s cubic-bezier(0.45, 0.05, 0.35, 1),
+              top 1.6s cubic-bezier(0.45, 0.05, 0.35, 1),
+              opacity 0.5s ease;
+}
+
+#helperFly.visible { opacity: 1; }
+
+#helperFly .glow {
+  animation: flyGlow 1s ease-in-out infinite alternate;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@keyframes flyGlow {
+  from { opacity: 0.5; transform: scale(0.85); }
+  to   { opacity: 1;   transform: scale(1.15); }
+}
+
+#helperFly .wing {
+  animation: flyFlap 0.22s ease-in-out infinite alternate;
+  transform-box: fill-box;
+  transform-origin: bottom center;
+}
+
+@keyframes flyFlap {
+  from { transform: rotate(-14deg); }
+  to   { transform: rotate(16deg); }
+}
+
+/* ---------- Allgemeine SVG-Animationen ---------- */
+
+.pokeable { cursor: pointer; }
+
+.wiggling {
+  animation: wiggle 0.55s ease-in-out;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@keyframes wiggle {
+  0%   { transform: rotate(0deg) scale(1); }
+  25%  { transform: rotate(-7deg) scale(1.08); }
+  55%  { transform: rotate(6deg) scale(1.05); }
+  80%  { transform: rotate(-3deg) scale(1.02); }
+  100% { transform: rotate(0deg) scale(1); }
+}
+
+.sparkleTarget {
+  animation: targetPulse 0.9s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@keyframes targetPulse {
+  0%, 100% { filter: drop-shadow(0 0 2px #fff8c0) brightness(1); }
+  50%      { filter: drop-shadow(0 0 14px #ffe95c) brightness(1.25); }
+}
+
+.floaty {
+  animation: floaty 2.6s ease-in-out infinite alternate;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@keyframes floaty {
+  from { transform: translateY(0px); }
+  to   { transform: translateY(-12px); }
+}
+
+.drifting {
+  animation: drift 26s linear infinite alternate;
+}
+
+@keyframes drift {
+  from { transform: translateX(0px); }
+  to   { transform: translateX(90px); }
+}
+
+.swaying {
+  animation: sway 3.4s ease-in-out infinite alternate;
+  transform-box: fill-box;
+  transform-origin: bottom center;
+}
+
+@keyframes sway {
+  from { transform: rotate(-2.5deg); }
+  to   { transform: rotate(2.5deg); }
+}
+
+.bobbing {
+  animation: bob 2.2s ease-in-out infinite alternate;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@keyframes bob {
+  from { transform: translateY(0) rotate(-2deg); }
+  to   { transform: translateY(-6px) rotate(2deg); }
+}
+
+.flapping {
+  animation: flap 0.3s ease-in-out infinite alternate;
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+
+@keyframes flap {
+  from { transform: scaleX(1); }
+  to   { transform: scaleX(0.35); }
+}
+
+.twinkling {
+  animation: twinkle 1.8s ease-in-out infinite alternate;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@keyframes twinkle {
+  from { opacity: 0.65; transform: scale(0.85); }
+  to   { opacity: 1; transform: scale(1.15); }
+}
+
+.grabbable { cursor: grab; }
+.grabbing { cursor: grabbing; }
+
+.happyBounce {
+  animation: happyBounce 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 2;
+  transform-box: fill-box;
+  transform-origin: bottom center;
+}
+
+@keyframes happyBounce {
+  0%   { transform: translateY(0) scale(1, 1); }
+  30%  { transform: translateY(-26px) scale(0.95, 1.08); }
+  60%  { transform: translateY(0) scale(1.08, 0.92); }
+  100% { transform: translateY(0) scale(1, 1); }
+}
+
+.growIn {
+  animation: growIn 1.6s cubic-bezier(0.34, 1.4, 0.64, 1) forwards;
+  transform-box: fill-box;
+  transform-origin: bottom center;
+}
+
+@keyframes growIn {
+  0%   { transform: scale(0.02); opacity: 0; }
+  40%  { opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.fadeOut {
+  animation: fadeOut 0.6s ease forwards;
+}
+
+@keyframes fadeOut {
+  to { opacity: 0; }
+}
+
+.heartPop {
+  animation: heartPop 1.4s ease-out forwards;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@keyframes heartPop {
+  0%   { transform: translateY(0) scale(0.3); opacity: 0; }
+  25%  { transform: translateY(-14px) scale(1.1); opacity: 1; }
+  100% { transform: translateY(-60px) scale(0.9); opacity: 0; }
+}
+
+.confettiStar {
+  animation: confettiFall 2.6s ease-in forwards;
+}
+
+/* ---------- Hinweis: Gerät bitte quer halten ---------- */
+
+#rotateHint {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 24px;
+  background: linear-gradient(#8ed4f7, #eaf9ff);
+}
+
+#rotateHint svg {
+  width: 40vw;
+  max-width: 220px;
+  animation: rotateDevice 2.2s ease-in-out infinite;
+}
+
+@keyframes rotateDevice {
+  0%, 20%  { transform: rotate(0deg); }
+  60%, 85% { transform: rotate(90deg); }
+  100%     { transform: rotate(90deg); }
+}
+
+@media (orientation: portrait) {
+  #rotateHint { display: flex; }
+}
+
+@keyframes confettiFall {
+  0%   { transform: translateY(-60px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(780px) rotate(340deg); opacity: 0.7; }
+}
