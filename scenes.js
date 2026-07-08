@@ -87,6 +87,16 @@ const TASK_INFO = {
     prompt: "Seesterne leben im Meer und brauchen Wasser. Bringst du den Seestern zurück ins Meer?",
     praise: "Super! Der Seestern schwimmt wieder fröhlich im Meer.",
   },
+  t14: {
+    icon: "liberty",
+    prompt: "Lia macht eine große Reise nach Amerika! Die Freiheitsstatue steht auf einer kleinen Insel. Fährst du Lia mit dem Boot zu ihr?",
+    praise: "Hurra! Lia ist bei der Freiheitsstatue angekommen. Was für eine Reise!",
+  },
+  t15: {
+    icon: "dolphin",
+    prompt: "Delfine leben im Meer und springen gern aus dem Wasser. Bringst du dem Delfin einen Fisch?",
+    praise: "Toll! Der Delfin freut sich und macht einen Freudensprung.",
+  },
 };
 
 function face(s = 1, mood = "happy") {
@@ -863,6 +873,114 @@ function beachBall(x, y, s = 1) {
   `);
 }
 
+/* ---------- Amerika: Freiheitsstatue, Fähre, Delfin ---------- */
+
+function libertyStatue(s = 1) {
+  return `<g transform="scale(${s})">
+    ${hit(95, 0, -90)}
+    <rect x="-55" y="50" width="110" height="26" rx="3" fill="#b8a888" stroke="#a89878" stroke-width="3"/>
+    <rect x="-45" y="-10" width="90" height="62" fill="#c9b8a0" stroke="#a89878" stroke-width="3"/>
+    <rect x="-36" y="-24" width="72" height="16" rx="2" fill="#b8a888" stroke="#a89878" stroke-width="2.5"/>
+    <path d="M -34 -26 L -20 -118 L 20 -118 L 34 -26 Z" fill="#7fbfa8" stroke="#5fa88e" stroke-width="3"/>
+    <path d="M -14 -30 Q -10 -70 -8 -100 M 6 -30 Q 8 -70 9 -100 M 20 -30 Q 18 -60 16 -84"
+      stroke="#5fa88e" stroke-width="2" fill="none" opacity="0.7"/>
+    <path d="M -18 -108 L -42 -82 L -33 -73 L -13 -97 Z" fill="#7fbfa8" stroke="#5fa88e" stroke-width="2"/>
+    <g transform="rotate(-15 -42 -80)"><rect x="-52" y="-94" width="20" height="28" rx="3" fill="#8fcbb5" stroke="#5fa88e" stroke-width="2"/></g>
+    <path d="M 15 -112 L 33 -168 L 44 -164 L 27 -108 Z" fill="#7fbfa8" stroke="#5fa88e" stroke-width="2"/>
+    <path d="M 31 -176 L 49 -170" stroke="#5fa88e" stroke-width="9" stroke-linecap="round"/>
+    <g class="torch">
+      <path d="M 40 -180 Q 32 -198 40 -212 Q 43 -200 47 -196 Q 49 -206 52 -210 Q 54 -194 48 -182 Z"
+        fill="#ffd23e" stroke="#f5a340" stroke-width="2"/>
+    </g>
+    <circle cx="0" cy="-132" r="17" fill="#8fcbb5" stroke="#5fa88e" stroke-width="2.5"/>
+    <path d="M -15 -141 L -21 -160 M -8 -145 L -10 -166 M 0 -147 L 0 -170 M 8 -145 L 10 -166 M 15 -141 L 21 -160"
+      stroke="#7fbfa8" stroke-width="5" stroke-linecap="round"/>
+    <path d="M -16 -139 Q 0 -149 16 -139" stroke="#5fa88e" stroke-width="4" fill="none"/>
+    <circle cx="-6" cy="-133" r="2.2" fill="#3a2c20"/><circle cx="6" cy="-133" r="2.2" fill="#3a2c20"/>
+    <path d="M -5 -127 Q 0 -123 5 -127" stroke="#3a2c20" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <circle cx="-11" cy="-128" r="2.6" fill="#ff9d9d" opacity="0.5"/>
+    <circle cx="11" cy="-128" r="2.6" fill="#ff9d9d" opacity="0.5"/>
+  </g>`;
+}
+
+function usFlag() {
+  return `<g>
+    <rect width="34" height="22" fill="#fff" stroke="#c9c2ae" stroke-width="1"/>
+    <rect width="34" height="3.2" y="2.8" fill="#e0634e"/>
+    <rect width="34" height="3.2" y="9.2" fill="#e0634e"/>
+    <rect width="34" height="3.2" y="15.6" fill="#e0634e"/>
+    <rect width="14" height="11" fill="#3f5fa8"/>
+    <circle cx="3.5" cy="3.5" r="1" fill="#fff"/><circle cx="8" cy="5.5" r="1" fill="#fff"/>
+    <circle cx="3.5" cy="8" r="1" fill="#fff"/><circle cx="11" cy="2.8" r="1" fill="#fff"/>
+  </g>`;
+}
+
+function ferryBoat(s = 1, withLia = true) {
+  return `<g transform="scale(${s})">
+    ${hit(95, 0, -18)}
+    <path d="M -82 0 L 82 0 L 62 36 L -62 36 Z" fill="#e0634e" stroke="#b94a38" stroke-width="3"/>
+    <path d="M -82 0 L 82 0 L 78 10 L -78 10 Z" fill="#fff"/>
+    <rect x="-48" y="-36" width="72" height="36" rx="6" fill="#fff" stroke="#c9dcea" stroke-width="2.5"/>
+    <circle cx="-32" cy="-18" r="6.5" fill="#7ec8f0" stroke="#5eb3d8" stroke-width="1.5"/>
+    <circle cx="-10" cy="-18" r="6.5" fill="#7ec8f0" stroke="#5eb3d8" stroke-width="1.5"/>
+    <circle cx="12" cy="-18" r="6.5" fill="#7ec8f0" stroke="#5eb3d8" stroke-width="1.5"/>
+    <rect x="34" y="-56" width="15" height="24" rx="3" fill="#5eb3d8" stroke="#3f92ba" stroke-width="2"/>
+    <circle class="steam floaty" cx="42" cy="-66" r="7" fill="#fff" opacity="0.8"/>
+    <path d="M -64 -2 L -64 -62" stroke="#94683c" stroke-width="4"/>
+    <g transform="translate(-64,-62)">${usFlag()}</g>
+    ${withLia ? `<g transform="translate(60,-50)">${lia(0.42)}</g>` : ""}
+  </g>`;
+}
+
+function dolphinFig(s = 1) {
+  return `<g transform="scale(${s})">
+    ${hit(64, 0, -8)}
+    <path d="M -2 -30 Q 3 -50 15 -52 Q 13 -37 6 -28 Z" fill="#7ba8c9" stroke="#5a86a8" stroke-width="2.5"/>
+    <path d="M -50 10 Q -64 2 -72 -12 Q -57 -9 -49 -2 Q -54 -17 -49 -26 Q -40 -12 -43 3 Z" fill="#7ba8c9" stroke="#5a86a8" stroke-width="2.5"/>
+    <path d="M -50 10 Q -30 -34 10 -30 Q 50 -26 58 4 Q 40 20 0 20 Q -30 20 -50 10 Z" fill="#7ba8c9" stroke="#5a86a8" stroke-width="3"/>
+    <ellipse cx="8" cy="8" rx="30" ry="9" fill="#dfeef7" opacity="0.9"/>
+    <path d="M 56 0 Q 70 3 72 8 Q 62 13 52 10 Z" fill="#7ba8c9" stroke="#5a86a8" stroke-width="2"/>
+    <circle cx="36" cy="-8" r="3.6" fill="#3a2c20"/><circle cx="37" cy="-9" r="1.3" fill="#fff"/>
+    <path d="M 46 7 Q 53 11 60 7" stroke="#2f5a78" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <circle cx="43" cy="-1" r="3.4" fill="#ff9d9d" opacity="0.55"/>
+  </g>`;
+}
+
+function buoy(s = 1) {
+  return `<g transform="scale(${s})">
+    ${hit(46, 0, -20)}
+    <ellipse cx="0" cy="10" rx="24" ry="8" fill="#c14a38"/>
+    <path d="M -20 8 L -12 -34 L 12 -34 L 20 8 Z" fill="#e0634e" stroke="#b94a38" stroke-width="2.5"/>
+    <path d="M -16 -8 L 16 -8 L 17.5 0 L -17.5 0 Z" fill="#fff"/>
+    <rect x="-8" y="-48" width="16" height="16" rx="3" fill="#ffd23e" stroke="#e8a62c" stroke-width="2"/>
+    <circle cx="0" cy="-40" r="4" fill="#f5a340"/>
+  </g>`;
+}
+
+function nySkyline() {
+  const win = (x, y) => `<rect x="${x}" y="${y}" width="6" height="8" rx="1" fill="#eef7fd" opacity="0.8"/>`;
+  return `<g>
+    <g fill="#a8c4d9" stroke="#8fb0c9" stroke-width="2">
+      <rect x="30" y="290" width="58" height="150" rx="3"/>
+      <rect x="98" y="250" width="46" height="190" rx="3"/>
+      <rect x="154" y="305" width="62" height="135" rx="3"/>
+      <rect x="226" y="215" width="44" height="225" rx="3"/>
+      <path d="M 238 215 L 244 178 L 252 178 L 258 215 Z"/>
+      <path d="M 246 178 L 246 158 L 250 158 L 250 178 Z"/>
+      <rect x="280" y="280" width="52" height="160" rx="3"/>
+      <rect x="342" y="245" width="40" height="195" rx="3"/>
+      <rect x="392" y="315" width="58" height="125" rx="3"/>
+    </g>
+    ${win(46, 310)}${win(64, 310)}${win(46, 335)}${win(64, 335)}
+    ${win(112, 270)}${win(128, 270)}${win(112, 296)}${win(128, 296)}
+    ${win(170, 325)}${win(190, 325)}${win(170, 350)}
+    ${win(238, 240)}${win(254, 240)}${win(238, 266)}${win(254, 266)}${win(238, 292)}
+    ${win(294, 300)}${win(312, 300)}${win(294, 326)}
+    ${win(352, 265)}${win(368, 265)}${win(352, 291)}
+    ${win(406, 335)}${win(424, 335)}
+  </g>`;
+}
+
 /* Lia reagiert überall gleich – wird vom Blumenbeet und vom Strand genutzt */
 function wireLia(svg, api) {
   const liaEl = svg.querySelector("#lia");
@@ -925,6 +1043,8 @@ const CardIcons = {
   snowman:  `<svg viewBox="-75 -205 150 230">${snowman(1, true)}</svg>`,
   crab:     `<svg viewBox="-60 -70 120 115">${crabFig(1.3, true)}</svg>`,
   starfish: `<svg viewBox="-55 -55 110 110">${starfishFig(1.5)}</svg>`,
+  liberty:  `<svg viewBox="-80 -235 160 330">${libertyStatue(1)}</svg>`,
+  dolphin:  `<svg viewBox="-88 -70 176 105">${dolphinFig(1.1)}</svg>`,
   rainbow:  `<svg viewBox="-70 -60 140 110">
     <path d="M -56 40 A 56 56 0 0 1 56 40" fill="none" stroke="#e84c3d" stroke-width="10"/>
     <path d="M -45 40 A 45 45 0 0 1 45 40" fill="none" stroke="#f5a340" stroke-width="10"/>
@@ -1602,7 +1722,134 @@ const sceneBeach = {
 };
 
 /* ================================================================
-   SZENE 7 – Die Nachtwiese  (wird freigespielt)
+   SZENE 7 – Amerika: Mit dem Boot zur Freiheitsstatue
+   ================================================================ */
+
+const sceneAmerica = {
+  id: "america",
+  tasks: [
+    { id: "t14", source: "#boat", target: "#island" },
+    { id: "t15", source: "#snack", target: "#dolphin" },
+  ],
+  html(done) {
+    const t14 = done("t14"), t15 = done("t15");
+    return `
+    <defs>
+      <linearGradient id="usSky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#8ed4f7"/><stop offset="1" stop-color="#e8f6ff"/>
+      </linearGradient>
+      <linearGradient id="usSea" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#6fb8d8"/><stop offset="1" stop-color="#3f7fa8"/>
+      </linearGradient>
+    </defs>
+    <rect width="1000" height="700" fill="url(#usSky)"/>
+    ${sun(100, 100)}
+    ${cloud(420, 80, 0.85)}
+    ${cloud(680, 140, 0.6)}
+    ${nySkyline()}
+    <path d="M 0 438 Q 250 428 500 438 Q 750 448 1000 436 L 1000 700 L 0 700 Z" fill="url(#usSea)"/>
+    <path d="M 80 500 Q 170 492 260 500 M 380 560 Q 470 552 560 560 M 620 480 Q 700 473 780 480 M 200 640 Q 300 632 400 640"
+      stroke="#bfe8f7" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.6"/>
+
+    <g id="island">
+      <ellipse cx="838" cy="590" rx="125" ry="36" fill="#c9b8a0" stroke="#a89878" stroke-width="3"/>
+      <ellipse cx="838" cy="580" rx="105" ry="26" fill="#8ccb60"/>
+      ${wrap(838, 574, 1, `id="liberty" class="pokeable" data-sound="chime"`, libertyStatue(1))}
+    </g>
+
+    ${wrap(390, 200, 0.9, `class="pokeable" data-sound="gull" data-action="loop"`, seagull(1), "floaty")}
+    ${wrap(660, 260, 0.65, `class="pokeable" data-sound="gull" data-action="loop"`, seagull(1), "floaty")}
+    ${wrap(60, 470, 0.6, ``, sailboat(1), "bobbing")}
+    ${wrap(600, 500, 0.9, `id="buoy" class="pokeable" data-sound="chime" data-action="dance"`, buoy(1), "bobbing")}
+
+    ${t14
+      ? wrap(680, 570, 0.9, `id="boatDone" class="pokeable" data-sound="horn"`, ferryBoat(1, true), "bobbing")
+      : wrap(225, 550, 0.9, `id="boat" class="grabbable"`, ferryBoat(1, true), "bobbing")}
+
+    ${wrap(430, 620, 1, `id="dolphin" class="pokeable" data-sound="whistle"`, dolphinFig(1), "bobbing")}
+    ${!t15 ? wrap(180, 660, 1, `id="snack" class="grabbable"`, fish(0.9, "#f5a340"), "bobbing") : ""}
+    `;
+  },
+  init(svg, api) {
+    if (!api.done("t14")) {
+      api.drag("#boat", "#island", 170, (boatEl) => {
+        api.play("horn");
+        boatEl.classList.remove("grabbable");
+        boatEl.setAttribute("transform", "translate(680,570) scale(0.9)");
+        api.play("splash");
+        api.sparkleBurst(790, 420);
+        const arm = boatEl.querySelector(".liaArm");
+        if (arm) arm.animate(
+          [{ transform: "rotate(0deg)" }, { transform: "rotate(-16deg)" }, { transform: "rotate(0deg)" }, { transform: "rotate(-16deg)" }, { transform: "rotate(0deg)" }],
+          { duration: 1100 });
+        setTimeout(() => {
+          api.play("success");
+          api.complete("t14");
+        }, 1200);
+        return true;
+      });
+    } else {
+      /* Angedockt: Tippen lässt das Horn tuten und Lia winken */
+      const boat = svg.querySelector("#boatDone");
+      if (boat) boat.addEventListener("pointerdown", () => {
+        const arm = boat.querySelector(".liaArm");
+        if (arm) arm.animate(
+          [{ transform: "rotate(0deg)" }, { transform: "rotate(-16deg)" }, { transform: "rotate(0deg)" }, { transform: "rotate(-16deg)" }, { transform: "rotate(0deg)" }],
+          { duration: 1000 });
+      });
+    }
+
+    if (!api.done("t15")) {
+      api.drag("#snack", "#dolphin", 130, (fishEl) => {
+        api.play("munch");
+        fishEl.classList.add("fadeOut");
+        setTimeout(() => fishEl.remove(), 400);
+        const d = svg.querySelector("#dolphin");
+        d.querySelector(":scope > .inner").animate(
+          [{ transform: "translate(0,0) rotate(0deg)" },
+           { transform: "translate(30px,-170px) rotate(-24deg)", offset: 0.45 },
+           { transform: "translate(60px,0) rotate(10deg)", offset: 0.8 },
+           { transform: "translate(0,0) rotate(0deg)" }],
+          { duration: 1600, easing: "ease-in-out" });
+        setTimeout(() => api.play("whistle"), 300);
+        setTimeout(() => api.play("splash"), 1300);
+        setTimeout(() => {
+          api.play("success");
+          api.complete("t15");
+        }, 1700);
+        return true;
+      });
+    }
+
+    /* Delfin springt beim Antippen */
+    const dol = svg.querySelector("#dolphin");
+    if (dol) dol.addEventListener("pointerdown", () => {
+      dol.querySelector(":scope > .inner").animate(
+        [{ transform: "translate(0,0) rotate(0deg)" },
+         { transform: "translate(-30px,-150px) rotate(-20deg)", offset: 0.45 },
+         { transform: "translate(0,0) rotate(0deg)" }],
+        { duration: 1400, easing: "ease-in-out" });
+      setTimeout(() => api.play("splash"), 1100);
+    });
+
+    /* Die Fackel funkelt, wenn man die Freiheitsstatue antippt */
+    const lib = svg.querySelector("#liberty");
+    if (lib) lib.addEventListener("pointerdown", () => {
+      const torch = lib.querySelector(".torch");
+      if (torch) {
+        torch.style.transformBox = "fill-box";
+        torch.style.transformOrigin = "center bottom";
+        torch.animate(
+          [{ transform: "scale(1)" }, { transform: "scale(1.8)" }, { transform: "scale(1)" }],
+          { duration: 900, easing: "ease-in-out" });
+      }
+      api.sparkleBurst(878, 388);
+    });
+  },
+};
+
+/* ================================================================
+   SZENE 8 – Die Nachtwiese  (wird freigespielt)
    ================================================================ */
 
 const sceneNight = {
@@ -1697,6 +1944,6 @@ const sceneNight = {
   },
 };
 
-const SCENES = [sceneGarden, scenePond, sceneTree, sceneAutumn, sceneWinter, sceneBeach, sceneNight];
-const ALL_TASKS = ["t1", "t2", "t3", "t4", "t5", "t6", "t8", "t9", "t10", "t11", "t12", "t13", "t7"];
-const UNLOCK_NIGHT_AT = 12;
+const SCENES = [sceneGarden, scenePond, sceneTree, sceneAutumn, sceneWinter, sceneBeach, sceneAmerica, sceneNight];
+const ALL_TASKS = ["t1", "t2", "t3", "t4", "t5", "t6", "t8", "t9", "t10", "t11", "t12", "t13", "t14", "t15", "t7"];
+const UNLOCK_NIGHT_AT = 14;

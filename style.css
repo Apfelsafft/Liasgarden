@@ -57,7 +57,7 @@ html, body {
   box-shadow: 0 3px 8px rgba(60, 90, 40, 0.25);
 }
 
-#starRow svg { width: 19px; height: 19px; }
+#starRow svg { width: 17px; height: 17px; }
 
 .roundBtn {
   width: 58px;
@@ -192,8 +192,8 @@ html, body {
   margin-bottom: 16px;
 }
 
-#factStars { height: 30px; margin-bottom: 8px; }
-#factStars svg { height: 30px; width: 30px; }
+#factStars { height: 26px; margin-bottom: 8px; }
+#factStars svg { height: 26px; width: 26px; }
 
 #cardBtns { display: flex; gap: 14px; justify-content: center; }
 

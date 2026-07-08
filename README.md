@@ -29,6 +29,7 @@ python3 -m http.server 8000
 | 🍂 Herbstwald | Eichel zum Eichhörnchen, Blätter zum Igel bringen | Wintervorräte, Winterschlaf im Blätternest |
 | ⛄ Winter | Körner ins Vogelhäuschen streuen, Schneemann-Nase | Vögel füttern im Winter |
 | 🏖️ Strand-Urlaub | Schneckenhaus zum Einsiedlerkrebs, Seestern ins Meer | Wo Einsiedlerkrebse wohnen, Seesterne brauchen Wasser |
+| 🗽 Amerika | Mit dem Boot zur Freiheitsstatue fahren, Delfin füttern | Die Freiheitsstatue steht auf einer Insel, Delfine leben im Meer |
 | 🌙 Nachtwiese *(großes Finale, wird freigespielt)* | Alle Glühwürmchen zum Leuchten bringen | Warum Glühwürmchen leuchten |
 
 Dazu ist **alles in jeder Szene antippbar**: Sonne, Wolken, Schnecke,

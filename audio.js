@@ -36,6 +36,7 @@ const AudioKit = (() => {
     munch: 0.6, twinkle: 0.6, quack: 0.7, peep: 0.5, snuffle: 0.5,
     water: 1.0, whoosh: 0.4, hello: 0.5, thud: 0.3, note: 0.6,
     meow: 0.9, woof: 0.6, whee: 0.9, gull: 0.8, hop: 0.4,
+    horn: 1.1, whistle: 0.9,
   };
 
   function wavDataUri(buf) {
@@ -408,6 +409,16 @@ const AudioKit = (() => {
     },
     whee()    { tone(392, 0.5, { type: "triangle", glideTo: 900, vol: 0.14 }); tone(900, 0.25, { type: "triangle", glideTo: 660, vol: 0.1, when: 0.5 }); },
     gull()    { [0, 0.3].forEach((w) => tone(1350, 0.28, { type: "sawtooth", glideTo: 750, vol: 0.12, when: w })); },
+    horn()    {
+      tone(196, 0.55, { type: "triangle", vol: 0.26 });
+      tone(147, 0.75, { type: "triangle", vol: 0.24, when: 0.18 });
+      noise(0.4, { vol: 0.05, freq: 300, q: 0.6, when: 0.1 });
+    },
+    whistle() {
+      tone(1400, 0.18, { glideTo: 2300, vol: 0.15 });
+      tone(2300, 0.26, { glideTo: 1100, vol: 0.15, when: 0.2 });
+      [0.5, 0.58, 0.66].forEach((w) => noise(0.05, { vol: 0.11, freq: 3200, q: 3, when: w }));
+    },
     hop()     { tone(300, 0.12, { type: "triangle", glideTo: 600, vol: 0.14 }); tone(340, 0.12, { type: "triangle", glideTo: 640, vol: 0.12, when: 0.16 }); },
     thud()    { tone(140, 0.15, { type: "triangle", glideTo: 70, vol: 0.2 }); },
     note(step = 0) {
