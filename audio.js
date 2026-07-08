@@ -101,13 +101,28 @@ const AudioKit = (() => {
     const key = name + ":" + (arg == null ? "" : arg);
     if (!wavCache[key]) wavCache[key] = renderSfx(name, arg);
     const uri = await wavCache[key];
-    if (!uri) return;
+    if (!uri) {
+      /* Offline-Rendern nicht möglich → wenigstens sprechen */
+      if (SFX_WORDS[name] && speakHandler) speakHandler(SFX_WORDS[name]);
+      return;
+    }
     const el = sfxPool[poolIdx];
     poolIdx = (poolIdx + 1) % sfxPool.length;
     try {
       el.src = uri;
       el.volume = 1;
-      el.play().catch(() => {});
+      el.play().catch(() => {
+        /* Zweiter Versuch mit frischem Element, sonst gesprochen */
+        try {
+          const fresh = new Audio(uri);
+          fresh.setAttribute("playsinline", "");
+          fresh.play().catch(() => {
+            if (SFX_WORDS[name] && speakHandler) speakHandler(SFX_WORDS[name]);
+          });
+        } catch (e) {
+          if (SFX_WORDS[name] && speakHandler) speakHandler(SFX_WORDS[name]);
+        }
+      });
     } catch (e) { /* dann eben nicht */ }
   }
 
@@ -448,6 +463,33 @@ const AudioKit = (() => {
   function isSpeakMode() { return speakMode; }
   function setSpeakHandler(fn) { speakHandler = fn; }
 
+  /* Klangweg umschalten: "web" (normal), "element" (Ersatz-Wiedergabe
+     über <audio>-Elemente) oder "speak" (gesprochene Tierlaute). */
+  function setSoundMode(mode) {
+    if (mode === "speak") {
+      speakMode = true;
+      return;
+    }
+    speakMode = false;
+    if (mode === "element") {
+      if (!elementMode) {
+        enableElementMode();
+      } else if (musicEl && musicOn && !muted) {
+        musicEl.play().catch(() => {});
+      }
+    } else { /* web */
+      if (elementMode) {
+        elementMode = false;
+        if (musicEl) musicEl.pause();
+        if (ctx) startMusic();
+      }
+    }
+  }
+
+  function getSoundMode() {
+    return speakMode ? "speak" : (elementMode ? "element" : "web");
+  }
+
   function play(name, arg) {
     if (muted || !sfx[name]) return;
     if (speakMode) {
@@ -474,7 +516,7 @@ const AudioKit = (() => {
 
   return {
     init, resume, play, setMuted, isMuted, setMusicOn, isMusicOn,
-    setSpeakMode, isSpeakMode, setSpeakHandler,
+    setSpeakMode, isSpeakMode, setSpeakHandler, setSoundMode, getSoundMode,
     forceElementMode: enableElementMode,
     isElementMode: () => elementMode,
     /* alte Namen für Tests */

@@ -147,8 +147,7 @@
     const sceneIdx = currentScene;
     setTimeout(() => {
       if (currentScene !== sceneIdx || cardOverlay.classList.contains("show")) return;
-      /* Während der Ton-Prüfung warten – sie ruft danach selbst auf */
-      if (!save.soundMode || confirmOverlay.classList.contains("show")) return;
+      if (confirmOverlay.classList.contains("show")) return;
       if (promptShown[task.id] || save.done[task.id]) return;
       promptShown[task.id] = true;
       const info = TASK_INFO[task.id];
@@ -688,7 +687,44 @@
     };
   }
 
-  document.getElementById("btnReset").addEventListener("click", () => {
+  /* ---------- Einstellungen ----------
+     Hier lässt sich der Klangweg der Tierstimmen jederzeit umschalten
+     (mit sofortigem Miau als Hörprobe), und hier wohnt der Neustart. */
+
+  const settingsOverlay = document.getElementById("settingsOverlay");
+
+  function updateSettingsUI() {
+    const mode = AudioKit.getSoundMode();
+    settingsOverlay.querySelectorAll(".soundOpt").forEach((b) => {
+      b.classList.toggle("selected", b.dataset.mode === mode);
+    });
+  }
+
+  document.getElementById("btnSettings").addEventListener("click", () => {
+    AudioKit.play("pop");
+    updateSettingsUI();
+    settingsOverlay.classList.add("show");
+  });
+
+  settingsOverlay.querySelectorAll(".soundOpt").forEach((b) => {
+    b.addEventListener("click", () => {
+      AudioKit.setSoundMode(b.dataset.mode);
+      save.soundMode = b.dataset.mode;
+      persist();
+      updateSettingsUI();
+      /* sofortige Hörprobe auf dem neuen Weg */
+      setTimeout(() => AudioKit.play("meow"), 250);
+    });
+  });
+
+  document.getElementById("btnSettingsClose").addEventListener("click", () => {
+    settingsOverlay.classList.remove("show");
+    AudioKit.play("pop");
+    resetIdle();
+  });
+
+  document.getElementById("btnSettingsReset").addEventListener("click", () => {
+    settingsOverlay.classList.remove("show");
     AudioKit.play("pop");
     speak("Möchtest du noch einmal von vorne anfangen?");
     showConfirm("Noch einmal von vorne anfangen?", RESET_ICON, () => {
@@ -700,49 +736,6 @@
       showScene(0);
     }, resetIdle);
   });
-
-  /* ---------- Ton-Prüfung beim ersten Start ----------
-     Manche Umgebungen (z. B. App-Vorschauen) geben keinen Klang aus,
-     obwohl die Sprachausgabe funktioniert. Wir fragen deshalb einmal
-     nach: erst mit dem normalen Tonweg, dann mit der Ersatz-
-     Wiedergabe – und wenn beides stumm bleibt, sprechen wir die
-     Tierlaute mit der Kinderstimme ("Miau!", "Wuff, wuff!"). */
-
-  function runSoundCheck() {
-    let phase = 1;
-    const playTest = () => AudioKit.play("success");
-    const iv = setInterval(playTest, 2600);
-    playTest();
-
-    const finish = (mode) => {
-      clearInterval(iv);
-      save.soundMode = mode;
-      persist();
-      if (mode === "speak") {
-        AudioKit.setSpeakMode(true);
-        speak("Alles klar! Dann machen die Tiere ihre Geräusche mit meiner Stimme. Miau! Wuff, wuff!");
-        setTimeout(maybeShowPrompt, 5000);
-      } else {
-        setTimeout(maybeShowPrompt, 400);
-      }
-    };
-
-    const ask = (text) => {
-      speak(text);
-      showConfirm(text, NOTE_ICON, () => {
-        finish(AudioKit.isElementMode() ? "element" : "web");
-      }, () => {
-        if (phase === 1) {
-          phase = 2;
-          AudioKit.forceElementMode();
-          setTimeout(() => ask("Und jetzt? Hörst du die Melodie jetzt?"), 900);
-        } else {
-          finish("speak");
-        }
-      });
-    };
-    ask("Hörst du die fröhliche Melodie?");
-  }
 
   /* ---------- Glühwürmchen-Hilfe ---------- */
 
@@ -895,16 +888,15 @@
           speechSynthesis.speak(primer);
         } catch (e) { /* nicht schlimm */ }
       }
-      /* gespeicherte Ton-Entscheidung anwenden */
-      if (save.soundMode === "element") AudioKit.forceElementMode();
-      if (save.soundMode === "speak") AudioKit.setSpeakMode(true);
+      /* gespeicherte Klangweg-Wahl anwenden */
+      if (save.soundMode === "element") AudioKit.setSoundMode("element");
+      if (save.soundMode === "speak") AudioKit.setSoundMode("speak");
       started = true;
       ov.style.transition = "opacity 0.7s ease";
       ov.style.opacity = "0";
       setTimeout(() => { ov.remove(); }, 700);
       topbar.style.display = "";
       showScene(0);
-      if (!save.soundMode) setTimeout(runSoundCheck, 1500);
     };
     const btn = ov.querySelector("#playBtn");
     btn.addEventListener("click", startGame);
