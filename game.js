@@ -821,6 +821,8 @@
     settingsOverlay.querySelectorAll(".soundOpt").forEach((b) => {
       b.classList.toggle("selected", b.dataset.mode === mode);
     });
+    const versionEl = document.getElementById("versionInfo");
+    versionEl.textContent = "Version: 09.07.2026 04:54:28";
   }
 
   document.getElementById("btnSettings").addEventListener("click", () => {
