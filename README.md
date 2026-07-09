@@ -19,18 +19,23 @@ npx serve .
 python3 -m http.server 8000
 ```
 
-## Was das Kind erlebt
+## Kapitel und Bilder
 
-| Szene | Aufgaben | Lernthema |
-|---|---|---|
-| 🌸 Blumenbeet | Samen gießen, Biene zur Blume bringen | Pflanzen brauchen Wasser & Sonne, Bienen machen Honig |
-| 🐸 Teich | Frosch füttern, Entenküken zur Mama bringen | Was Frösche fressen, Entenfamilien |
-| 🍎 Apfelbaum | Igel füttern, Vogelküken füttern | Was Igel mögen, wie Vogeleltern füttern |
-| 🍂 Herbstwald | Eichel zum Eichhörnchen, Blätter zum Igel bringen | Wintervorräte, Winterschlaf im Blätternest |
-| ⛄ Winter | Körner ins Vogelhäuschen streuen, Schneemann-Nase | Vögel füttern im Winter |
-| 🏖️ Strand-Urlaub | Schneckenhaus zum Einsiedlerkrebs, Seestern ins Meer | Wo Einsiedlerkrebse wohnen, Seesterne brauchen Wasser |
-| 🗽 Amerika | Mit dem Boot zur Freiheitsstatue fahren, Delfin füttern | Die Freiheitsstatue steht auf einer Insel, Delfine leben im Meer |
-| 🌙 Nachtwiese *(großes Finale, wird freigespielt)* | Alle Glühwürmchen zum Leuchten bringen | Warum Glühwürmchen leuchten |
+Das Spiel ist in **Kapitel** gegliedert; jedes Kapitel enthält mehrere
+Bilder (Screens) mit eigenen Aufgaben. Die Sterne-Anzeige gilt pro Bild,
+das Kapitel-Menü zeigt den Fortschritt je Kapitel, und wer ein ganzes
+Kapitel löst, bekommt eine Feier mit Sternenregen.
+
+| Kapitel | Bilder |
+|---|---|
+| 🌸 Garten | Blumenbeet · Teich · Apfelbaum · Nachtwiese |
+| 🌈 Jahreszeiten | Frühling · Sommer · Herbstwald · Winter |
+| 🏖️ Urlaub | Strand · Amerika (Freiheitsstatue) |
+| 🎂 Feste | Ostern · Geburtstag · Weihnachten · Silvester |
+
+Insgesamt 14 Bilder mit 27 Aufgaben. Neue Kapitel lassen sich einfach
+ergänzen (siehe `ARCHITEKTUR.md`) — die Struktur ist bereits auf
+per In-App-Kauf freischaltbare Kapitel vorbereitet.
 
 Dazu ist **alles in jeder Szene antippbar**: Sonne, Wolken, Schnecke,
 Marienkäfer, Eichhörnchen, Fische, Sterne … alles wackelt, klingt und
@@ -42,18 +47,21 @@ reagiert — es gibt kein Falsch, kein Verlieren und keinen Zeitdruck.
   Natur-Fakt zum Handeln ein („Igel lieben Äpfel! Bringst du dem Igel einen
   Apfel?") und wird auf Deutsch vorgelesen. Nach dem Lösen folgt eine
   Lob-Karte — perfekt für Kinder, die noch nicht lesen können.
-- **Glühwürmchen-Hilfe:** Nach kurzer Zeit ohne Fortschritt (oder per
-  Knopfdruck oben rechts) fliegt ein Glühwürmchen zum nächsten möglichen
-  Schritt und lässt Start und Ziel funkeln. Ein Festhängen ist dadurch
-  unmöglich.
+- **Aufgaben-Übersicht & Glühwürmchen-Hilfe:** Der Glühwürmchen-Knopf
+  zeigt alle Aufgaben des aktuellen Bildes — gelöste mit Haken, offene
+  mit einem eigenen Glühwürmchen, das beim Antippen direkt zur Aufgabe
+  fliegt und Start und Ziel funkeln lässt. Nach kurzer Zeit ohne
+  Fortschritt hilft das Glühwürmchen auch von selbst. Ein Festhängen
+  ist unmöglich.
 - **Lia macht mit:** Wird Lia angetippt, winkt sie, springt, kichert oder
   macht einen Purzelbaum — mit passender Sprachausgabe („Hallo, ich bin
   Lia!", „Hurra!", „Juhu, ein Purzelbaum!").
 - **Tierstimmen:** Frosch quakt, Enten schnattern, die Eule ruft huhu,
   Vögel zwitschern, die Katze miaut und der Hund bellt — jedes Tier
   antwortet auf Berührung mit Bewegung, Funkeln und seinem Laut.
-- **Sterne-Fortschritt:** Sieben Sterne führen zum großen Finale mit
-  Sternenregen. Mit sechs Sternen öffnet sich die geheime Nachtwiese.
+- **Sterne-Fortschritt:** Jede gelöste Aufgabe füllt einen Stern des
+  aktuellen Bildes; ein komplett gelöstes Kapitel wird mit Konfetti-
+  Sternenregen und einer Jubel-Karte gefeiert.
 - **Klangwelt & Musik:** Alle Geräusche und eine sanfte, selbst komponierte
   Hintergrundmelodie werden live mit der Web-Audio-API erzeugt. Musik und
   Geräusche sind getrennt abschaltbar (Noten- und Lautsprecher-Knopf).
@@ -83,6 +91,8 @@ Reines HTML/CSS/JavaScript ohne Abhängigkeiten:
 |---|---|
 | `index.html` | Grundgerüst, Kopfleiste, Overlays |
 | `style.css` | Layout und alle CSS-Animationen |
-| `scenes.js` | Die vier Szenen und sämtliche SVG-Zeichnungen |
+| `scenes.js` | Kapitel, alle Szenen und sämtliche SVG-Zeichnungen |
 | `game.js` | Spiel-Engine: Szenenwechsel, Ziehen & Ablegen, Hilfe, Karten, Speichern |
 | `audio.js` | Klangerzeugung mit der Web-Audio-API |
+
+Details zur Kapitel-Struktur und zum Weg in die App Stores: `ARCHITEKTUR.md`.

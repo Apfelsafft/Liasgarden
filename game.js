@@ -9,7 +9,7 @@
 
   /* ---------- Spielstand ---------- */
 
-  let save = { done: {}, muted: false, musicOff: false };
+  let save = { done: {}, muted: false, musicOff: false, unlocked: {}, celebrated: {} };
   try {
     const raw = localStorage.getItem(SAVE_KEY);
     if (raw) save = Object.assign(save, JSON.parse(raw));
@@ -28,16 +28,34 @@
     try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) { /* egal */ }
   }
 
-  const doneCount = () => ALL_TASKS.filter((t) => save.done[t]).length;
-  const nightUnlocked = () => doneCount() >= UNLOCK_NIGHT_AT;
+  /* ---------- Kapitel-Helfer ---------- */
+
+  const chapterTasks = (ch) => ch.screens.flatMap((sc) => sc.tasks.map((t) => t.id));
+  const chapterDone = (ch) => chapterTasks(ch).filter((t) => save.done[t]).length;
+  const chapterComplete = (ch) => chapterTasks(ch).every((t) => save.done[t]);
+  const screenTasks = (sc) => sc.tasks.map((t) => t.id);
+  const screenDone = (sc) => screenTasks(sc).filter((t) => save.done[t]).length;
+
+  /* Freischaltung: kostenlose Kapitel sind immer offen, gekaufte
+     stehen in save.unlocked. Später verbindet sich hier der
+     App-Store-Kauf (siehe ARCHITEKTUR.md) – die Spiel-Logik fragt
+     nur diese eine Funktion. */
+  const isChapterUnlocked = (ch) => ch.free === true || save.unlocked[ch.id] === true;
 
   /* ---------- Grundgerüst der Seite ---------- */
 
   const stage = document.getElementById("stage");
+  let currentChapter = 0;
   let currentScene = 0;
+  let inMenu = true;
   let started = false;
   let idleTimer = null;
   let hintBusy = false;
+
+  const screens = () => CHAPTERS[currentChapter].screens;
+  const currentScreenScene = () => screens()[currentScene];
+
+  const SCENE_BG = { night: "#1b2a5e", silvester: "#1b2145", christmas: "#4a5d8a" };
 
   const topbar = document.getElementById("topbar");
   const starRow = document.getElementById("starRow");
@@ -110,17 +128,18 @@
 
   function showScene(idx) {
     currentScene = idx;
+    inMenu = false;
     stopHint();
     stage.innerHTML = "";
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("viewBox", "0 0 1000 700");
     svg.setAttribute("preserveAspectRatio", "xMidYMax slice");
     svg.classList.add("scene");
-    const scene = SCENES[idx];
+    const scene = currentScreenScene();
     svg.innerHTML = scene.html((t) => !!save.done[t]);
     stage.appendChild(svg);
 
-    document.body.style.background = scene.id === "night" ? "#1b2a5e" : "#bde8ff";
+    document.body.style.background = SCENE_BG[scene.id] || "#bde8ff";
 
     wirePokes(svg);
     scene.init(svg, makeApi(svg, scene));
@@ -129,7 +148,52 @@
     maybeShowPrompt();
   }
 
-  /* Erste offene Aufgabe der Szene (Reihenfolge beachten) */
+  /* ---------- Kapitel-Menü ---------- */
+
+  function chapterIconSvg(ch) {
+    return CardIcons[ch.icon] || "";
+  }
+
+  function showMenu() {
+    inMenu = true;
+    stopHint();
+    clearTimeout(idleTimer);
+    document.body.style.background = "#bde8ff";
+    const cards = CHAPTERS.map((ch, i) => {
+      const total = chapterTasks(ch).length;
+      const done = chapterDone(ch);
+      const open = isChapterUnlocked(ch);
+      return `<button class="chapCard ${open ? "" : "lockedChap"}" data-i="${i}">
+        <div class="chapIcon">${open ? chapterIconSvg(ch) : `<svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="3" fill="#9a9a9a"/><path d="M8 10 V7.5 a4 4 0 0 1 8 0 V10" fill="none" stroke="#9a9a9a" stroke-width="2.6"/></svg>`}</div>
+        <div class="chapName">${ch.name}</div>
+        <div class="chapProgress">${open
+          ? `<svg viewBox="-14 -14 28 28"><path d="M 0 -12 L 3.5 -3.5 L 12 -3 L 5.5 3 L 7.5 12 L 0 7 L -7.5 12 L -5.5 3 L -12 -3 L -3.5 -3.5 Z" fill="${done > 0 ? "#ffd23e" : "#e8e2d0"}" stroke="#e8a62c" stroke-width="1.5"/></svg> ${done}/${total}`
+          : "Bald verfügbar"}</div>
+      </button>`;
+    }).join("");
+    stage.innerHTML = `
+      <div id="chapterMenu">
+        <div id="menuTitle">Lia’s Garten</div>
+        <div id="menuSub">Wähle ein Kapitel!</div>
+        <div id="menuGrid">${cards}</div>
+      </div>`;
+    stage.querySelectorAll(".chapCard").forEach((b) => {
+      b.addEventListener("click", () => {
+        const ch = CHAPTERS[+b.dataset.i];
+        if (!isChapterUnlocked(ch)) {
+          AudioKit.play("thud");
+          showCard({ icon: "rainbow", text: `Das Kapitel „${ch.name}" kommt bald! Frag Mama oder Papa.` });
+          return;
+        }
+        AudioKit.play("chime");
+        currentChapter = +b.dataset.i;
+        showScene(0);
+      });
+    });
+    updateChrome();
+  }
+
+  /* Erste offene Aufgabe des Bildes (Reihenfolge beachten) */
   function currentTaskOf(scene) {
     for (const t of scene.tasks) {
       if (save.done[t.id]) continue;
@@ -141,12 +205,14 @@
 
   /* Aufgaben-Einladung zeigen: der Natur-Fakt wird zur Aufgabe */
   function maybeShowPrompt() {
-    if (!started || cardOverlay.classList.contains("show")) return;
-    const task = currentTaskOf(SCENES[currentScene]);
+    if (!started || inMenu || cardOverlay.classList.contains("show")) return;
+    const task = currentTaskOf(currentScreenScene());
     if (!task || promptShown[task.id]) return;
     const sceneIdx = currentScene;
+    const chapIdx = currentChapter;
     setTimeout(() => {
-      if (currentScene !== sceneIdx || cardOverlay.classList.contains("show")) return;
+      if (inMenu || currentScene !== sceneIdx || currentChapter !== chapIdx) return;
+      if (cardOverlay.classList.contains("show")) return;
       if (confirmOverlay.classList.contains("show")) return;
       if (promptShown[task.id] || save.done[task.id]) return;
       promptShown[task.id] = true;
@@ -549,7 +615,7 @@
     stopHint();
     document.getElementById("factIcon").innerHTML = CardIcons[icon] || "";
     document.getElementById("factText").textContent = text;
-    document.getElementById("factStars").innerHTML = starSvg(doneCount());
+    document.getElementById("factStars").innerHTML = inMenu ? "" : starSvg(currentScreenScene());
     cardOverlay.classList.add("show");
     if (praise) AudioKit.play("fanfare");
     setTimeout(() => speak(text), praise ? 700 : 400);
@@ -560,30 +626,37 @@
       if (window.speechSynthesis) speechSynthesis.cancel();
       AudioKit.play("pop");
       if (praise) {
-        /* Szene im Fertig-Zustand neu aufbauen (zeigt z. B. die Biene
+        /* Bild im Fertig-Zustand neu aufbauen (zeigt z. B. die Biene
            auf der Blume) und danach die nächste Aufgabe einladen */
         showScene(currentScene);
-        if (taskId === "t7") celebrate();
+        /* Kapitel komplett? Dann große Feier (einmalig) */
+        const ch = CHAPTERS[currentChapter];
+        if (chapterComplete(ch) && !save.celebrated[ch.id]) {
+          save.celebrated[ch.id] = true;
+          persist();
+          celebrate(ch);
+        }
       } else {
         resetIdle();
       }
     };
   }
 
-  function starSvg(n) {
+  /* Sterne des aktuellen Bildes (eine pro Aufgabe) */
+  function starSvg(scene) {
+    const ids = screenTasks(scene);
     let s = "";
-    for (let i = 0; i < ALL_TASKS.length; i++) {
-      const fill = i < n ? "#ffd23e" : "#e8e2d0";
-      const stroke = i < n ? "#e8a62c" : "#c9c2ae";
+    ids.forEach((id) => {
+      const done = !!save.done[id];
       s += `<svg viewBox="-14 -14 28 28"><path d="M 0 -12 L 3.5 -3.5 L 12 -3 L 5.5 3 L 7.5 12 L 0 7 L -7.5 12 L -5.5 3 L -12 -3 L -3.5 -3.5 Z"
-        fill="${fill}" stroke="${stroke}" stroke-width="1.5"/></svg>`;
-    }
+        fill="${done ? "#ffd23e" : "#e8e2d0"}" stroke="${done ? "#e8a62c" : "#c9c2ae"}" stroke-width="1.5"/></svg>`;
+    });
     return s;
   }
 
-  /* ---------- Abschluss-Feier ---------- */
+  /* ---------- Kapitel-Abschluss-Feier ---------- */
 
-  function celebrate() {
+  function celebrate(chapter) {
     const svg = stage.querySelector("svg.scene");
     if (!svg) return;
     AudioKit.play("fanfare");
@@ -600,26 +673,32 @@
       setTimeout(() => g.remove(), 4400);
     }
     setTimeout(() => {
-      showCard({ icon: "rainbow", text: "Hurra! Du hast Lia’s ganzen Garten zum Leben erweckt!" });
+      showCard({ icon: "rainbow", text: `Hurra! Du hast das ganze Kapitel „${chapter.name}" geschafft!` });
     }, 2600);
   }
 
   /* ---------- Kopfleiste, Pfeile, Punkte ---------- */
 
   function updateChrome() {
-    starRow.innerHTML = starSvg(doneCount());
-
-    navLeft.classList.toggle("hidden", currentScene === 0);
-    const lastIdx = nightUnlocked() ? SCENES.length - 1 : SCENES.length - 2;
-    navRight.classList.toggle("hidden", currentScene >= lastIdx);
-
-    dots.innerHTML = "";
-    SCENES.forEach((sc, i) => {
-      const d = document.createElement("div");
-      d.className = "dot" + (i === currentScene ? " active" : "");
-      if (sc.locked && !nightUnlocked()) d.classList.add("locked");
-      dots.appendChild(d);
-    });
+    /* Im Menü: schlanke Leiste ohne Spiel-Elemente */
+    document.getElementById("btnHome").style.display = inMenu ? "none" : "";
+    document.getElementById("btnHint").style.display = inMenu ? "none" : "";
+    starRow.style.display = inMenu ? "none" : "";
+    dots.style.display = inMenu ? "none" : "";
+    if (inMenu) {
+      navLeft.classList.add("hidden");
+      navRight.classList.add("hidden");
+    } else {
+      starRow.innerHTML = starSvg(currentScreenScene());
+      navLeft.classList.toggle("hidden", currentScene === 0);
+      navRight.classList.toggle("hidden", currentScene >= screens().length - 1);
+      dots.innerHTML = "";
+      screens().forEach((sc, i) => {
+        const d = document.createElement("div");
+        d.className = "dot" + (i === currentScene ? " active" : "");
+        dots.appendChild(d);
+      });
+    }
 
     document.getElementById("muteIcon").innerHTML = AudioKit.isMuted()
       ? `<path d="M4 9v6h4l5 4V5L8 9H4z" fill="#8a8a8a"/><line x1="16" y1="9" x2="21" y2="15" stroke="#e05a5a" stroke-width="2.5" stroke-linecap="round"/><line x1="21" y1="9" x2="16" y2="15" stroke="#e05a5a" stroke-width="2.5" stroke-linecap="round"/>`
@@ -636,8 +715,12 @@
   });
   navRight.addEventListener("click", () => {
     AudioKit.play("whoosh");
-    const lastIdx = nightUnlocked() ? SCENES.length - 1 : SCENES.length - 2;
-    if (currentScene < lastIdx) showScene(currentScene + 1);
+    if (currentScene < screens().length - 1) showScene(currentScene + 1);
+  });
+
+  document.getElementById("btnHome").addEventListener("click", () => {
+    AudioKit.play("pop");
+    showMenu();
   });
 
   document.getElementById("btnMute").addEventListener("click", () => {
@@ -656,7 +739,7 @@
     updateChrome();
   });
 
-  document.getElementById("btnHint").addEventListener("click", () => showHint());
+  document.getElementById("btnHint").addEventListener("click", () => openTaskOverview());
 
   /* ---------- Bestätigungs-Dialog (Neustart, Ton-Prüfung) ---------- */
 
@@ -729,39 +812,93 @@
     speak("Möchtest du noch einmal von vorne anfangen?");
     showConfirm("Noch einmal von vorne anfangen?", RESET_ICON, () => {
       save.done = {};
+      save.celebrated = {};
       Object.keys(promptShown).forEach((k) => delete promptShown[k]);
       persist();
       AudioKit.play("success");
       speak("Los geht's!");
-      showScene(0);
+      showMenu();
     }, resetIdle);
+  });
+
+  /* ---------- Aufgaben-Übersicht (Hilfe-Knopf) ----------
+     Zeigt alle Aufgaben des aktuellen Bildes: gelöste mit Haken,
+     offene mit einem Glühwürmchen-Knopf, der direkt hinfliegt. */
+
+  const tasksOverlay = document.getElementById("tasksOverlay");
+
+  function openTaskOverview() {
+    if (inMenu) return;
+    const scene = currentScreenScene();
+    const rows = scene.tasks.map((t) => {
+      const info = TASK_INFO[t.id];
+      const done = !!save.done[t.id];
+      return `<div class="taskRow ${done ? "taskDone" : ""}">
+        <div class="taskIcon">${CardIcons[info.icon] || ""}</div>
+        <div class="taskLabel">${info.label}</div>
+        ${done
+          ? `<div class="taskCheck">✓</div>`
+          : `<button class="taskFlyBtn" data-task="${t.id}" title="Zeig mir wo!">
+              <svg viewBox="-40 -40 80 80">
+                <circle r="26" fill="#ffe95c" opacity="0.5"/>
+                <ellipse cx="-8" cy="-12" rx="9" ry="6" fill="#bfe8f7"/>
+                <ellipse cx="8" cy="-12" rx="9" ry="6" fill="#bfe8f7"/>
+                <ellipse cx="0" cy="4" rx="9" ry="12" fill="#ffe95c" stroke="#e8c02c" stroke-width="2"/>
+                <circle cx="0" cy="-10" r="7.5" fill="#5b6770"/>
+                <circle cx="-2.5" cy="-12" r="1.8" fill="#fff"/><circle cx="2.5" cy="-12" r="1.8" fill="#fff"/>
+              </svg>
+            </button>`}
+      </div>`;
+    }).join("");
+    document.getElementById("tasksList").innerHTML = rows;
+    tasksOverlay.classList.add("show");
+    AudioKit.play("twinkle");
+    speak("Das kannst du auf diesem Bild machen.");
+    document.querySelectorAll(".taskFlyBtn").forEach((b) => {
+      b.addEventListener("click", () => {
+        tasksOverlay.classList.remove("show");
+        const info = TASK_INFO[b.dataset.task];
+        speak(info.prompt);
+        showHint(b.dataset.task);
+      });
+    });
+  }
+
+  document.getElementById("btnTasksClose").addEventListener("click", () => {
+    tasksOverlay.classList.remove("show");
+    AudioKit.play("pop");
+    resetIdle();
   });
 
   /* ---------- Glühwürmchen-Hilfe ---------- */
 
-  function nextHintTarget() {
-    /* 1. offene Aufgabe in der aktuellen Szene */
+  function nextHintTarget(taskId = null) {
     const svg = stage.querySelector("svg.scene");
-    const task = currentTaskOf(SCENES[currentScene]);
+    const scene = currentScreenScene();
+    /* 1. gewünschte oder erste offene Aufgabe im aktuellen Bild */
+    const task = taskId
+      ? scene.tasks.find((t) => t.id === taskId)
+      : currentTaskOf(scene);
     if (task && svg) {
       const src = svg.querySelector(task.source);
       const tgt = svg.querySelector(task.target);
       if (src) return { el: src, tgt };
     }
-    /* 2. sonst: Pfeil zur nächsten Szene mit offener Aufgabe */
-    for (let i = 0; i < SCENES.length; i++) {
+    /* 2. sonst: Pfeil zum nächsten Bild des Kapitels mit offener Aufgabe */
+    const scs = screens();
+    for (let i = 0; i < scs.length; i++) {
       if (i === currentScene) continue;
-      if (SCENES[i].locked && !nightUnlocked()) continue;
-      if (SCENES[i].tasks.some((t) => !save.done[t.id])) {
+      if (scs[i].tasks.some((t) => !save.done[t.id])) {
         return { el: i > currentScene ? navRight : navLeft, tgt: null };
       }
     }
-    return null;
+    /* 3. Kapitel fertig → zurück zum Menü zeigen */
+    return { el: document.getElementById("btnHome"), tgt: null };
   }
 
-  function showHint() {
-    if (!started || hintBusy || cardOverlay.classList.contains("show")) return;
-    const hint = nextHintTarget();
+  function showHint(taskId = null) {
+    if (!started || inMenu || hintBusy || cardOverlay.classList.contains("show")) return;
+    const hint = nextHintTarget(taskId);
     if (!hint) return;
     hintBusy = true;
 
@@ -797,7 +934,7 @@
 
   function resetIdle() {
     clearTimeout(idleTimer);
-    if (!started) return;
+    if (!started || inMenu) return;
     idleTimer = setTimeout(() => {
       showHint();
       resetIdle();
@@ -896,7 +1033,7 @@
       ov.style.opacity = "0";
       setTimeout(() => { ov.remove(); }, 700);
       topbar.style.display = "";
-      showScene(0);
+      showMenu();
     };
     const btn = ov.querySelector("#playBtn");
     btn.addEventListener("click", startGame);

@@ -1,0 +1,11 @@
+{
+  "name": "lias-garten",
+  "version": "1.0.0",
+  "description": "Lia’s Garten – Wimmel-Entdeckerspiel für Kinder von 2–5 Jahren",
+  "private": true,
+  "scripts": {
+    "start": "npx serve .",
+    "cap:init": "npx cap init \"Lia's Garten\" de.example.liasgarten --web-dir .",
+    "cap:sync": "npx cap sync"
+  }
+}
