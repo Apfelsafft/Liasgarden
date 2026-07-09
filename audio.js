@@ -8,6 +8,7 @@ const AudioKit = (() => {
   let ctx = null;
   let master = null;
   let ambientGain = null;
+  let ambientOscillators = [];
   let muted = false;
   let ambientTimer = null;
   let musicGain = null;
@@ -269,7 +270,19 @@ const AudioKit = (() => {
 
   /* Sanfte Hintergrund-Atmosphäre: leiser Akkord-Teppich
      und ab und zu ein Vogelzwitschern. */
+  function stopAmbient() {
+    ambientOscillators.forEach((o) => {
+      try { o.stop(); } catch (e) { /* bereits gestoppt */ }
+    });
+    ambientOscillators = [];
+    if (ambientTimer) {
+      clearTimeout(ambientTimer);
+      ambientTimer = null;
+    }
+  }
+
   function startAmbient() {
+    stopAmbient();
     ambientGain = ctx.createGain();
     ambientGain.gain.value = 0.045;
     ambientGain.connect(master);
@@ -288,6 +301,7 @@ const AudioKit = (() => {
       osc.connect(g).connect(ambientGain);
       osc.start();
       lfo.start();
+      ambientOscillators.push(osc, lfo);
     });
 
     scheduleBird();
