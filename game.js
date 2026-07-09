@@ -217,7 +217,7 @@
       if (promptShown[task.id] || save.done[task.id]) return;
       promptShown[task.id] = true;
       const info = TASK_INFO[task.id];
-      showCard({ icon: info.icon, text: info.prompt });
+      showCard({ icon: info.icon, icon2: info.icon2, text: info.prompt });
       AudioKit.play("chime");
     }, 700);
   }
@@ -227,7 +227,54 @@
      ausführen – nicht nur wackeln. Alle Animationen kehren von
      selbst zur Ausgangsposition zurück. */
 
+  /* Gleichmäßige Flugbahn: viele Zwischenschritte entlang einer
+     Ellipse statt weniger eckiger Punkte. Richtung ist zufällig,
+     damit nicht alles gleich aussieht. */
+  function orbitFrames(A, B, { bank = 0, wobble = 0, spin = 0 } = {}) {
+    const dir = Math.random() < 0.5 ? -1 : 1;
+    const n = 30;
+    const frames = [];
+    for (let i = 0; i <= n; i++) {
+      const p = i / n;
+      const a = 2 * Math.PI * p;
+      const x = dir * A * Math.sin(a);
+      const y = -B * (1 - Math.cos(a));
+      const r = dir * bank * Math.sin(a)
+        + (wobble ? Math.sin(5 * Math.PI * p) * wobble : 0)
+        + dir * spin * p;
+      frames.push({ transform: `translate(${x.toFixed(1)}px,${y.toFixed(1)}px) rotate(${r.toFixed(1)}deg)`, offset: p });
+    }
+    return frames;
+  }
+
+  /* Fisch-/Delfinsprung: glatter Bogen mit Überschlag */
+  function leapFrames(height = 170, width = 110, flip = true) {
+    const dir = Math.random() < 0.5 ? -1 : 1;
+    const n = 26;
+    const frames = [];
+    for (let i = 0; i <= n; i++) {
+      const p = i / n;
+      const x = dir * width * Math.sin(Math.PI * p);
+      const y = -height * Math.sin(Math.PI * p);
+      const r = flip ? dir * (-50 + 100 * p) : dir * 20 * Math.sin(Math.PI * p);
+      frames.push({ transform: `translate(${x.toFixed(1)}px,${y.toFixed(1)}px) rotate(${r.toFixed(1)}deg)`, offset: p });
+    }
+    return frames;
+  }
+
   const POKE_ACTIONS = {
+    /* runde Flugschleife (Schmetterling, Biene, Marienkäfer) */
+    circleFly: (inner) => inner.animate(
+      orbitFrames(120 + Math.random() * 90, 90 + Math.random() * 60, { bank: 16, wobble: 7 }),
+      { duration: 2400 + Math.random() * 700, easing: "ease-in-out" }),
+    /* weiter, flacher Gleitflug durch den Himmel (Vögel, Möwen) */
+    soar: (inner) => inner.animate(
+      orbitFrames(240 + Math.random() * 80, 60 + Math.random() * 30, { bank: 12 }),
+      { duration: 2800 + Math.random() * 600, easing: "ease-in-out" }),
+    /* Sprung aus dem Wasser mit Überschlag (Fische) */
+    leap: (inner) => inner.animate(
+      leapFrames(150 + Math.random() * 60, 90 + Math.random() * 50, true),
+      { duration: 1500, easing: "ease-in-out" }),
     /* hoher Hüpfer mit Quetsch-Landung (Pilze, Sandburg, Igel, Frosch) */
     bigBounce: (inner) => inner.animate([
       { transform: "translateY(0) scale(1,1)" },
@@ -236,14 +283,10 @@
       { transform: "translateY(-55px) scale(1,1)", offset: 0.75 },
       { transform: "translateY(0) scale(1,1)" },
     ], { duration: 1400, easing: "ease-in-out" }),
-    /* großer Bogenflug über den Bildschirm und zurück (Wasserball) */
-    flyArc: (inner) => inner.animate([
-      { transform: "translate(0,0) rotate(0deg)" },
-      { transform: "translate(-240px,-220px) rotate(-160deg)", offset: 0.25 },
-      { transform: "translate(-460px,-20px) rotate(-320deg)", offset: 0.5 },
-      { transform: "translate(-240px,-200px) rotate(-160deg)", offset: 0.75 },
-      { transform: "translate(0,0) rotate(0deg)" },
-    ], { duration: 2600, easing: "ease-in-out" }),
+    /* großer Kreisflug wie eine Frisbee, kommt zurück (Wasserball) */
+    flyArc: (inner) => inner.animate(
+      orbitFrames(280 + Math.random() * 60, 180 + Math.random() * 40, { spin: 540 }),
+      { duration: 2800, easing: "ease-in-out" }),
     /* wegrollen und zurück (Kürbis) */
     roll: (inner) => inner.animate([
       { transform: "translateX(0) rotate(0deg)" },
@@ -298,14 +341,8 @@
       { transform: "scale(1.15,1.1) translateY(-6px)", offset: 0.85 },
       { transform: "scale(1,1) translateY(0)" },
     ], { duration: 2000, easing: "ease-in-out" }),
-    /* eine Flugrunde drehen (Marienkäfer) */
-    loop: (inner) => inner.animate([
-      { transform: "translate(0,0) rotate(0deg)" },
-      { transform: "translate(90px,-110px) rotate(30deg)", offset: 0.3 },
-      { transform: "translate(180px,-30px) rotate(-20deg)", offset: 0.55 },
-      { transform: "translate(80px,30px) rotate(15deg)", offset: 0.8 },
-      { transform: "translate(0,0) rotate(0deg)" },
-    ], { duration: 2200, easing: "ease-in-out" }),
+    /* alter Name für die Flugschleife */
+    loop: (inner) => POKE_ACTIONS.circleFly(inner),
     /* seitwärts flitzen wie ein echter Krebs */
     scuttle: (inner) => inner.animate([
       { transform: "translateX(0)" },
@@ -524,7 +561,7 @@
         persist();
         updateChrome();
         const info = TASK_INFO[taskId];
-        showCard({ icon: info.icon, text: info.praise, taskId, praise: true });
+        showCard({ icon: info.icon, icon2: info.icon2, text: info.praise, taskId, praise: true });
       },
     };
   }
@@ -611,9 +648,12 @@
 
   /* ---------- Wissens-Karte ---------- */
 
-  function showCard({ icon, text, taskId = null, praise = false }) {
+  function showCard({ icon, icon2 = null, text, taskId = null, praise = false }) {
     stopHint();
-    document.getElementById("factIcon").innerHTML = CardIcons[icon] || "";
+    /* Bei Bring-Aufgaben beide Beteiligte zeigen: Ding ➜ Ziel */
+    document.getElementById("factIcon").innerHTML = icon2
+      ? `<div class="iconPair">${CardIcons[icon] || ""}<div class="iconArrow">➜</div>${CardIcons[icon2] || ""}</div>`
+      : (CardIcons[icon] || "");
     document.getElementById("factText").textContent = text;
     document.getElementById("factStars").innerHTML = inMenu ? "" : starSvg(currentScreenScene());
     cardOverlay.classList.add("show");
@@ -836,6 +876,9 @@
       return `<div class="taskRow ${done ? "taskDone" : ""}">
         <div class="taskIcon">${CardIcons[info.icon] || ""}</div>
         <div class="taskLabel">${info.label}</div>
+        <button class="taskInfoBtn" data-task="${t.id}" title="Aufgabe noch einmal anhören">
+          <svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="#fff"/><path d="M16 8 Q 19 12 16 16 M 18 5.5 Q 22.5 12 18 18.5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+        </button>
         ${done
           ? `<div class="taskCheck">✓</div>`
           : `<button class="taskFlyBtn" data-task="${t.id}" title="Zeig mir wo!">
@@ -860,6 +903,15 @@
         const info = TASK_INFO[b.dataset.task];
         speak(info.prompt);
         showHint(b.dataset.task);
+      });
+    });
+    /* Aufgaben-Info mit Vorlesung noch einmal anzeigen */
+    document.querySelectorAll(".taskInfoBtn").forEach((b) => {
+      b.addEventListener("click", () => {
+        tasksOverlay.classList.remove("show");
+        const info = TASK_INFO[b.dataset.task];
+        showCard({ icon: info.icon, icon2: info.icon2, text: info.prompt });
+        AudioKit.play("chime");
       });
     });
   }
@@ -984,22 +1036,22 @@
         style="font-family:inherit">Lia’s Garten</text>
       <text x="500" y="265" text-anchor="middle" font-size="30" fill="#5a7a3f"
         stroke="#fff" stroke-width="6" paint-order="stroke"
-        style="font-family:inherit">Tippe auf die Sonnenblume!</text>
+        style="font-family:inherit">Tippe auf den Apfel!</text>
 
-      <g id="playBtn" transform="translate(500,480)" style="cursor:pointer">
+      <g id="playBtn" transform="translate(500,470)" style="cursor:pointer">
         <g class="inner floaty">
-          <circle r="105" fill="#fff" opacity="0.55"/>
-          <g transform="translate(0,-30)">
-            <path d="M 0 30 Q -4 90 0 130" stroke="#5f9e45" stroke-width="10" fill="none" stroke-linecap="round"/>
-            <path d="M 0 80 Q -34 74 -40 50 Q -12 56 0 74 Z" fill="#74b95a"/>
-            <path d="M 2 104 Q 36 98 44 72 Q 14 78 2 96 Z" fill="#74b95a"/>
-            ${(() => { let p = ""; for (let i = 0; i < 12; i++) p += `<ellipse rx="15" ry="34" fill="#ffd23e" transform="rotate(${i * 30}) translate(0,-38)"/>`; return p; })()}
-            <circle r="30" fill="#96683c"/>
-            <circle cx="-8" cy="-6" r="3.4" fill="#3a2c20"/><circle cx="8" cy="-6" r="3.4" fill="#3a2c20"/>
-            <circle cx="-7" cy="-7" r="1.2" fill="#fff"/><circle cx="9" cy="-7" r="1.2" fill="#fff"/>
-            <path d="M -8 4 Q 0 11 8 4" stroke="#3a2c20" stroke-width="2.6" fill="none" stroke-linecap="round"/>
-            <circle cx="-15" cy="1" r="4" fill="#ff9d9d" opacity="0.55"/>
-            <circle cx="15" cy="1" r="4" fill="#ff9d9d" opacity="0.55"/>
+          <circle r="110" fill="#fff" opacity="0.55"/>
+          <g transform="translate(0,8)">
+            <path d="M 0 -62 Q 2 -80 12 -88" stroke="#7a5230" stroke-width="9" fill="none" stroke-linecap="round"/>
+            <path d="M 10 -78 Q 34 -94 46 -74 Q 26 -62 10 -78 Z" fill="#74b95a" stroke="#5f9e45" stroke-width="2.5"/>
+            <path d="M -62 -20 Q -66 -68 -26 -66 Q -6 -65 0 -52 Q 6 -65 26 -66 Q 66 -68 62 -20 Q 58 30 30 54 Q 12 68 0 60 Q -12 68 -30 54 Q -58 30 -62 -20 Z"
+              fill="#e84c3d" stroke="#b93425" stroke-width="4"/>
+            <ellipse cx="-28" cy="-30" rx="12" ry="20" fill="#fff" opacity="0.3" transform="rotate(-18 -28 -30)"/>
+            <circle cx="-16" cy="-8" r="5" fill="#3a2c20"/><circle cx="16" cy="-8" r="5" fill="#3a2c20"/>
+            <circle cx="-14" cy="-10" r="1.8" fill="#fff"/><circle cx="18" cy="-10" r="1.8" fill="#fff"/>
+            <path d="M -12 6 Q 0 16 12 6" stroke="#3a2c20" stroke-width="3.2" fill="none" stroke-linecap="round"/>
+            <circle cx="-27" cy="2" r="6" fill="#ff9d9d" opacity="0.6"/>
+            <circle cx="27" cy="2" r="6" fill="#ff9d9d" opacity="0.6"/>
           </g>
         </g>
       </g>

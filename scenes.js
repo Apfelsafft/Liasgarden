@@ -24,37 +24,43 @@ function hit(r = 44, x = 0, y = 0) {
 const TASK_INFO = {
   t1: {
     label: "Samen gießen",
-    icon: "flower",
+    icon: "can",
+    icon2: "flower",
     prompt: "Pflanzen brauchen Wasser, um zu wachsen. Gießt du den kleinen Samen mit der Gießkanne?",
     praise: "Super gemacht! Schau nur, wie groß die Blume geworden ist!",
   },
   t2: {
     label: "Biene zur Blume",
     icon: "bee",
+    icon2: "flower",
     prompt: "Bienen lieben Blumen und machen aus Nektar Honig. Bringst du die Biene zur Blume?",
     praise: "Toll! Die Biene sammelt jetzt süßen Nektar.",
   },
   t3: {
     label: "Frosch füttern",
-    icon: "frog",
+    icon: "flies",
+    icon2: "frog",
     prompt: "Frösche fressen am liebsten Fliegen. Bringst du dem Frosch die Fliegen?",
     praise: "Mmmh! Das hat dem Frosch richtig gut geschmeckt.",
   },
   t4: {
     label: "Küken zur Mama",
-    icon: "duck",
+    icon: "duckling",
+    icon2: "duck",
     prompt: "Entenküken schwimmen immer dicht bei ihrer Mama. Bringst du das kleine Küken zu ihr?",
     praise: "Wie schön! Jetzt ist das Küken wieder bei seiner Mama.",
   },
   t5: {
     label: "Apfel für den Igel",
-    icon: "hedgehog",
+    icon: "apple",
+    icon2: "hedgehog",
     prompt: "Igel lieben Äpfel! Bringst du dem Igel einen Apfel?",
     praise: "Super gemacht! Der Igel freut sich riesig.",
   },
   t6: {
     label: "Wurm zum Küken",
-    icon: "chick",
+    icon: "worm",
+    icon2: "chick",
     prompt: "Vogelkinder haben großen Hunger und fressen gerne Würmer. Bringst du dem Küken den Wurm?",
     praise: "Piep, piep! Jetzt ist das Vogelkind satt und glücklich.",
   },
@@ -66,73 +72,85 @@ const TASK_INFO = {
   },
   t8: {
     label: "Eichel sammeln",
-    icon: "squirrel",
+    icon: "acorn",
+    icon2: "squirrel",
     prompt: "Eichhörnchen sammeln im Herbst Eicheln und Nüsse für den Winter. Bringst du dem Eichhörnchen die Eichel?",
     praise: "Klasse! Jetzt hat das Eichhörnchen einen Vorrat für den Winter.",
   },
   t9: {
     label: "Blätternest bauen",
-    icon: "hedgehog",
+    icon: "leaves",
+    icon2: "hedgehog",
     prompt: "Igel bauen sich aus Blättern ein kuscheliges Nest für den Winterschlaf. Bringst du dem Igel die Blätter?",
     praise: "Wunderbar! Der Igel kuschelt sich in sein Blätternest. Schlaf gut!",
   },
   t10: {
     label: "Vögel füttern",
-    icon: "bird",
+    icon: "seedbag",
+    icon2: "bird",
     prompt: "Im Winter finden Vögel kaum Futter. Streust du ihnen Körner ins Vogelhäuschen?",
     praise: "Toll! Die hungrigen Vögel picken schon die Körner.",
   },
   t11: {
     label: "Schneemann-Nase",
-    icon: "snowman",
+    icon: "carrot",
+    icon2: "snowman",
     prompt: "Der Schneemann hat noch gar keine Nase! Schenkst du ihm die Möhre?",
     praise: "Hihi! Was für eine schöne Möhrennase.",
   },
   t12: {
     label: "Haus für den Krebs",
-    icon: "crab",
+    icon: "shell",
+    icon2: "crab",
     prompt: "Einsiedlerkrebse wohnen in leeren Schneckenhäusern. Schenkst du dem kleinen Krebs das Häuschen?",
     praise: "Juhu! Der Einsiedlerkrebs hat ein neues Zuhause.",
   },
   t13: {
     label: "Seestern retten",
     icon: "starfish",
+    icon2: "wave",
     prompt: "Seesterne leben im Meer und brauchen Wasser. Bringst du den Seestern zurück ins Meer?",
     praise: "Super! Der Seestern schwimmt wieder fröhlich im Meer.",
   },
   t14: {
     label: "Boot zur Statue",
-    icon: "liberty",
+    icon: "boat",
+    icon2: "liberty",
     prompt: "Lia macht eine große Reise nach Amerika! Die Freiheitsstatue steht auf einer kleinen Insel. Fährst du Lia mit dem Boot zu ihr?",
     praise: "Hurra! Lia ist bei der Freiheitsstatue angekommen. Was für eine Reise!",
   },
   t15: {
     label: "Delfin füttern",
-    icon: "dolphin",
+    icon: "fish",
+    icon2: "dolphin",
     prompt: "Delfine leben im Meer und springen gern aus dem Wasser. Bringst du dem Delfin einen Fisch?",
     praise: "Toll! Der Delfin freut sich und macht einen Freudensprung.",
   },
   s1: {
     label: "Zwiebel einpflanzen",
-    icon: "flower",
+    icon: "bulb",
+    icon2: "flower",
     prompt: "Im Frühling wachsen aus kleinen Zwiebeln neue Blumen. Pflanzt du die Blumenzwiebel in das Erdloch?",
     praise: "Wunderbar! Schau, eine Tulpe ist gewachsen!",
   },
   s2: {
     label: "Nest bauen helfen",
-    icon: "bird",
+    icon: "twigs",
+    icon2: "bird",
     prompt: "Im Frühling bauen die Vögel ihre Nester aus kleinen Zweigen. Bringst du dem Vogel die Zweige?",
     praise: "Toll! Der Vogel hat jetzt ein gemütliches Nest.",
   },
   s3: {
     label: "Erdbeere pflücken",
     icon: "strawberry",
+    icon2: "basket",
     prompt: "Im Sommer werden die Erdbeeren rot und süß. Pflückst du eine Erdbeere in den Korb?",
     praise: "Mmmh! Die Erdbeere ist schön reif und süß.",
   },
   s4: {
     label: "Eis für Lia",
     icon: "icecream",
+    icon2: "lia",
     prompt: "An heißen Sommertagen schmeckt ein kühles Eis am besten. Bringst du Lia das Eis?",
     praise: "Mmmh, lecker! Lia freut sich riesig über das Eis.",
   },
@@ -145,30 +163,35 @@ const TASK_INFO = {
   e2: {
     label: "Geschenk für Lia",
     icon: "gift",
+    icon2: "lia",
     prompt: "Zum Geburtstag gibt es Geschenke. Bringst du Lia ihr Geburtstagsgeschenk?",
     praise: "Ein Teddy! Lia hat sich so gefreut.",
   },
   e3: {
     label: "Stern auf den Baum",
-    icon: "xtree",
+    icon: "goldstar",
+    icon2: "xtree",
     prompt: "An Weihnachten schmücken wir den Tannenbaum. Setzt du den goldenen Stern ganz oben auf die Spitze?",
     praise: "Wie schön der Weihnachtsbaum jetzt leuchtet!",
   },
   e4: {
     label: "Geschenk zum Baum",
     icon: "gift",
+    icon2: "xtree",
     prompt: "An Weihnachten legen wir Geschenke unter den Tannenbaum. Legst du das Geschenk dazu?",
     praise: "Wunderbar! Jetzt kann Weihnachten kommen.",
   },
   e5: {
     label: "Ostereier suchen",
     icon: "egg",
+    icon2: "basket",
     prompt: "Der Osterhase hat bunte Eier versteckt. Sammelst du alle drei Eier in das Körbchen?",
     praise: "Super! Du hast alle Ostereier gefunden.",
   },
   e6: {
     label: "Möhre für den Hasen",
-    icon: "bunny",
+    icon: "carrot",
+    icon2: "bunny",
     prompt: "Der Osterhase hat vom vielen Eierverstecken großen Hunger. Bringst du ihm die Möhre?",
     praise: "Mampf! Jetzt ist der Osterhase wieder gestärkt.",
   },
@@ -181,8 +204,111 @@ const TASK_INFO = {
   e8: {
     label: "Wunderkerze für Lia",
     icon: "sparkler",
+    icon2: "lia",
     prompt: "Bringst du Lia die funkelnde Wunderkerze?",
     praise: "Frohes neues Jahr! Lia strahlt mit der Wunderkerze um die Wette.",
+  },
+  f1: {
+    label: "Heu für das Pferd",
+    icon: "hay", icon2: "horse",
+    prompt: "Pferde fressen am liebsten Heu und Gras. Bringst du dem Pferd das Heu?",
+    praise: "Wiehiehie! Das Pferd knuspert genüsslich sein Heu.",
+  },
+  f2: {
+    label: "Eimer zur Kuh",
+    icon: "bucket", icon2: "cow",
+    prompt: "Kühe geben uns leckere Milch. Stellst du den Eimer zur Kuh?",
+    praise: "Muuuh! Frische Milch für alle.",
+  },
+  f3: {
+    label: "Körner fürs Huhn",
+    icon: "seedbag", icon2: "hen",
+    prompt: "Hühner picken den ganzen Tag gerne Körner. Streust du dem Huhn welche hin?",
+    praise: "Gack, gack! Das Huhn pickt fröhlich seine Körner.",
+  },
+  f4: {
+    label: "Apfel fürs Schwein",
+    icon: "apple", icon2: "pig",
+    prompt: "Schweine fressen für ihr Leben gern Obst. Bringst du dem Schwein den Apfel?",
+    praise: "Oink, oink! Das Schwein schmatzt vor Freude.",
+  },
+  w1: {
+    label: "Pilze sammeln",
+    icon: "mushroomI", icon2: "basket",
+    prompt: "Im Wald wachsen viele bunte Pilze. Sammelst du drei Pilze in den Korb?",
+    praise: "Toll! Der Korb ist voller Pilze.",
+  },
+  w2: {
+    label: "Zapfen fürs Eichhörnchen",
+    icon: "pinecone", icon2: "squirrel",
+    prompt: "Eichhörnchen knabbern die Samen aus Tannenzapfen. Bringst du dem Eichhörnchen den Zapfen?",
+    praise: "Klasse! Das Eichhörnchen knabbert schon los.",
+  },
+  w3: {
+    label: "Reh füttern",
+    icon: "leaves", icon2: "deer",
+    prompt: "Rehe fressen Blätter, Gräser und Knospen. Fütterst du das kleine Reh?",
+    praise: "Wie schön! Das Reh frisst dir aus der Hand.",
+  },
+  b1: {
+    label: "Helm für Lia",
+    icon: "helmet", icon2: "lia",
+    prompt: "Auf der Baustelle trägt jeder einen Helm. Setzt du Lia den gelben Helm auf?",
+    praise: "Sicher ist sicher! Lia sieht aus wie eine echte Bauarbeiterin.",
+  },
+  b2: {
+    label: "Steine aufladen",
+    icon: "stone", icon2: "truck",
+    prompt: "Der Kipplaster bringt die schweren Steine weg. Lädst du alle drei Steine auf?",
+    praise: "Brummm! Der Kipplaster ist voll beladen.",
+  },
+  b3: {
+    label: "Hütchen aufstellen",
+    icon: "cone", icon2: "excavatorI",
+    prompt: "Die orangen Hütchen sagen: Vorsicht, Baustelle! Stellst du das Hütchen an die Straße?",
+    praise: "Super! Jetzt wissen alle: Hier wird gebaut.",
+  },
+  u1: {
+    label: "Perle in die Muschel",
+    icon: "pearl", icon2: "clam",
+    prompt: "In manchen Muscheln wächst eine glänzende Perle. Legst du die Perle in die Muschel?",
+    praise: "Wunderschön! Die Muschel funkelt mit ihrer Perle.",
+  },
+  u2: {
+    label: "Clownfisch nach Hause",
+    icon: "clownfish", icon2: "anemoneI",
+    prompt: "Clownfische wohnen mitten in der Anemone. Bringst du den kleinen Clownfisch nach Hause?",
+    praise: "Blubb! Der Clownfisch kuschelt sich in seine Anemone.",
+  },
+  u3: {
+    label: "Schildkröte füttern",
+    icon: "seaweed", icon2: "turtle",
+    prompt: "Meeresschildkröten fressen gerne Seegras. Fütterst du die Schildkröte?",
+    praise: "Mmmh! Die Schildkröte kaut zufrieden ihr Seegras.",
+  },
+  u4: {
+    label: "Luftblasen zerplatzen",
+    icon: "bubble",
+    prompt: "Blubb, blubb! Tippst du alle vier Luftblasen an?",
+    praise: "Blubb! Alle Blasen sind zerplatzt.",
+  },
+  x1: {
+    label: "Astronauten-Helm",
+    icon: "spacehelmet", icon2: "lia",
+    prompt: "Im Weltraum gibt es keine Luft zum Atmen. Setzt du Lia ihren Astronauten-Helm auf?",
+    praise: "Startklar! Lia ist jetzt eine echte Astronautin.",
+  },
+  x2: {
+    label: "Keks für den Außerirdischen",
+    icon: "cookie", icon2: "alien",
+    prompt: "Der kleine Außerirdische hat noch nie einen Keks probiert. Schenkst du ihm einen?",
+    praise: "Mampf! Kekse gibt es wohl nur auf der Erde. Er ist begeistert!",
+  },
+  x3: {
+    label: "Rakete starten",
+    icon: "rocket",
+    prompt: "Drei, zwei, eins! Tippst du die große Rakete an und startest sie zum Mond?",
+    praise: "Wuuusch! Die Rakete fliegt zum Mond. Gute Reise!",
   },
 };
 
@@ -790,16 +916,17 @@ function carrot(s = 1) {
   </g>`;
 }
 
-function firTree(s = 1) {
+function firTree(s = 1, snowy = true) {
   return `<g transform="scale(${s})">
     ${hit(66, 0, -60)}
     <rect x="-9" y="-12" width="18" height="26" rx="4" fill="#7a5230"/>
     <path d="M 0 -150 L 38 -92 L -38 -92 Z" fill="#3a7050"/>
     <path d="M 0 -118 L 48 -52 L -48 -52 Z" fill="#437c59"/>
     <path d="M 0 -84 L 58 -10 L -58 -10 Z" fill="#4d8a63"/>
+    ${snowy ? `
     <path d="M -2 -148 Q 10 -132 24 -114 Q 8 -118 -2 -122 Z" fill="#eef7fd" opacity="0.9"/>
     <path d="M -34 -60 Q -14 -54 8 -58 Q -8 -46 -30 -50 Z" fill="#eef7fd" opacity="0.9"/>
-    <path d="M 14 -28 Q 34 -24 50 -16 Q 28 -12 10 -18 Z" fill="#eef7fd" opacity="0.9"/>
+    <path d="M 14 -28 Q 34 -24 50 -16 Q 28 -12 10 -18 Z" fill="#eef7fd" opacity="0.9"/>` : ""}
   </g>`;
 }
 
@@ -1440,6 +1567,49 @@ const CardIcons = {
   bunny:    `<svg viewBox="-55 -85 110 130">${bunny(1.4)}</svg>`,
   rocket:   `<svg viewBox="-50 -70 100 130">${rocketFig(1.4)}</svg>`,
   sparkler: `<svg viewBox="-45 -50 90 95">${sparklerFig(1.9, true)}</svg>`,
+  can:      `<svg viewBox="-78 -58 156 105">${wateringCan(1.1)}</svg>`,
+  apple:    `<svg viewBox="-48 -60 96 100">${apple(2)}</svg>`,
+  worm:     `<svg viewBox="-58 -55 116 95">${worm(1.6)}</svg>`,
+  flies:    `<svg viewBox="-60 -55 120 100">${flySwarm(1.7)}</svg>`,
+  duckling: `<svg viewBox="-68 -58 136 108">${duck(1.4, "#ffdf5e", "#f5a340")}</svg>`,
+  acorn:    `<svg viewBox="-45 -60 90 105">${acorn(2.2)}</svg>`,
+  leaves:   `<svg viewBox="-62 -52 124 100">${leafBundle(1.6)}</svg>`,
+  seedbag:  `<svg viewBox="-55 -75 110 125">${seedBag(1.7)}</svg>`,
+  carrot:   `<svg viewBox="-78 -48 156 90">${carrot(1.9)}</svg>`,
+  shell:    `<svg viewBox="-52 -52 104 104">${spiralShell(1.9)}</svg>`,
+  wave:     `<svg viewBox="0 0 110 70"><path d="M8 30 Q 22 14 36 30 Q 50 46 64 30 Q 78 14 92 30" stroke="#5eb3d8" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M8 52 Q 22 36 36 52 Q 50 68 64 52 Q 78 36 92 52" stroke="#8fd4e8" stroke-width="9" fill="none" stroke-linecap="round"/></svg>`,
+  boat:     `<svg viewBox="-95 -75 190 125">${ferryBoat(0.95, false)}</svg>`,
+  bulb:     `<svg viewBox="-42 -72 84 112">${bulbFig(1.9)}</svg>`,
+  twigs:    `<svg viewBox="-58 -42 116 78">${twigBundle(1.7)}</svg>`,
+  basket:   `<svg viewBox="-62 -62 124 112">${basketFig(1.5)}</svg>`,
+  lia:      `<svg viewBox="-52 -62 104 200">${lia(1)}</svg>`,
+  goldstar: `<svg viewBox="-42 -42 84 84">${goldStar(1.9)}</svg>`,
+  fish:     `<svg viewBox="-58 -42 116 78">${fish(1.5)}</svg>`,
+  cow:      `<svg viewBox="-78 -62 156 115">${cowFig(1.1)}</svg>`,
+  horse:    `<svg viewBox="-72 -95 144 155">${horseFig(1)}</svg>`,
+  pig:      `<svg viewBox="-68 -50 136 105">${pigFig(1.2)}</svg>`,
+  hen:      `<svg viewBox="-55 -60 110 105">${henFig(1.4)}</svg>`,
+  hay:      `<svg viewBox="-52 -52 104 92">${hayBale(1.4)}</svg>`,
+  bucket:   `<svg viewBox="-45 -55 90 95">${bucketFig(1.6)}</svg>`,
+  deer:     `<svg viewBox="-62 -90 124 150">${deerFig(1.1)}</svg>`,
+  fox:      `<svg viewBox="-68 -60 136 105">${foxFig(1.2)}</svg>`,
+  pinecone: `<svg viewBox="-40 -45 80 85">${pineconeFig(1.9)}</svg>`,
+  mushroomI: `<svg viewBox="-45 -55 90 85"><path d="M -12 0 Q -15 -21 0 -21 Q 15 -21 12 0 Z" fill="#f5ecd7"/><path d="M -33 -18 Q -33 -51 0 -51 Q 33 -51 33 -18 Q 0 -9 -33 -18 Z" fill="#e84c3d" stroke="#b93425" stroke-width="3"/><circle cx="-13" cy="-36" r="6" fill="#fff" opacity="0.85"/><circle cx="10" cy="-28" r="4.5" fill="#fff" opacity="0.85"/></svg>`,
+  helmet:   `<svg viewBox="-48 -50 96 85">${helmetFig(1.6)}</svg>`,
+  stone:    `<svg viewBox="-42 -35 84 65">${stoneFig(1.9)}</svg>`,
+  truck:    `<svg viewBox="-88 -55 176 95">${dumpTruckFig(1.15)}</svg>`,
+  cone:     `<svg viewBox="-40 -55 80 95">${trafficCone(1.7)}</svg>`,
+  excavatorI: `<svg viewBox="-75 -85 210 130">${excavatorFig(1.05)}</svg>`,
+  turtle:   `<svg viewBox="-75 -50 150 100">${turtleFig(1.2)}</svg>`,
+  clownfish: `<svg viewBox="-55 -40 110 80">${clownfishFig(1.4)}</svg>`,
+  anemoneI: `<svg viewBox="-58 -75 116 120">${anemoneFig(1.3)}</svg>`,
+  seaweed:  `<svg viewBox="-42 -55 84 100">${seaweedBundle(1.6)}</svg>`,
+  pearl:    `<svg viewBox="-35 -35 70 70">${pearlFig(2)}</svg>`,
+  clam:     `<svg viewBox="-55 -60 110 105">${openClam(1.4, true)}</svg>`,
+  bubble:   `<svg viewBox="-40 -40 80 80">${bubbleFig(1.8)}</svg>`,
+  alien:    `<svg viewBox="-52 -85 104 140">${alienFig(1.15)}</svg>`,
+  cookie:   `<svg viewBox="-35 -35 70 70">${cookieFig(1.9)}</svg>`,
+  spacehelmet: `<svg viewBox="-45 -45 90 90">${spaceHelmetFig(1.5)}</svg>`,
   dolphin:  `<svg viewBox="-88 -70 176 105">${dolphinFig(1.1)}</svg>`,
   rainbow:  `<svg viewBox="-70 -60 140 110">
     <path d="M -56 40 A 56 56 0 0 1 56 40" fill="none" stroke="#e84c3d" stroke-width="10"/>
@@ -1489,7 +1659,7 @@ const sceneGarden = {
     ${wrap(300, 640, 1, `class="pokeable" data-sound="pop" data-action="bloom"`, flower("#ff8fab"), "swaying")}
     ${wrap(390, 655, 0.85, `class="pokeable" data-sound="pop" data-action="bloom"`, flower("#b892e0", "#fff3b0"), "swaying")}
     ${wrap(240, 660, 0.7, `class="pokeable" data-sound="pop" data-action="bloom"`, tulip("#f5a340", 1.3))}
-    ${wrap(460, 648, 0.75, `class="pokeable" data-sound="pop" data-action="bloom"`, tulip("#e84c3d", 1.3))}
+    ${wrap(625, 650, 0.75, `class="pokeable" data-sound="pop" data-action="bloom"`, tulip("#e84c3d", 1.3))}
 
     ${wrap(430, 500, 1, `id="ladybug" data-free="1" class="pokeable" data-sound="chirp" data-action="loop"`, `
       <path d="M -30 14 Q 0 2 34 12 Q 20 26 -6 24 Z" fill="#74b95a"/>
@@ -1629,8 +1799,8 @@ const scenePond = {
 
     ${!t3 ? wrap(380, 330, 1, `id="flies" class="grabbable"`, flySwarm(1.1)) : ""}
 
-    ${wrap(830, 270, 1, `id="dragonfly" data-free="1" class="pokeable" data-sound="whoosh"`, dragonfly(1.1), "floaty")}
-    ${wrap(560, 640, 1, `id="fish" data-free="1" class="pokeable" data-sound="splash"`, fish(1), "bobbing")}
+    ${wrap(830, 270, 1, `id="dragonfly" data-free="1" class="pokeable" data-sound="whoosh" data-action="circleFly"`, dragonfly(1.1), "floaty")}
+    ${wrap(255, 585, 1, `id="fish" data-free="1" class="pokeable" data-sound="splash" data-action="leap"`, fish(1), "bobbing")}
     ${butterfly(240, 300, 0.8, "#f5a340")}
     `;
   },
@@ -1696,12 +1866,6 @@ const scenePond = {
       inner.classList.add("happyBounce");
       setTimeout(() => inner.classList.remove("happyBounce"), 1500);
     };
-    const fishEl = svg.querySelector("#fish");
-    if (fishEl) fishEl._tapAction = () => {
-      fishEl.querySelector(":scope > .inner").animate(
-        [{ transform: "translateY(0) rotate(0deg)" }, { transform: "translateY(-90px) rotate(-20deg)" }, { transform: "translateY(0) rotate(0deg)" }],
-        { duration: 800, easing: "ease-out" });
-    };
     const df = svg.querySelector("#dragonfly");
     if (df) df._tapAction = () => {
       df.querySelector(":scope > .inner").animate(
@@ -1752,8 +1916,8 @@ const sceneTree = {
 
     ${wrap(830, 610, 1, `id="hedgehog" data-free="1" class="pokeable" data-sound="snuffle" data-action="bigBounce"`, hedgehog(1))}
 
-    ${!t5 ? wrap(500, 640, 1, `id="apple1" class="grabbable"`, apple(1)) : ""}
-    ${wrap(575, 660, 0.9, `id="apple2" class="grabbable"`, apple(1))}
+    ${!t5 ? wrap(300, 662, 1, `id="apple1" class="grabbable"`, apple(1)) : ""}
+    ${wrap(370, 655, 0.9, `id="apple2" class="grabbable"`, apple(1))}
 
     ${!t6 ? wrap(660, 672, 1, `id="worm" class="grabbable"`, worm(1), "bobbing") : ""}
     ${butterfly(720, 320, 0.9, "#ff8fab")}
@@ -1864,7 +2028,7 @@ const sceneAutumn = {
 
     ${wrap(250, 620, 1.35, `id="squirrel2" data-free="1" class="pokeable" data-sound="chirp" data-action="bigBounce"`, squirrel(1))}
     ${t8 ? `<g transform="translate(300,635)">${acorn(0.85)}</g>` : ""}
-    ${!t8 ? wrap(490, 660, 1, `id="acorn" class="grabbable"`, acorn(1), "bobbing") : ""}
+    ${!t8 ? wrap(330, 662, 1, `id="acorn" class="grabbable"`, acorn(1), "bobbing") : ""}
 
     ${wrap(790, 620, 1.05, `id="hedgehog2" data-free="1" class="pokeable" data-sound="snuffle" data-action="bigBounce"`, hedgehog(1))}
     ${t9 ? `<g transform="translate(796,596)">
@@ -1875,7 +2039,7 @@ const sceneAutumn = {
           <circle r="4" fill="#fff" opacity="0.8"/><circle cx="12" cy="-12" r="6" fill="#fff" opacity="0.7"/>
         </g>
       </g>`
-      : wrap(400, 645, 1, `id="leafpile" class="grabbable"`, leafBundle(1), "bobbing")}
+      : wrap(170, 652, 1, `id="leafpile" class="grabbable"`, leafBundle(1), "bobbing")}
 
     ${fallingLeaves(7)}
     ${butterfly(660, 300, 0.8, "#d9772e")}
@@ -1952,7 +2116,7 @@ const sceneWinter = {
 
     ${wrap(300, 655, 1, `id="snowmanFig" class="pokeable" data-sound="boing" data-action="dance"`, snowman(1, t11))}
     <g id="snowmanTarget" transform="translate(300,510)"><circle r="46" fill="transparent"/></g>
-    ${!t11 ? wrap(470, 668, 1, `id="carrot" class="grabbable"`, carrot(1), "bobbing") : ""}
+    ${!t11 ? wrap(650, 592, 1, `id="carrot" class="grabbable"`, carrot(1), "bobbing") : ""}
 
     ${wrap(760, 655, 1, `id="feeder"`, birdFeeder(1, t10))}
     ${t10
@@ -1960,7 +2124,7 @@ const sceneWinter = {
          ${wrap(806, 572, 0.8, `data-free="1" class="pokeable" data-sound="chirp" data-action="flutter"`, winterBird(1, "#f0b04a"), "bobbing")}`
       : `${wrap(650, 665, 0.9, `id="wbird1" data-free="1" class="pokeable" data-sound="chirp" data-action="flutter"`, winterBird(1), "bobbing")}
          ${wrap(870, 668, 0.9, `id="wbird2" data-free="1" class="pokeable" data-sound="chirp" data-action="flutter"`, winterBird(1, "#f0b04a"), "bobbing")}`}
-    ${!t10 ? wrap(560, 660, 1, `id="seeds" class="grabbable"`, seedBag(1)) : ""}
+    ${!t10 ? wrap(460, 598, 1, `id="seeds" class="grabbable"`, seedBag(1)) : ""}
 
     ${wrap(170, 640, 1, `id="bunny" data-free="1" class="pokeable" data-sound="hop"`, bunny(1))}
     ${snowflakes(12)}
@@ -2050,7 +2214,7 @@ const sceneBeach = {
     <path d="M 0 640 Q 400 615 1000 635 L 1000 700 L 0 700 Z" fill="#e8cf9a"/>
 
     ${wrap(160, 415, 1, ``, sailboat(1), "bobbing")}
-    ${wrap(600, 210, 1, `id="seagull" data-free="1" class="pokeable" data-sound="gull"`, seagull(1), "floaty")}
+    ${wrap(600, 210, 1, `id="seagull" data-free="1" class="pokeable" data-sound="gull" data-action="soar"`, seagull(1), "floaty")}
     ${wrap(75, 435, 1.05, `class="pokeable" data-sound="whoosh"`, palm(1), "swaying")}
 
     <rect x="160" y="600" width="150" height="66" rx="10" fill="#ff8fab" transform="rotate(-3 235 633)"/>
@@ -2065,9 +2229,9 @@ const sceneBeach = {
       : wrap(340, 650, 1, `id="starfish" class="grabbable"`, starfishFig(1), "bobbing")}
 
     ${wrap(740, 615, 1, `id="crab" data-free="1" class="pokeable" data-sound="pop" data-action="scuttle"`, crabFig(1, t12))}
-    ${!t12 ? wrap(470, 660, 1, `id="shell" class="grabbable"`, spiralShell(1), "bobbing") : ""}
+    ${!t12 ? wrap(268, 668, 1, `id="shell" class="grabbable"`, spiralShell(1), "bobbing") : ""}
 
-    ${wrap(660, 450, 0.9, `id="seafish" data-free="1" class="pokeable" data-sound="splash"`, fish(1, "#79c850"), "bobbing")}
+    ${wrap(660, 450, 0.9, `id="seafish" data-free="1" class="pokeable" data-sound="splash" data-action="leap"`, fish(1, "#79c850"), "bobbing")}
     `;
   },
   init(svg, api) {
@@ -2102,18 +2266,6 @@ const sceneBeach = {
         return true;
       });
     }
-    const gullEl = svg.querySelector("#seagull");
-    if (gullEl) gullEl._tapAction = () => {
-      gullEl.querySelector(":scope > .inner").animate(
-        [{ transform: "translate(0,0)" }, { transform: "translate(-160px,-50px)" }, { transform: "translate(80px,-90px)" }, { transform: "translate(0,0)" }],
-        { duration: 2400, easing: "ease-in-out" });
-    };
-    const sf = svg.querySelector("#seafish");
-    if (sf) sf._tapAction = () => {
-      sf.querySelector(":scope > .inner").animate(
-        [{ transform: "translateY(0) rotate(0deg)" }, { transform: "translateY(-80px) rotate(-20deg)" }, { transform: "translateY(0) rotate(0deg)" }],
-        { duration: 800, easing: "ease-out" });
-    };
   },
 };
 
@@ -2153,8 +2305,8 @@ const sceneAmerica = {
       ${wrap(838, 574, 1, `id="liberty" class="pokeable" data-sound="chime"`, libertyStatue(1))}
     </g>
 
-    ${wrap(390, 200, 0.9, `data-free="1" class="pokeable" data-sound="gull" data-action="loop"`, seagull(1), "floaty")}
-    ${wrap(660, 260, 0.65, `data-free="1" class="pokeable" data-sound="gull" data-action="loop"`, seagull(1), "floaty")}
+    ${wrap(390, 200, 0.9, `data-free="1" class="pokeable" data-sound="gull" data-action="soar"`, seagull(1), "floaty")}
+    ${wrap(660, 260, 0.65, `data-free="1" class="pokeable" data-sound="gull" data-action="soar"`, seagull(1), "floaty")}
     ${wrap(60, 470, 0.6, ``, sailboat(1), "bobbing")}
     ${wrap(600, 500, 0.9, `id="buoy" data-free="1" class="pokeable" data-sound="chime" data-action="dance"`, buoy(1), "bobbing")}
 
@@ -2162,7 +2314,7 @@ const sceneAmerica = {
       ? wrap(680, 570, 0.9, `id="boatDone" class="pokeable" data-sound="horn"`, ferryBoat(1, true), "bobbing")
       : wrap(225, 550, 0.9, `id="boat" class="grabbable"`, ferryBoat(1, true), "bobbing")}
 
-    ${wrap(430, 620, 1, `id="dolphin" data-free="1" class="pokeable" data-sound="whistle"`, dolphinFig(1), "bobbing")}
+    ${wrap(430, 596, 1, `id="dolphin" data-free="1" class="pokeable" data-sound="whistle"`, dolphinFig(1), "bobbing")}
     ${!t15 ? wrap(180, 660, 1, `id="snack" class="grabbable"`, fish(0.9, "#f5a340"), "bobbing") : ""}
     `;
   },
@@ -2293,7 +2445,7 @@ const sceneNight = {
     ${grassTuft(880, 660, 1.4, "#3a6647")}
     ${grassTuft(100, 620, 1.2, "#3a6647")}
     ${mushroom(620, 640, 0.9)}
-    ${wrap(430, 620, 0.7, `class="pokeable" data-sound="pop" data-action="bloom"`, tulip("#b892e0", 1.3))}
+    ${wrap(300, 628, 0.7, `class="pokeable" data-sound="pop" data-action="bloom"`, tulip("#b892e0", 1.3))}
     ${ffs}
     `;
   },
@@ -2379,14 +2531,14 @@ const sceneSpring = {
         <path d="M -24 -4 Q 0 8 24 -4 Q 25 10 0 14 Q -25 10 -24 -4 Z" fill="#a5652c" stroke="#7a5230" stroke-width="2.5"/>
         <g transform="translate(0,-14)">${winterBird(0.85)}</g>
       </g>`
-      : wrap(430, 665, 1, `id="twigs" class="grabbable"`, twigBundle(1), "bobbing")}
+      : wrap(320, 668, 1, `id="twigs" class="grabbable"`, twigBundle(1), "bobbing")}
     ${!d2 ? wrap(310, 330, 0.8, `id="sbird" data-free="1" class="pokeable" data-sound="chirp" data-action="flutter"`, winterBird(1), "bobbing") : ""}
 
-    <g id="hole" transform="translate(580,650)">
+    <g id="hole" transform="translate(645,650)">
       <ellipse rx="34" ry="12" fill="#6e4526"/>
       ${d1 ? "" : `<ellipse rx="20" ry="7" fill="#4a2e18"/>`}
     </g>
-    ${d1 ? `<g transform="translate(580,650)"><g class="growIn">${tulip("#e84c3d", 1.9)}</g></g>` : ""}
+    ${d1 ? `<g transform="translate(645,650)"><g class="growIn">${tulip("#e84c3d", 1.9)}</g></g>` : ""}
     ${!d1 ? wrap(760, 660, 1, `id="bulb" class="grabbable"`, bulbFig(1), "bobbing") : ""}
 
     ${wrap(870, 600, 1, `id="sheep" data-free="1" class="pokeable" data-sound="baa" data-action="bigBounce"`, sheep(1))}
@@ -2409,7 +2561,7 @@ const sceneSpring = {
         api.play("thud");
         el.classList.add("fadeOut");
         setTimeout(() => el.remove(), 400);
-        api.sparkleBurst(580, 630);
+        api.sparkleBurst(645, 630);
         setTimeout(() => {
           api.play("success");
           api.complete("s1");
@@ -2466,19 +2618,19 @@ const sceneSummer = {
     ${wrap(330, 490, 0.95, `id="lia" data-free="1" class="pokeable"`, lia(1))}
     ${d4 ? `<g transform="translate(392,545)">${iceCreamFig(0.9)}</g>` : ""}
 
-    <g transform="translate(560,655)">
+    <g transform="translate(615,660)">
       <path d="M -60 0 Q -30 -26 0 -12 Q 30 -26 60 0 Q 30 14 0 6 Q -30 14 -60 0 Z" fill="#5faf51"/>
     </g>
-    ${!d3 ? wrap(520, 640, 1, `id="sb1" class="grabbable"`, strawberryFig(1), "bobbing") : ""}
-    ${wrap(590, 650, 0.85, `id="sb2" class="grabbable"`, strawberryFig(1))}
-    ${wrap(630, 635, 0.7, `id="sb3" class="grabbable"`, strawberryFig(1))}
+    ${!d3 ? wrap(600, 645, 1, `id="sb1" class="grabbable"`, strawberryFig(1), "bobbing") : ""}
+    ${wrap(655, 655, 0.85, `id="sb2" class="grabbable"`, strawberryFig(1))}
+    ${wrap(695, 640, 0.7, `id="sb3" class="grabbable"`, strawberryFig(1))}
 
     ${wrap(770, 640, 1.05, `id="basket"`, basketFig(1))}
     ${d3 ? `<g transform="translate(762,608)">${strawberryFig(0.85)}</g>` : ""}
 
     ${!d4 ? wrap(900, 480, 1.05, `id="icecream" class="grabbable"`, iceCreamFig(1), "bobbing") : ""}
     ${wrap(210, 660, 1, `data-free="1" class="pokeable" data-sound="munch"`, melonFig(1))}
-    ${wrap(700, 300, 1, `id="dragonfly2" data-free="1" class="pokeable" data-sound="whoosh"`, dragonfly(1), "floaty")}
+    ${wrap(700, 300, 1, `id="dragonfly2" data-free="1" class="pokeable" data-sound="whoosh" data-action="circleFly"`, dragonfly(1), "floaty")}
     ${butterfly(480, 280, 0.9, "#f5a340")}
     ${grassTuft(480, 560, 1.2)}
     `;
@@ -2543,9 +2695,9 @@ const sceneEaster = {
     ${berryBush(940, 590, 1)}
 
     ${wrap(800, 570, 1.6, `id="ebunny" data-free="1" class="pokeable" data-sound="hop"`, bunny(1))}
-    ${d6 ? `<g transform="translate(742,640)">${carrot(0.8)}</g>` : wrap(600, 668, 1, `id="ecarrot" class="grabbable"`, carrot(1), "bobbing")}
+    ${d6 ? `<g transform="translate(742,640)">${carrot(0.8)}</g>` : wrap(640, 668, 1, `id="ecarrot" class="grabbable"`, carrot(1), "bobbing")}
 
-    ${wrap(450, 645, 1.1, `id="ebasket"`, basketFig(1, d5 ? 3 : 0))}
+    ${wrap(345, 655, 1.1, `id="ebasket"`, basketFig(1, d5 ? 3 : 0))}
 
     ${!d5 ? `
       ${wrap(150, 655, 1, `id="egg1" class="grabbable"`, paintedEgg(1, 0))}
@@ -2566,9 +2718,9 @@ const sceneEaster = {
       ["#egg1", "#egg2", "#egg3"].forEach((sel, i) => {
         api.drag(sel, "#ebasket", 110, (el) => {
           api.play("pop");
-          el.setAttribute("transform", `translate(${434 + i * 17},${622}) scale(0.75)`);
+          el.setAttribute("transform", `translate(${329 + i * 17},${632}) scale(0.75)`);
           el.classList.remove("grabbable");
-          api.sparkleBurst(450, 620);
+          api.sparkleBurst(345, 630);
           collected++;
           api.play("note", collected);
           if (collected >= 3) {
@@ -2706,7 +2858,7 @@ const sceneChristmas = {
 
     ${wrap(360, 620, 1.5, `id="xtreeFig" class="pokeable" data-sound="whoosh" data-action="shiver"`, xmasTree(1, d3))}
     <g id="treetop2" transform="translate(360,390)"><circle r="46" fill="transparent"/></g>
-    <g id="undertree" transform="translate(470,655)"><circle r="46" fill="transparent"/></g>
+    <g id="undertree" transform="translate(250,660)"><circle r="46" fill="transparent"/></g>
     ${d3 ? `${star(280, 250, 1.1)} ${star(440, 230, 0.9)}` : ""}
 
     ${!d3 ? wrap(700, 665, 1.2, `id="xstar" class="grabbable"`, goldStar(1), "bobbing") : ""}
@@ -2716,7 +2868,7 @@ const sceneChristmas = {
       <g transform="translate(52,8)">${giftFig(0.8, "#79c850", "#ffd23e")}</g>
     </g>
     ${d4
-      ? `<g transform="translate(470,655)">${giftFig(1.05, "#e0634e", "#ffd23e")}</g>`
+      ? `<g transform="translate(250,660)">${giftFig(1.05, "#e0634e", "#ffd23e")}</g>`
       : wrap(910, 590, 1.05, `id="xgift" class="grabbable"`, giftFig(1, "#e0634e", "#ffd23e"), "bobbing")}
 
     ${wrap(120, 530, 1, `class="pokeable" data-sound="jingle" data-action="dance"`, `
@@ -2747,10 +2899,10 @@ const sceneChristmas = {
     }
     if (!api.done("e4")) {
       api.drag("#xgift", "#undertree", 110, (el) => {
-        el.setAttribute("transform", "translate(470,655) scale(1.05)");
+        el.setAttribute("transform", "translate(250,660) scale(1.05)");
         el.classList.remove("grabbable");
         api.play("jingle");
-        api.sparkleBurst(470, 640);
+        api.sparkleBurst(250, 645);
         setTimeout(() => {
           api.play("success");
           api.complete("e4");
@@ -2791,8 +2943,8 @@ const sceneSilvester = {
     ${townSilhouette()}
 
     ${!d7 ? `
-      ${wrap(320, 630, 1, `id="rk1" class="pokeable rocket" data-idx="0"`, rocketFig(1, "#e0634e"))}
-      ${wrap(500, 645, 1.1, `id="rk2" class="pokeable rocket" data-idx="1"`, rocketFig(1, "#5eb3d8"))}
+      ${wrap(215, 635, 1, `id="rk1" class="pokeable rocket" data-idx="0"`, rocketFig(1, "#e0634e"))}
+      ${wrap(390, 650, 1.1, `id="rk2" class="pokeable rocket" data-idx="1"`, rocketFig(1, "#5eb3d8"))}
       ${wrap(680, 635, 0.95, `id="rk3" class="pokeable rocket" data-idx="2"`, rocketFig(1, "#79c850"))}
     ` : ""}
 
@@ -2868,6 +3020,817 @@ const sceneSilvester = {
   },
 };
 
+/* ---------- Bauernhof, Wald, Baustelle, Unterwasser, Weltraum ---------- */
+
+function cowFig(s = 1) {
+  return `<g transform="scale(${s})">
+    ${hit(75, 0, -14)}
+    <ellipse cx="8" cy="0" rx="52" ry="34" fill="#f7f5ee" stroke="#d8d2c2" stroke-width="2.5"/>
+    <path d="M -18 -22 Q 2 -34 20 -18 Q 8 -2 -10 -6 Z" fill="#5b5148"/>
+    <path d="M 28 10 Q 44 4 50 20 Q 36 28 26 22 Z" fill="#5b5148"/>
+    <circle cx="-38" cy="-16" r="22" fill="#f7f5ee" stroke="#d8d2c2" stroke-width="2.5"/>
+    <path d="M -52 -34 Q -60 -44 -52 -46 Q -45 -44 -46 -36 Z M -24 -34 Q -16 -44 -24 -46 Q -31 -44 -30 -36 Z" fill="#e8c49a"/>
+    <path d="M -56 -22 Q -64 -26 -64 -18 Q -60 -14 -54 -16 Z M -20 -22 Q -12 -26 -12 -18 Q -16 -14 -22 -16 Z" fill="#d8d2c2"/>
+    <ellipse cx="-38" cy="-4" rx="14" ry="10" fill="#ffb9c4"/>
+    <circle cx="-43" cy="-6" r="2" fill="#8a5a6a"/><circle cx="-33" cy="-6" r="2" fill="#8a5a6a"/>
+    <circle cx="-44" cy="-20" r="2.8" fill="#3a2c20"/><circle cx="-31" cy="-20" r="2.8" fill="#3a2c20"/>
+    <path d="M -12 30 L -12 42 M 4 32 L 4 44 M 24 30 L 24 42 M 40 26 L 40 38" stroke="#d8d2c2" stroke-width="7" stroke-linecap="round"/>
+    <path d="M 56 -8 Q 66 0 62 14" stroke="#d8d2c2" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <circle cx="62" cy="17" r="4" fill="#5b5148"/>
+  </g>`;
+}
+
+function horseFig(s = 1) {
+  return `<g transform="scale(${s})">
+    ${hit(75, 0, -20)}
+    <ellipse cx="6" cy="4" rx="48" ry="30" fill="#b5825a" stroke="#94683c" stroke-width="2.5"/>
+    <path d="M -30 -14 Q -44 -34 -40 -58 Q -30 -66 -22 -58 Q -12 -46 -14 -22 Z" fill="#b5825a" stroke="#94683c" stroke-width="2.5"/>
+    <circle cx="-36" cy="-58" r="15" fill="#b5825a" stroke="#94683c" stroke-width="2.5"/>
+    <path d="M -50 -60 Q -58 -62 -56 -54 Q -52 -50 -47 -53 Z" fill="#b5825a"/>
+    <path d="M -44 -70 Q -48 -78 -42 -78 Q -38 -76 -38 -70 Z M -32 -72 Q -32 -80 -26 -78 Q -24 -74 -28 -70 Z" fill="#94683c"/>
+    <path d="M -26 -66 Q -14 -60 -12 -34 Q -20 -30 -24 -38" fill="#6d4a28"/>
+    <circle cx="-41" cy="-60" r="2.6" fill="#3a2c20"/>
+    <ellipse cx="-50" cy="-54" rx="6" ry="4" fill="#e8c49a"/>
+    <path d="M -18 30 L -18 46 M -2 32 L -2 48 M 20 32 L 20 48 M 38 28 L 38 44" stroke="#94683c" stroke-width="7" stroke-linecap="round"/>
+    <path d="M 50 -8 Q 66 0 62 24 Q 56 34 52 24" fill="#6d4a28"/>
+  </g>`;
+}
+
+function pigFig(s = 1) {
+  return `<g transform="scale(${s})">
+    ${hit(62, 0, -6)}
+    <ellipse cx="4" cy="0" rx="42" ry="30" fill="#ffb9c4" stroke="#e08a9a" stroke-width="2.5"/>
+    <circle cx="-30" cy="-8" r="21" fill="#ffb9c4" stroke="#e08a9a" stroke-width="2.5"/>
+    <path d="M -44 -24 Q -50 -34 -42 -34 Q -36 -32 -37 -25 Z M -18 -26 Q -14 -36 -8 -33 Q -7 -27 -13 -24 Z" fill="#e08a9a"/>
+    <ellipse cx="-34" cy="-2" rx="11" ry="8" fill="#e08a9a"/>
+    <circle cx="-38" cy="-3" r="2.2" fill="#8a3d4d"/><circle cx="-30" cy="-3" r="2.2" fill="#8a3d4d"/>
+    <circle cx="-38" cy="-14" r="2.6" fill="#3a2c20"/><circle cx="-24" cy="-14" r="2.6" fill="#3a2c20"/>
+    <path d="M -10 26 L -10 38 M 8 28 L 8 40 M 28 24 L 28 36" stroke="#e08a9a" stroke-width="7" stroke-linecap="round"/>
+    <path d="M 44 -6 q 8 -6 6 2 q -6 6 -1 8 q 7 -2 5 6" stroke="#e08a9a" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  </g>`;
+}
+
+function henFig(s = 1) {
+  return `<g transform="scale(${s})">
+    ${hit(52, 0, -14)}
+    <ellipse cx="4" cy="0" rx="26" ry="21" fill="#e8c49a" stroke="#c49a6a" stroke-width="2.5"/>
+    <path d="M 22 -8 Q 40 -20 38 2 Q 32 12 20 8 Z" fill="#c49a6a"/>
+    <circle cx="-16" cy="-22" r="13" fill="#e8c49a" stroke="#c49a6a" stroke-width="2.5"/>
+    <path d="M -22 -34 Q -26 -44 -18 -42 Q -16 -44 -14 -40 Q -10 -44 -10 -36 Z" fill="#e0634e"/>
+    <path d="M -28 -20 L -36 -17 L -28 -14 Z" fill="#f5a340"/>
+    <path d="M -26 -12 Q -24 -6 -20 -8 Z" fill="#e0634e"/>
+    <circle cx="-19" cy="-24" r="2.4" fill="#3a2c20"/>
+    <path d="M -6 19 L -6 30 M 8 19 L 8 30" stroke="#f5a340" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M -10 30 L -2 30 M 4 30 L 12 30" stroke="#f5a340" stroke-width="3" stroke-linecap="round"/>
+  </g>`;
+}
+
+function hayBale(s = 1) {
+  return `<g transform="scale(${s})">
+    ${hit(48, 0, -8)}
+    <ellipse cx="0" cy="0" rx="34" ry="24" fill="#e8c25e" stroke="#c49a3a" stroke-width="2.5"/>
+    <path d="M -30 -10 Q 0 -2 30 -10 M -32 2 Q 0 10 32 2 M -26 12 Q 0 19 26 12" stroke="#c49a3a" stroke-width="2" fill="none"/>
+    <path d="M -20 -22 L -26 -32 M -4 -24 L -4 -35 M 12 -23 L 18 -32 M 24 -18 L 32 -25" stroke="#e8c25e" stroke-width="3.5" stroke-linecap="round"/>
+  </g>`;
+}
+
+function bucketFig(s = 1) {
+  return `<g transform="scale(${s})">
+    ${hit(42, 0, -8)}
+    <path d="M -22 -18 L 22 -18 L 16 22 L -16 22 Z" fill="#a8b8c4" stroke="#7a8a96" stroke-width="2.5"/>
+    <ellipse cx="0" cy="-18" rx="22" ry="6" fill="#c4d2dc" stroke="#7a8a96" stroke-width="2"/>
+    <path d="M -20 -20 Q 0 -42 20 -20" fill="none" stroke="#7a8a96" stroke-width="3.5" stroke-linecap="round"/>
+    <ellipse cx="0" cy="-18" rx="15" ry="3.5" fill="#f7f5ee"/>
+  </g>`;
+}
+
+function deerFig(s = 1) {
+  return `<g transform="scale(${s})">
+    ${hit(66, 0, -24)}
+    <ellipse cx="6" cy="4" rx="38" ry="24" fill="#d8a068" stroke="#b5825a" stroke-width="2.5"/>
+    <circle cx="-6" cy="-4" r="4" fill="#fdf3d3"/><circle cx="12" cy="-8" r="4" fill="#fdf3d3"/>
+    <circle cx="24" cy="2" r="4" fill="#fdf3d3"/><circle cx="4" cy="10" r="4" fill="#fdf3d3"/>
+    <path d="M -24 -12 Q -34 -30 -30 -50 Q -24 -58 -18 -50 Q -12 -36 -14 -16 Z" fill="#d8a068" stroke="#b5825a" stroke-width="2.5"/>
+    <circle cx="-26" cy="-52" r="13" fill="#d8a068" stroke="#b5825a" stroke-width="2.5"/>
+    <path d="M -36 -60 Q -44 -68 -36 -68 Q -32 -66 -32 -60 Z M -18 -62 Q -14 -70 -8 -67 Q -8 -62 -14 -59 Z" fill="#b5825a"/>
+    <circle cx="-30" cy="-54" r="2.6" fill="#3a2c20"/><circle cx="-20" cy="-54" r="2.6" fill="#3a2c20"/>
+    <ellipse cx="-32" cy="-46" rx="4.5" ry="3.5" fill="#5b4632"/>
+    <path d="M -27 -42 Q -24 -40 -21 -42" stroke="#5b4632" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    <path d="M -14 24 L -14 40 M 0 26 L 0 42 M 18 26 L 18 42 M 32 22 L 32 38" stroke="#b5825a" stroke-width="5.5" stroke-linecap="round"/>
+    <path d="M 40 -6 Q 48 -10 46 -2 Z" fill="#fdf3d3" stroke="#b5825a" stroke-width="2"/>
+  </g>`;
+}
+
+function foxFig(s = 1) {
+  return `<g transform="scale(${s})">
+    ${hit(58, 0, -8)}
+    <path class="foxTail" d="M 26 8 Q 52 2 56 -18 Q 56 -28 47 -24 Q 46 -8 32 0 Q 27 3 24 6 Z" fill="#e8955e" stroke="#c4713a" stroke-width="2.5"/>
+    <path d="M 50 -22 Q 54 -26 56 -22 Q 55 -18 51 -19 Z" fill="#fdf3d3"/>
+    <ellipse cx="0" cy="4" rx="34" ry="24" fill="#e8955e" stroke="#c4713a" stroke-width="2.5"/>
+    <path d="M -14 12 Q 0 24 16 12 L 10 26 L -8 26 Z" fill="#fdf3d3"/>
+    <circle cx="-16" cy="-14" r="18" fill="#e8955e" stroke="#c4713a" stroke-width="2.5"/>
+    <path d="M -30 -26 L -34 -44 L -18 -34 Z M -2 -28 L 4 -44 L -12 -35 Z" fill="#e8955e" stroke="#c4713a" stroke-width="2"/>
+    <path d="M -29 -32 L -30 -39 L -24 -35 Z M -5 -33 L -3 -39 L -9 -36 Z" fill="#3a2c20"/>
+    <path d="M -28 -8 Q -34 -2 -30 2 Q -22 4 -18 -2 Z" fill="#fdf3d3"/>
+    <circle cx="-30" cy="-1" r="3" fill="#3a2c20"/>
+    <circle cx="-22" cy="-16" r="2.6" fill="#3a2c20"/><circle cx="-10" cy="-16" r="2.6" fill="#3a2c20"/>
+    <ellipse cx="-8" cy="24" rx="7" ry="4" fill="#c4713a"/><ellipse cx="12" cy="24" rx="7" ry="4" fill="#c4713a"/>
+  </g>`;
+}
+
+function pineconeFig(s = 1) {
+  return `<g transform="scale(${s})">
+    ${hit(38)}
+    <ellipse rx="14" ry="20" fill="#94683c" stroke="#6d4a28" stroke-width="2"/>
+    <path d="M -12 -10 Q 0 -4 12 -10 M -13 -2 Q 0 4 13 -2 M -12 6 Q 0 12 12 6" stroke="#6d4a28" stroke-width="2" fill="none"/>
+    <path d="M 0 -20 Q -2 -27 2 -30" stroke="#6d4a28" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  </g>`;
+}
+
+function excavatorFig(s = 1) {
+  return `<g transform="scale(${s})">
+    ${hit(90, 10, -20)}
+    <g class="exArm">
+      <path d="M 30 -30 L 92 -58 L 98 -48 L 40 -20 Z" fill="#f5b73e" stroke="#c48a3a" stroke-width="2.5"/>
+      <path d="M 92 -56 L 120 -28 L 110 -20 L 88 -44 Z" fill="#f5b73e" stroke="#c48a3a" stroke-width="2.5"/>
+      <path d="M 118 -30 Q 132 -18 122 -4 L 104 -12 L 110 -24 Z" fill="#8a7a68" stroke="#6d5f4e" stroke-width="2.5"/>
+    </g>
+    <rect x="-40" y="-44" width="52" height="34" rx="6" fill="#f5b73e" stroke="#c48a3a" stroke-width="2.5"/>
+    <rect x="-32" y="-38" width="20" height="16" rx="3" fill="#bfe8f7" stroke="#8fb0c9" stroke-width="2"/>
+    <rect x="-52" y="-12" width="88" height="18" rx="8" fill="#e8955e" stroke="#c4713a" stroke-width="2.5"/>
+    <rect x="-58" y="2" width="100" height="20" rx="10" fill="#5b5148" stroke="#3d362e" stroke-width="2.5"/>
+    <circle cx="-40" cy="12" r="7" fill="#8a7a68"/><circle cx="-16" cy="12" r="7" fill="#8a7a68"/>
+    <circle cx="8" cy="12" r="7" fill="#8a7a68"/><circle cx="26" cy="12" r="7" fill="#8a7a68"/>
+  </g>`;
+}
+
+function dumpTruckFig(s = 1) {
+  return `<g transform="scale(${s})">
+    ${hit(80, 0, -18)}
+    <path d="M -62 -34 L 10 -34 L 18 -4 L -66 -4 Z" fill="#e8955e" stroke="#c4713a" stroke-width="2.5"/>
+    <path d="M -58 -30 L -58 -8 M -44 -32 L -44 -6 M -30 -32 L -30 -6 M -16 -33 L -16 -5 M -2 -33 L -2 -5" stroke="#c4713a" stroke-width="2"/>
+    <rect x="22" y="-38" width="34" height="34" rx="5" fill="#5eb3d8" stroke="#3f92ba" stroke-width="2.5"/>
+    <rect x="28" y="-32" width="16" height="14" rx="2.5" fill="#bfe8f7" stroke="#8fb0c9" stroke-width="1.8"/>
+    <rect x="-68" y="-6" width="126" height="12" rx="5" fill="#8a7a68" stroke="#6d5f4e" stroke-width="2"/>
+    <circle cx="-44" cy="10" r="10" fill="#5b5148" stroke="#3d362e" stroke-width="2.5"/><circle cx="-44" cy="10" r="4" fill="#a8b8c4"/>
+    <circle cx="-8" cy="10" r="10" fill="#5b5148" stroke="#3d362e" stroke-width="2.5"/><circle cx="-8" cy="10" r="4" fill="#a8b8c4"/>
+    <circle cx="38" cy="10" r="10" fill="#5b5148" stroke="#3d362e" stroke-width="2.5"/><circle cx="38" cy="10" r="4" fill="#a8b8c4"/>
+  </g>`;
+}
+
+function helmetFig(s = 1) {
+  return `<g transform="scale(${s})">
+    ${hit(40, 0, -6)}
+    <path d="M -24 6 Q -26 -22 0 -24 Q 26 -22 24 6 Z" fill="#ffd23e" stroke="#e8a62c" stroke-width="2.5"/>
+    <path d="M -6 -24 L -6 -30 L 6 -30 L 6 -24" fill="#ffd23e" stroke="#e8a62c" stroke-width="2"/>
+    <rect x="-30" y="4" width="60" height="8" rx="4" fill="#f5b73e" stroke="#e8a62c" stroke-width="2"/>
+  </g>`;
+}
+
+function stoneFig(s = 1) {
+  return `<g transform="scale(${s})">
+    ${hit(36)}
+    <path d="M -18 8 Q -22 -8 -8 -14 Q 6 -18 16 -8 Q 22 2 14 10 Q 0 16 -18 8 Z" fill="#a8a29a" stroke="#7d776e" stroke-width="2.5"/>
+    <path d="M -8 -4 Q 0 -8 8 -4" stroke="#7d776e" stroke-width="1.8" fill="none"/>
+  </g>`;
+}
+
+function trafficCone(s = 1) {
+  return `<g transform="scale(${s})">
+    ${hit(38, 0, -12)}
+    <path d="M -14 8 L -4 -28 L 4 -28 L 14 8 Z" fill="#e8955e" stroke="#c4713a" stroke-width="2.5"/>
+    <path d="M -10 -6 L 10 -6 L 8 -14 L -8 -14 Z" fill="#fff"/>
+    <rect x="-20" y="8" width="40" height="7" rx="3.5" fill="#e8955e" stroke="#c4713a" stroke-width="2"/>
+  </g>`;
+}
+
+function turtleFig(s = 1) {
+  return `<g transform="scale(${s})">
+    ${hit(60, 0, -6)}
+    <ellipse cx="0" cy="0" rx="36" ry="26" fill="#5faf51" stroke="#437c3a" stroke-width="3"/>
+    <path d="M -18 -14 L 0 -22 L 18 -14 L 22 4 L 0 12 L -22 4 Z" fill="#79c850" stroke="#437c3a" stroke-width="2"/>
+    <path d="M -18 -14 L 0 -8 L 18 -14 M 0 -22 L 0 -8 M 22 4 L 0 -8 L -22 4 M 0 12 L 0 -8" stroke="#437c3a" stroke-width="1.8" fill="none"/>
+    <circle cx="-40" cy="-8" r="13" fill="#8ccb60" stroke="#5f9e45" stroke-width="2.5"/>
+    <circle cx="-44" cy="-11" r="2.6" fill="#3a2c20"/><circle cx="-36" cy="-11" r="2.6" fill="#3a2c20"/>
+    <path d="M -44 -4 Q -40 -1 -36 -4" stroke="#3a5a2e" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <path d="M -22 18 Q -30 26 -24 28 Q -16 28 -14 20 Z M 20 18 Q 28 26 22 28 Q 14 28 12 20 Z" fill="#8ccb60" stroke="#5f9e45" stroke-width="2"/>
+    <path d="M 34 6 Q 42 10 38 16 Q 32 16 30 10 Z" fill="#8ccb60" stroke="#5f9e45" stroke-width="2"/>
+  </g>`;
+}
+
+function octopusFig(s = 1) {
+  let legs = "";
+  for (let i = 0; i < 5; i++) {
+    const x = -28 + i * 14;
+    legs += `<path d="M ${x} 10 Q ${x - 6} 28 ${x + 4} 34 Q ${x + 12} 28 ${x + 6} 12" fill="#b892e0" stroke="#9a6fc9" stroke-width="2"/>`;
+  }
+  return `<g transform="scale(${s})">
+    ${hit(56, 0, -6)}
+    ${legs}
+    <ellipse cx="0" cy="-10" rx="30" ry="26" fill="#b892e0" stroke="#9a6fc9" stroke-width="2.5"/>
+    <circle cx="-10" cy="-14" r="6" fill="#fff"/><circle cx="10" cy="-14" r="6" fill="#fff"/>
+    <circle cx="-9" cy="-13" r="2.8" fill="#3a2c20"/><circle cx="11" cy="-13" r="2.8" fill="#3a2c20"/>
+    <path d="M -6 -2 Q 0 3 6 -2" stroke="#6d4a9a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+    <circle cx="-18" cy="-4" r="4" fill="#e88fa2" opacity="0.6"/><circle cx="18" cy="-4" r="4" fill="#e88fa2" opacity="0.6"/>
+  </g>`;
+}
+
+function clownfishFig(s = 1) {
+  return `<g transform="scale(${s})">
+    ${hit(42)}
+    <ellipse rx="24" ry="15" fill="#f5a340" stroke="#d8862c" stroke-width="2.5"/>
+    <path d="M 20 0 L 36 -12 L 34 0 L 36 12 Z" fill="#f5a340" stroke="#d8862c" stroke-width="2"/>
+    <path d="M -12 -14 L -8 14 L -16 14 L -18 -12 Z M 6 -15 L 10 15 L 2 15 L 0 -15 Z" fill="#fff" stroke="#d8862c" stroke-width="1.5"/>
+    <path d="M -2 -14 Q 4 -22 10 -15 Z" fill="#f5a340" stroke="#d8862c" stroke-width="1.8"/>
+    <circle cx="-14" cy="-4" r="3" fill="#3a2c20"/><circle cx="-13" cy="-5" r="1.1" fill="#fff"/>
+    <path d="M -18 3 Q -15 6 -12 3" stroke="#a5652c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  </g>`;
+}
+
+function anemoneFig(s = 1) {
+  let arms = "";
+  for (let i = 0; i < 9; i++) {
+    const a = -80 + i * 20;
+    const rad = (a * Math.PI) / 180;
+    const x = Math.cos(rad + Math.PI / 2) * 30 * (i % 2 ? 1 : 0.8);
+    arms += `<path d="M ${x * 0.4} 0 Q ${x} -26 ${x * 0.75} -44" stroke="#e88fa2" stroke-width="8" fill="none" stroke-linecap="round"/>`;
+  }
+  return `<g transform="scale(${s})">
+    ${hit(56, 0, -18)}
+    ${arms}
+    <path d="M -34 6 Q 0 -10 34 6 Q 34 18 0 22 Q -34 18 -34 6 Z" fill="#c46a8a" stroke="#a04e6a" stroke-width="2.5"/>
+  </g>`;
+}
+
+function seaweedBundle(s = 1) {
+  return `<g transform="scale(${s})">
+    ${hit(42, 0, -14)}
+    <path d="M -12 14 Q -20 -8 -10 -30 M 0 16 Q 6 -10 -2 -34 M 12 14 Q 18 -6 10 -28"
+      stroke="#5faf51" stroke-width="7" fill="none" stroke-linecap="round"/>
+  </g>`;
+}
+
+function pearlFig(s = 1) {
+  return `<g transform="scale(${s})">
+    ${hit(34)}
+    <circle r="14" fill="#f2eee8" stroke="#c9c2ae" stroke-width="2"/>
+    <circle cx="-5" cy="-5" r="4.5" fill="#fff"/>
+    <circle cx="4" cy="4" r="2" fill="#dcd5c4"/>
+  </g>`;
+}
+
+function openClam(s = 1, withPearl = false) {
+  return `<g transform="scale(${s})">
+    ${hit(52, 0, -8)}
+    <path d="M -30 0 Q -34 -34 0 -34 Q 34 -34 30 0 Z" fill="#d8a8b8" stroke="#b5829a" stroke-width="2.5" transform="rotate(-14)"/>
+    <path d="M -28 -28 L -22 -4 M -14 -32 L -12 -4 M 2 -33 L 2 -4 M 16 -30 L 13 -5" stroke="#b5829a" stroke-width="1.8" transform="rotate(-14)" opacity="0.7"/>
+    ${withPearl ? `<circle cx="0" cy="-6" r="11" fill="#f2eee8" stroke="#c9c2ae" stroke-width="2"/><circle cx="-4" cy="-9" r="3.5" fill="#fff"/>` : ""}
+    <path d="M -32 4 Q 0 -8 32 4 Q 30 22 0 24 Q -30 22 -32 4 Z" fill="#e8c0cd" stroke="#b5829a" stroke-width="2.5"/>
+    <path d="M -26 8 Q 0 0 26 8 M -20 14 Q 0 8 20 14" stroke="#b5829a" stroke-width="1.8" fill="none" opacity="0.7"/>
+  </g>`;
+}
+
+function bubbleFig(s = 1) {
+  return `<g transform="scale(${s})">
+    ${hit(38)}
+    <circle r="18" fill="#bfe8f7" opacity="0.45" stroke="#8fd4e8" stroke-width="2.5"/>
+    <circle cx="-6" cy="-6" r="5" fill="#fff" opacity="0.8"/>
+  </g>`;
+}
+
+function alienFig(s = 1) {
+  return `<g transform="scale(${s})">
+    ${hit(56, 0, -16)}
+    <path d="M -8 -46 Q -14 -58 -20 -60 M 8 -46 Q 14 -58 20 -60" stroke="#79c850" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    <circle cx="-20" cy="-62" r="5" fill="#b8dd6c"/><circle cx="20" cy="-62" r="5" fill="#b8dd6c"/>
+    <ellipse cx="0" cy="-26" rx="26" ry="24" fill="#8ccb60" stroke="#5f9e45" stroke-width="2.5"/>
+    <ellipse cx="0" cy="-30" rx="10" ry="12" fill="#fff"/>
+    <circle cx="0" cy="-28" r="5.5" fill="#3a2c20"/><circle cx="2" cy="-30" r="2" fill="#fff"/>
+    <path d="M -8 -12 Q 0 -6 8 -12" stroke="#3a5a2e" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+    <path d="M -14 0 Q -20 16 -10 22 Q 0 26 10 22 Q 20 16 14 0 Z" fill="#8ccb60" stroke="#5f9e45" stroke-width="2.5"/>
+    <path d="M -16 6 Q -28 8 -30 0 M 16 6 Q 28 8 30 0" stroke="#8ccb60" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <ellipse cx="-8" cy="24" rx="6" ry="3.5" fill="#5f9e45"/><ellipse cx="8" cy="24" rx="6" ry="3.5" fill="#5f9e45"/>
+  </g>`;
+}
+
+function planetFig(s = 1, col = "#e8955e") {
+  return `<g transform="scale(${s})">
+    ${hit(48)}
+    <circle r="26" fill="${col}" stroke="#00000022" stroke-width="2"/>
+    <circle cx="-8" cy="-6" r="6" fill="#fff" opacity="0.25"/>
+    <circle cx="10" cy="8" r="4" fill="#00000018"/>
+    <ellipse rx="40" ry="10" fill="none" stroke="#ffd23e" stroke-width="4" transform="rotate(-18)"/>
+  </g>`;
+}
+
+function cookieFig(s = 1) {
+  return `<g transform="scale(${s})">
+    ${hit(34)}
+    <circle r="16" fill="#d8a068" stroke="#b5825a" stroke-width="2.5"/>
+    <circle cx="-6" cy="-4" r="2.5" fill="#5b4632"/><circle cx="5" cy="-6" r="2.5" fill="#5b4632"/>
+    <circle cx="2" cy="6" r="2.5" fill="#5b4632"/><circle cx="-7" cy="7" r="2" fill="#5b4632"/>
+  </g>`;
+}
+
+function spaceHelmetFig(s = 1) {
+  return `<g transform="scale(${s})">
+    ${hit(40, 0, -4)}
+    <circle r="24" fill="#bfe8f7" opacity="0.55" stroke="#8fb0c9" stroke-width="3"/>
+    <path d="M -14 -14 Q -6 -22 4 -18" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.8"/>
+    <path d="M -18 18 L 18 18 L 15 26 L -15 26 Z" fill="#a8b8c4" stroke="#7a8a96" stroke-width="2"/>
+  </g>`;
+}
+
+/* ================================================================
+   SZENEN: Bauernhof, Wald, Baustelle, Unterwasser, Weltraum
+   ================================================================ */
+
+const sceneFarm = {
+  id: "farm",
+  tasks: [
+    { id: "f1", source: "#hay", target: "#horse" },
+    { id: "f2", source: "#bucket", target: "#cow" },
+    { id: "f3", source: "#korn", target: "#hen" },
+    { id: "f4", source: "#fapple", target: "#pig" },
+  ],
+  html(done) {
+    const d1 = done("f1"), d2 = done("f2"), d3 = done("f3"), d4 = done("f4");
+    return `
+    <defs>
+      <linearGradient id="fmSky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#9bdcf5"/><stop offset="1" stop-color="#f2fbe8"/>
+      </linearGradient>
+    </defs>
+    <rect width="1000" height="700" fill="url(#fmSky)"/>
+    ${sun(890, 100)}
+    ${cloud(520, 80, 0.8)}
+    <path d="M 0 400 Q 280 350 560 400 Q 810 445 1000 390 L 1000 700 L 0 700 Z" fill="#a8de7c"/>
+    <path d="M 0 520 Q 400 470 1000 530 L 1000 700 L 0 700 Z" fill="#8ccb60"/>
+
+    <g transform="translate(190,300)">
+      <path d="M -130 240 L -130 40 L 0 -60 L 130 40 L 130 240 Z" fill="#c9552e" stroke="#a5432a" stroke-width="4"/>
+      <path d="M -140 48 L 0 -70 L 140 48" fill="none" stroke="#8a3325" stroke-width="10" stroke-linecap="round"/>
+      <rect x="-45" y="110" width="90" height="130" rx="6" fill="#8a5a35" stroke="#6d4a28" stroke-width="3"/>
+      <path d="M -45 110 L 45 240 M 45 110 L -45 240" stroke="#c9b8a0" stroke-width="5"/>
+      <circle cx="0" cy="30" r="26" fill="#fff" stroke="#a5432a" stroke-width="3"/>
+      <path d="M -26 30 L 26 30 M 0 4 L 0 56" stroke="#a5432a" stroke-width="3"/>
+    </g>
+    <path d="M 400 470 L 1000 470 M 430 470 L 430 520 M 530 470 L 530 522 M 630 470 L 630 524 M 730 470 L 730 522 M 830 470 L 830 520 M 930 470 L 930 518" stroke="#a5824a" stroke-width="6" stroke-linecap="round" opacity="0.7"/>
+
+    ${wrap(150, 630, 1.1, `id="hen" data-free="1" class="pokeable" data-sound="cluck" data-action="flutter"`, henFig(1))}
+    ${d3 ? `<g transform="translate(210,660)"><circle cx="-8" cy="0" r="2.5" fill="#94683c"/><circle cx="4" cy="4" r="2.5" fill="#94683c"/><circle cx="12" cy="-3" r="2.5" fill="#94683c"/><circle cx="0" cy="-6" r="2.5" fill="#94683c"/></g>` : ""}
+    ${!d3 ? wrap(300, 662, 1, `id="korn" class="grabbable"`, seedBag(1), "bobbing") : ""}
+
+    ${wrap(600, 540, 1.05, `id="cow" data-free="1" class="pokeable" data-sound="moo"`, cowFig(1))}
+    ${d2 ? `<g transform="translate(528,585)">${bucketFig(0.9)}<ellipse cx="0" cy="-17" rx="13" ry="3" fill="#fff"/></g>`
+        : wrap(75, 585, 1, `id="bucket" class="grabbable"`, bucketFig(1), "bobbing")}
+
+    ${wrap(880, 500, 1.05, `id="horse" data-free="1" class="pokeable" data-sound="neigh" data-action="dance"`, horseFig(1))}
+    ${d1 ? `<g transform="translate(800,560)">${hayBale(0.8)}</g>`
+        : wrap(640, 662, 1, `id="hay" class="grabbable"`, hayBale(1), "bobbing")}
+
+    ${wrap(760, 645, 1, `id="pig" data-free="1" class="pokeable" data-sound="oink" data-action="bigBounce"`, pigFig(1))}
+    ${!d4 ? wrap(935, 640, 1, `id="fapple" class="grabbable"`, apple(1.1), "bobbing") : ""}
+
+    ${wrap(390, 610, 0.85, `data-free="1" class="pokeable" data-sound="meow" data-action="pounce"`, cat(1))}
+    ${butterfly(480, 300, 0.9, "#ffd23e")}
+    ${grassTuft(60, 680, 1.3)}
+    ${grassTuft(500, 680, 1.2)}
+    `;
+  },
+  init(svg, api) {
+    const feed = (sel, target, taskId, snd) => {
+      api.drag(sel, target, 130, (el) => {
+        api.play(snd);
+        if (taskId === "f2") {
+          el.setAttribute("transform", "translate(528,585) scale(0.9)");
+          el.classList.remove("grabbable");
+        } else if (taskId === "f1") {
+          el.setAttribute("transform", "translate(800,560) scale(0.8)");
+          el.classList.remove("grabbable");
+        } else {
+          el.classList.add("fadeOut");
+          setTimeout(() => el.remove(), 400);
+        }
+        const t = svg.querySelector(target);
+        if (t) {
+          const inner = t.querySelector(":scope > .inner");
+          if (inner) { inner.classList.add("happyBounce"); setTimeout(() => inner.classList.remove("happyBounce"), 1500); }
+        }
+        setTimeout(() => {
+          api.play("success");
+          api.complete(taskId);
+        }, 1000);
+        return true;
+      });
+    };
+    if (!api.done("f1")) feed("#hay", "#horse", "f1", "neigh");
+    if (!api.done("f2")) feed("#bucket", "#cow", "f2", "moo");
+    if (!api.done("f3")) feed("#korn", "#hen", "f3", "cluck");
+    if (!api.done("f4")) feed("#fapple", "#pig", "f4", "oink");
+  },
+};
+
+const sceneForest = {
+  id: "forest",
+  tasks: [
+    { id: "w1", source: "#pz1", target: "#wbasket" },
+    { id: "w2", source: "#zapfen", target: "#squirrel3" },
+    { id: "w3", source: "#wleaves", target: "#deer" },
+  ],
+  html(done) {
+    const d1 = done("w1"), d2 = done("w2"), d3 = done("w3");
+    return `
+    <defs>
+      <linearGradient id="woSky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#a8d8c0"/><stop offset="1" stop-color="#e8f5dd"/>
+      </linearGradient>
+    </defs>
+    <rect width="1000" height="700" fill="url(#woSky)"/>
+    ${sun(120, 100)}
+    <path d="M 0 380 Q 280 330 560 380 Q 810 420 1000 370 L 1000 700 L 0 700 Z" fill="#7cb56a"/>
+    <path d="M 0 500 Q 400 455 1000 510 L 1000 700 L 0 700 Z" fill="#639e54"/>
+
+    ${wrap(90, 480, 1.4, `class="pokeable" data-sound="whoosh" data-action="shiver"`, firTree(1, false))}
+    ${wrap(300, 430, 1.1, `class="pokeable" data-sound="whoosh" data-action="shiver"`, firTree(1, false))}
+    ${wrap(950, 470, 1.3, `class="pokeable" data-sound="whoosh" data-action="shiver"`, firTree(1, false))}
+    ${wrap(680, 420, 0.9, `class="pokeable" data-sound="whoosh" data-action="shiver"`, firTree(1, false))}
+    ${wrap(300, 300, 0.85, `data-free="1" class="pokeable" data-sound="hoot" data-action="flutter"`, owl(1))}
+
+    ${wrap(180, 590, 1.1, `id="squirrel3" data-free="1" class="pokeable" data-sound="chirp" data-action="bigBounce"`, squirrel(1))}
+    ${d2 ? `<g transform="translate(232,610)">${pineconeFig(0.9)}</g>` : ""}
+    ${!d2 ? wrap(650, 662, 1, `id="zapfen" class="grabbable"`, pineconeFig(1), "bobbing") : ""}
+
+    ${wrap(800, 560, 1.15, `id="deer" data-free="1" class="pokeable" data-sound="peep"`, deerFig(1))}
+    ${!d3 ? wrap(240, 662, 1, `id="wleaves" class="grabbable"`, leafBundle(0.9), "bobbing") : ""}
+
+    ${wrap(900, 655, 1.05, `id="wbasket"`, basketFig(1))}
+    ${d1 ? `<g transform="translate(892,622)">${mushroom(0, 0, 0.7).replace('class="pokeable" data-sound="boing" data-action="bigBounce"', '')}</g>` : ""}
+    ${!d1 ? `
+      ${wrap(330, 655, 0.9, `id="pz1" class="grabbable"`, `${hit(40, 0, -16)}<path d="M -8 0 Q -10 -14 0 -14 Q 10 -14 8 0 Z" fill="#f5ecd7"/><path d="M -22 -12 Q -22 -34 0 -34 Q 22 -34 22 -12 Q 0 -6 -22 -12 Z" fill="#e84c3d" stroke="#b93425" stroke-width="2.5"/><circle cx="-9" cy="-24" r="4" fill="#fff" opacity="0.85"/>`)}
+      ${wrap(395, 668, 0.75, `id="pz2" class="grabbable"`, `${hit(40, 0, -16)}<path d="M -8 0 Q -10 -14 0 -14 Q 10 -14 8 0 Z" fill="#f5ecd7"/><path d="M -22 -12 Q -22 -34 0 -34 Q 22 -34 22 -12 Q 0 -6 -22 -12 Z" fill="#e8955e" stroke="#c4713a" stroke-width="2.5"/><circle cx="7" cy="-22" r="3.5" fill="#fff" opacity="0.85"/>`)}
+      ${wrap(620, 665, 0.85, `id="pz3" class="grabbable"`, `${hit(40, 0, -16)}<path d="M -8 0 Q -10 -14 0 -14 Q 10 -14 8 0 Z" fill="#f5ecd7"/><path d="M -22 -12 Q -22 -34 0 -34 Q 22 -34 22 -12 Q 0 -6 -22 -12 Z" fill="#c99a64" stroke="#a5824a" stroke-width="2.5"/><circle cx="-6" cy="-22" r="3.5" fill="#fff" opacity="0.85"/>`)}
+    ` : ""}
+
+    ${wrap(490, 590, 1, `id="fox" data-free="1" class="pokeable" data-sound="yip" data-action="pounce"`, foxFig(1))}
+    ${butterfly(560, 280, 0.9, "#b892e0")}
+    ${grassTuft(430, 680, 1.2, "#4d8a3e")}
+    ${grassTuft(720, 690, 1.3, "#4d8a3e")}
+    ${fallingLeaves(4)}
+    `;
+  },
+  init(svg, api) {
+    if (!api.done("w1")) {
+      let collected = 0;
+      ["#pz1", "#pz2", "#pz3"].forEach((sel, i) => {
+        api.drag(sel, "#wbasket", 110, (el) => {
+          api.play("pop");
+          el.setAttribute("transform", `translate(${880 + i * 16},${626}) scale(0.6)`);
+          el.classList.remove("grabbable");
+          api.sparkleBurst(900, 630);
+          collected++;
+          api.play("note", collected);
+          if (collected >= 3) {
+            setTimeout(() => { api.play("success"); api.complete("w1"); }, 800);
+          }
+          return true;
+        });
+      });
+    }
+    if (!api.done("w2")) {
+      api.drag("#zapfen", "#squirrel3", 120, (el) => {
+        api.play("munch");
+        el.setAttribute("transform", "translate(232,610) scale(0.9)");
+        el.classList.remove("grabbable");
+        const sq = svg.querySelector("#squirrel3");
+        sq.querySelector(":scope > .inner").classList.add("happyBounce");
+        setTimeout(() => { api.play("success"); api.complete("w2"); }, 1000);
+        return true;
+      });
+    }
+    if (!api.done("w3")) {
+      api.drag("#wleaves", "#deer", 130, (el) => {
+        api.play("munch");
+        el.classList.add("fadeOut");
+        setTimeout(() => el.remove(), 400);
+        const d = svg.querySelector("#deer");
+        d.querySelector(":scope > .inner").classList.add("happyBounce");
+        api.svgAppend(heart(790, 470, 0.9));
+        setTimeout(() => { api.play("success"); api.complete("w3"); }, 1000);
+        return true;
+      });
+    }
+  },
+};
+
+const sceneConstruction = {
+  id: "baustelle",
+  tasks: [
+    { id: "b1", source: "#helm", target: "#lia" },
+    { id: "b2", source: "#st1", target: "#truck" },
+    { id: "b3", source: "#kegel", target: "#kegelSpot" },
+  ],
+  html(done) {
+    const d1 = done("b1"), d2 = done("b2"), d3 = done("b3");
+    return `
+    <defs>
+      <linearGradient id="bsSky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#9bdcf5"/><stop offset="1" stop-color="#f5ecd7"/>
+      </linearGradient>
+    </defs>
+    <rect width="1000" height="700" fill="url(#bsSky)"/>
+    ${sun(110, 100)}
+    ${cloud(650, 90, 0.8)}
+    <path d="M 0 430 Q 300 390 620 435 Q 850 470 1000 425 L 1000 700 L 0 700 Z" fill="#d9b25e"/>
+    <path d="M 0 540 Q 400 495 1000 550 L 1000 700 L 0 700 Z" fill="#c9a05e"/>
+    <path d="M 620 560 Q 640 480 700 440 M 660 570 Q 680 500 740 460" stroke="#b5825a" stroke-width="4" fill="none" opacity="0.5"/>
+    <ellipse cx="680" cy="600" rx="120" ry="30" fill="#b5825a" opacity="0.5"/>
+
+    <path d="M 40 460 L 340 460 M 60 460 L 60 440 L 90 440 L 90 460 M 150 460 L 150 438 L 180 438 L 180 460 M 250 460 L 250 440 L 280 440 L 280 460"
+      stroke="#e0634e" stroke-width="7" stroke-linecap="round"/>
+    <path d="M 45 452 L 335 452" stroke="#fff" stroke-width="5" stroke-dasharray="18 12"/>
+
+    ${wrap(300, 555, 1.05, `id="bagger" class="pokeable" data-sound="engine"`, excavatorFig(1))}
+    ${wrap(830, 620, 1.05, `id="truck" class="pokeable" data-sound="horn"`, dumpTruckFig(1))}
+    ${d2 ? `<g transform="translate(790,585)">${stoneFig(0.8)}<g transform="translate(24,-6)">${stoneFig(0.65)}</g><g transform="translate(46,2)">${stoneFig(0.7)}</g></g>` : ""}
+
+    ${wrap(120, 500, 1, `id="lia" data-free="1" class="pokeable"`, lia(1))}
+    ${d1 ? `<g transform="translate(120,455)">${helmetFig(0.85)}</g>` : ""}
+    ${!d1 ? wrap(935, 545, 1, `id="helm" class="grabbable"`, helmetFig(1), "bobbing") : ""}
+
+    ${!d2 ? `
+      ${wrap(380, 662, 1, `id="st1" class="grabbable"`, stoneFig(1))}
+      ${wrap(620, 668, 0.85, `id="st2" class="grabbable"`, stoneFig(1))}
+      ${wrap(690, 645, 0.9, `id="st3" class="grabbable"`, stoneFig(1))}
+    ` : ""}
+
+    <g id="kegelSpot" transform="translate(240,640)">${d3 ? "" : `<ellipse rx="26" ry="9" fill="#a5824a" opacity="0.6"/>`}</g>
+    ${d3 ? `<g transform="translate(240,632)">${trafficCone(1)}</g>`
+        : wrap(70, 660, 1, `id="kegel" class="grabbable"`, trafficCone(1), "bobbing")}
+    ${wrap(170, 655, 0.8, ``, trafficCone(1))}
+
+    ${wrap(500, 610, 0.9, `data-free="1" class="pokeable" data-sound="woof"`, `
+      ${dog(1)}
+      <path d="M -18 -50 L -4 -74 L 12 -48 Z" fill="#ffd23e" stroke="#e8a62c" stroke-width="2"/>
+    `)}
+    `;
+  },
+  init(svg, api) {
+    wireLia(svg, api);
+    if (!api.done("b1")) {
+      api.drag("#helm", "#lia", 120, (el) => {
+        el.setAttribute("transform", "translate(120,455) scale(0.85)");
+        el.classList.remove("grabbable");
+        api.play("chime");
+        api.speak("Jetzt bin ich eine Bauarbeiterin!", "kind");
+        api.sparkleBurst(120, 460);
+        setTimeout(() => { api.play("success"); api.complete("b1"); }, 1000);
+        return true;
+      });
+    }
+    if (!api.done("b2")) {
+      let loaded = 0;
+      ["#st1", "#st2", "#st3"].forEach((sel, i) => {
+        api.drag(sel, "#truck", 130, (el) => {
+          api.play("thud");
+          el.setAttribute("transform", `translate(${790 + i * 24},${582 - (i % 2) * 8}) scale(0.7)`);
+          el.classList.remove("grabbable");
+          loaded++;
+          api.play("note", loaded);
+          if (loaded >= 3) {
+            setTimeout(() => {
+              api.play("horn");
+              api.play("success");
+              api.complete("b2");
+            }, 800);
+          }
+          return true;
+        });
+      });
+    }
+    if (!api.done("b3")) {
+      api.drag("#kegel", "#kegelSpot", 100, (el) => {
+        el.setAttribute("transform", "translate(240,632) scale(1)");
+        el.classList.remove("grabbable");
+        api.play("thud");
+        api.sparkleBurst(240, 620);
+        setTimeout(() => { api.play("success"); api.complete("b3"); }, 900);
+        return true;
+      });
+    }
+    /* Bagger-Arm gräbt beim Antippen */
+    const bagger = svg.querySelector("#bagger");
+    if (bagger) bagger._tapAction = () => {
+      const arm = bagger.querySelector(".exArm");
+      if (arm) {
+        arm.style.transformBox = "fill-box";
+        arm.style.transformOrigin = "left bottom";
+        arm.animate(
+          [{ transform: "rotate(0deg)" }, { transform: "rotate(26deg)" }, { transform: "rotate(-6deg)" }, { transform: "rotate(20deg)" }, { transform: "rotate(0deg)" }],
+          { duration: 1800, easing: "ease-in-out" });
+      }
+    };
+  },
+};
+
+const sceneOcean = {
+  id: "ozean",
+  tasks: [
+    { id: "u1", source: "#perle", target: "#muschel" },
+    { id: "u2", source: "#clown", target: "#anemone" },
+    { id: "u3", source: "#gras", target: "#turtle" },
+    { id: "u4", source: "#bl1", target: "#bl1" },
+  ],
+  html(done) {
+    const d1 = done("u1"), d2 = done("u2"), d3 = done("u3"), d4 = done("u4");
+    const bubbles = [[210, 470], [390, 340], [700, 280], [880, 430]];
+    let bl = "";
+    if (!d4) {
+      bubbles.forEach(([x, y], i) => {
+        bl += wrap(x, y, 1, `id="bl${i + 1}" class="pokeable blase"`, bubbleFig(1), "floaty");
+      });
+    }
+    return `
+    <defs>
+      <linearGradient id="ozSky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#6fc2e0"/><stop offset="1" stop-color="#2f6a94"/>
+      </linearGradient>
+    </defs>
+    <rect width="1000" height="700" fill="url(#ozSky)"/>
+    <path d="M 100 0 L 220 700 L 320 700 L 180 0 Z M 500 0 L 560 700 L 640 700 L 560 0 Z" fill="#bfe8f7" opacity="0.15"/>
+    <path d="M 0 640 Q 300 610 600 640 Q 820 660 1000 635 L 1000 700 L 0 700 Z" fill="#e8cf9a"/>
+
+    <path d="M 60 660 Q 45 590 65 530 M 90 665 Q 105 600 88 545 M 120 662 Q 110 610 125 560"
+      stroke="#4d8a63" stroke-width="8" fill="none" stroke-linecap="round" class="inner swaying"/>
+    <path d="M 950 662 Q 935 600 955 550 M 920 665 Q 935 610 918 565"
+      stroke="#4d8a63" stroke-width="8" fill="none" stroke-linecap="round"/>
+
+    ${wrap(760, 560, 1.1, `id="turtle" data-free="1" class="pokeable" data-sound="blub" data-action="circleFly"`, turtleFig(1))}
+    ${!d3 ? wrap(395, 668, 1, `id="gras" class="grabbable"`, seaweedBundle(1), "bobbing") : ""}
+
+    ${wrap(865, 630, 1.15, `id="anemone" class="pokeable" data-sound="blub"`, anemoneFig(1))}
+    ${d2 ? `<g transform="translate(862,585)"><g class="inner bobbing">${clownfishFig(0.75)}</g></g>`
+        : wrap(150, 320, 1, `id="clown" class="grabbable"`, clownfishFig(1), "bobbing")}
+
+    ${wrap(255, 640, 1.1, `id="muschel" class="pokeable" data-sound="blub"`, openClam(1, d1))}
+    ${!d1 ? wrap(630, 662, 1, `id="perle" class="grabbable"`, pearlFig(1), "bobbing") : ""}
+
+    ${wrap(480, 590, 1, `id="krake" data-free="1" class="pokeable" data-sound="blub" data-action="dance"`, octopusFig(1))}
+    ${wrap(420, 250, 0.8, `data-free="1" class="pokeable" data-sound="splash" data-action="leap"`, fish(1, "#ffd23e"))}
+    ${wrap(620, 180, 0.7, `data-free="1" class="pokeable" data-sound="splash" data-action="leap"`, fish(1, "#e88fa2"))}
+    ${wrap(180, 620, 0.8, `class="pokeable" data-sound="pop"`, starfishFig(0.9))}
+    ${bl}
+    `;
+  },
+  init(svg, api) {
+    if (!api.done("u1")) {
+      api.drag("#perle", "#muschel", 110, (el) => {
+        el.classList.add("fadeOut");
+        setTimeout(() => el.remove(), 300);
+        api.play("blub");
+        api.sparkleBurst(255, 620);
+        setTimeout(() => { api.play("success"); api.complete("u1"); }, 900);
+        return true;
+      });
+    }
+    if (!api.done("u2")) {
+      api.drag("#clown", "#anemone", 120, (el) => {
+        el.setAttribute("transform", "translate(862,585) scale(0.75)");
+        el.classList.remove("grabbable");
+        api.play("blub");
+        api.svgAppend(heart(860, 540, 0.9));
+        setTimeout(() => { api.play("success"); api.complete("u2"); }, 900);
+        return true;
+      });
+    }
+    if (!api.done("u3")) {
+      api.drag("#gras", "#turtle", 130, (el) => {
+        api.play("munch");
+        el.classList.add("fadeOut");
+        setTimeout(() => el.remove(), 400);
+        const t = svg.querySelector("#turtle");
+        t.querySelector(":scope > .inner").classList.add("happyBounce");
+        setTimeout(() => { api.play("success"); api.complete("u3"); }, 1000);
+        return true;
+      });
+    }
+    if (!api.done("u4")) {
+      let popped = 0;
+      svg.querySelectorAll(".blase").forEach((b) => {
+        b.addEventListener("pointerdown", (e) => {
+          e.stopPropagation();
+          if (b.dataset.done) return;
+          b.dataset.done = "1";
+          popped++;
+          api.play("blub");
+          const inner = b.querySelector(":scope > .inner");
+          inner.animate([{ transform: "scale(1)", opacity: 1 }, { transform: "scale(1.8)", opacity: 0 }], { duration: 350, fill: "forwards" });
+          if (popped >= 4) {
+            setTimeout(() => { api.play("success"); api.complete("u4"); }, 700);
+          }
+        });
+      });
+    }
+  },
+};
+
+const sceneSpace = {
+  id: "weltraum",
+  tasks: [
+    { id: "x1", source: "#shelm", target: "#lia" },
+    { id: "x2", source: "#keks", target: "#alien" },
+    { id: "x3", source: "#bigrocket", target: "#bigrocket" },
+  ],
+  html(done) {
+    const d1 = done("x1"), d2 = done("x2"), d3 = done("x3");
+    return `
+    <defs>
+      <linearGradient id="spcSky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#101430"/><stop offset="1" stop-color="#2a2f5e"/>
+      </linearGradient>
+    </defs>
+    <rect width="1000" height="700" fill="url(#spcSky)"/>
+    ${star(120, 100, 1.1)} ${star(320, 60, 0.8)} ${star(540, 130, 1)} ${star(760, 70, 0.9)}
+    ${star(930, 180, 0.8)} ${star(80, 300, 0.9)} ${star(460, 260, 0.7)} ${star(680, 200, 1)}
+    ${wrap(700, 150, 1, `class="pokeable" data-sound="chime" data-action="spin"`, planetFig(1, "#e8955e"))}
+    ${wrap(180, 190, 0.75, `class="pokeable" data-sound="chime" data-action="spin"`, planetFig(1, "#5eb3d8"))}
+    ${wrap(880, 320, 0.8, `class="pokeable" data-sound="chime" data-action="pulse"`, `
+      <circle r="34" fill="#5eb3d8" stroke="#3f92ba" stroke-width="3"/>
+      <path d="M -20 -10 Q -6 -22 10 -14 Q 22 -8 18 6 Q 4 14 -10 8 Q -24 2 -20 -10 Z" fill="#79c850" opacity="0.8"/>
+      <circle cx="-14" cy="14" r="7" fill="#79c850" opacity="0.8"/>
+    `)}
+    <path d="M 0 600 Q 200 570 400 595 Q 650 620 1000 585 L 1000 700 L 0 700 Z" fill="#a8a29a"/>
+    <path d="M 0 650 Q 400 625 1000 650 L 1000 700 L 0 700 Z" fill="#8d877e"/>
+    <ellipse cx="180" cy="650" rx="45" ry="12" fill="#7d776e"/>
+    <ellipse cx="620" cy="670" rx="55" ry="14" fill="#7d776e"/>
+    <ellipse cx="890" cy="640" rx="35" ry="10" fill="#7d776e"/>
+
+    ${wrap(230, 530, 1, `id="lia" data-free="1" class="pokeable"`, lia(1))}
+    ${d1 ? `<g transform="translate(230,528)"><circle r="36" fill="#bfe8f7" opacity="0.4" stroke="#8fb0c9" stroke-width="3"/></g>` : ""}
+    ${!d1 ? wrap(80, 655, 1, `id="shelm" class="grabbable"`, spaceHelmetFig(1), "bobbing") : ""}
+
+    ${wrap(660, 590, 1.05, `id="alien" data-free="1" class="pokeable" data-sound="blub" data-action="bigBounce"`, alienFig(1))}
+    ${!d2 ? wrap(370, 662, 1.1, `id="keks" class="grabbable"`, cookieFig(1), "bobbing") : ""}
+
+    ${d3
+      ? `<g transform="translate(760,180)"><g class="inner floaty" style="transform-box:fill-box;transform-origin:center">
+          ${rocketFig(0.8, "#e0634e")}
+          <path d="M 0 22 Q -6 40 0 52 Q 6 40 0 22" fill="#ffd23e" stroke="#f5a340" stroke-width="1.5"/>
+        </g></g>`
+      : wrap(850, 560, 1.5, `id="bigrocket" class="pokeable"`, rocketFig(1, "#e0634e"))}
+    `;
+  },
+  init(svg, api) {
+    wireLia(svg, api);
+    if (!api.done("x1")) {
+      api.drag("#shelm", "#lia", 120, (el) => {
+        el.remove();
+        api.play("chime");
+        const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        g.setAttribute("transform", "translate(230,528)");
+        g.innerHTML = `<circle r="36" fill="#bfe8f7" opacity="0.4" stroke="#8fb0c9" stroke-width="3"/>`;
+        svg.appendChild(g);
+        api.speak("Jetzt bin ich eine Astronautin!", "kind");
+        api.sparkleBurst(230, 520);
+        setTimeout(() => { api.play("success"); api.complete("x1"); }, 1000);
+        return true;
+      });
+    }
+    if (!api.done("x2")) {
+      api.drag("#keks", "#alien", 120, (el) => {
+        api.play("munch");
+        el.classList.add("fadeOut");
+        setTimeout(() => el.remove(), 400);
+        const a = svg.querySelector("#alien");
+        a.querySelector(":scope > .inner").classList.add("happyBounce");
+        api.svgAppend(heart(660, 500, 0.9));
+        setTimeout(() => { api.play("success"); api.complete("x2"); }, 1100);
+        return true;
+      });
+    }
+    if (!api.done("x3")) {
+      const rocket = svg.querySelector("#bigrocket");
+      if (rocket) rocket._tapAction = () => {
+        if (rocket.dataset.done) return;
+        rocket.dataset.done = "1";
+        api.speak("Drei, zwei, eins ... Start!", "kind");
+        setTimeout(() => api.play("engine"), 1800);
+        setTimeout(() => {
+          const inner = rocket.querySelector(":scope > .inner");
+          inner.animate(
+            [{ transform: "translateY(0)" }, { transform: "translateY(-14px)" }, { transform: "translateY(-8px)" }, { transform: "translateY(-620px)" }],
+            { duration: 2200, easing: "ease-in", fill: "forwards" });
+          api.play("whoosh");
+        }, 2400);
+        setTimeout(() => {
+          api.play("fanfare");
+          api.complete("x3");
+        }, 4600);
+      };
+    }
+  },
+};
+
 /* ================================================================
    KAPITEL – jedes Kapitel bündelt mehrere Bilder (Screens).
    "free" markiert Kapitel, die ohne Kauf spielbar sind; gekaufte
@@ -2903,6 +3866,41 @@ const CHAPTERS = [
     icon: "cake",
     free: true,
     screens: [sceneEaster, sceneBirthday, sceneChristmas, sceneSilvester],
+  },
+  {
+    id: "bauernhof",
+    name: "Bauernhof",
+    icon: "cow",
+    free: true,
+    screens: [sceneFarm],
+  },
+  {
+    id: "wald",
+    name: "Wald",
+    icon: "deer",
+    free: true,
+    screens: [sceneForest],
+  },
+  {
+    id: "baustelle",
+    name: "Baustelle",
+    icon: "truck",
+    free: true,
+    screens: [sceneConstruction],
+  },
+  {
+    id: "unterwasser",
+    name: "Unterwasser",
+    icon: "turtle",
+    free: true,
+    screens: [sceneOcean],
+  },
+  {
+    id: "weltraum",
+    name: "Weltraum",
+    icon: "alien",
+    free: true,
+    screens: [sceneSpace],
   },
 ];
 

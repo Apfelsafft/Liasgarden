@@ -37,6 +37,8 @@ const AudioKit = (() => {
     water: 1.0, whoosh: 0.4, hello: 0.5, thud: 0.3, note: 0.6,
     meow: 0.9, woof: 0.6, whee: 0.9, gull: 0.8, hop: 0.4,
     horn: 1.1, whistle: 0.9, baa: 0.7, jingle: 1.2, boom: 0.9,
+    moo: 1.0, neigh: 0.9, oink: 0.6, cluck: 0.9, yip: 0.5,
+    engine: 1.1, blub: 0.4,
   };
 
   function wavDataUri(buf) {
@@ -501,6 +503,24 @@ const AudioKit = (() => {
     },
     whee()    { tone(392, 0.5, { type: "triangle", glideTo: 900, vol: 0.14 }); tone(900, 0.25, { type: "triangle", glideTo: 660, vol: 0.1, when: 0.5 }); },
     baa()     { beast({ dur: 0.55, curve: [300, 265, 235, 245], vol: 0.65, am: 28, amDepth: 1, bp: 900, bpQ: 1.2, lp: 2500 }); },
+    moo()     { beast({ dur: 0.85, curve: [175, 150, 122, 128], vol: 0.55, bp: 340, bpQ: 1.3, lp: 900, vib: 4, vibDepth: 7 }); },
+    neigh()   { beast({ dur: 0.7, curve: [900, 780, 540, 380], vol: 0.4, am: 14, amDepth: 0.9, bp: 1200, bpQ: 1.4, lp: 3200 }); },
+    oink()    {
+      [0, 0.26].forEach((w) => {
+        noise(0.09, { vol: 0.3, freq: 350, q: 1, when: w });
+        beast({ dur: 0.13, curve: [165, 110], vol: 0.45, am: 35, amDepth: 1, lp: 800, when: w });
+      });
+    },
+    cluck()   {
+      [0, 0.14, 0.28].forEach((w) => beast({ dur: 0.08, curve: [500, 390], vol: 0.32, bp: 1500, bpQ: 1.5, lp: 4000, when: w }));
+      beast({ dur: 0.3, curve: [600, 880, 480], vol: 0.34, bp: 1500, bpQ: 1.5, lp: 4000, when: 0.46 });
+    },
+    yip()     { [0, 0.18].forEach((w) => beast({ dur: 0.12, curve: [620, 420], vol: 0.38, bp: 1300, bpQ: 1.3, lp: 3600, when: w })); },
+    engine()  {
+      beast({ dur: 0.95, curve: [68, 76, 71, 80], vol: 0.45, am: 27, amDepth: 0.7, lp: 320 });
+      noise(0.9, { vol: 0.12, freq: 220, q: 0.5 });
+    },
+    blub()    { tone(280, 0.14, { type: "sine", glideTo: 720, vol: 0.22 }); tone(500, 0.1, { type: "sine", glideTo: 950, vol: 0.14, when: 0.12 }); },
     jingle()  { [1568, 1318, 1046, 1318].forEach((f, i) => tone(f, 0.5, { when: i * 0.15, vol: 0.14 })); },
     boom()    {
       noise(0.5, { vol: 0.4, freq: 150, q: 0.5 });
@@ -543,7 +563,9 @@ const AudioKit = (() => {
     munch: "Mampf, mampf!", splash: "Platsch!", horn: "Tut, tuuut!",
     boing: "Boing!", whee: "Wiiie!", thud: "Plumps!", hello: "Hallo!",
     success: "Super!", fanfare: "Hurra!", baa: "Määäh!",
-    jingle: "Kling, kling!", boom: "Buuum!",
+    jingle: "Kling, kling!", boom: "Buuum!", moo: "Muuuh!",
+    neigh: "Wiehiehie!", oink: "Oink, oink!", cluck: "Gack, gack!",
+    yip: "Wiff, wiff!", engine: "Brummm!", blub: "Blubb!",
   };
 
   function setSpeakMode(on) { speakMode = on; }

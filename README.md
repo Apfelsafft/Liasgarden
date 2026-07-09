@@ -32,8 +32,13 @@ Kapitel löst, bekommt eine Feier mit Sternenregen.
 | 🌈 Jahreszeiten | Frühling · Sommer · Herbstwald · Winter |
 | 🏖️ Urlaub | Strand · Amerika (Freiheitsstatue) |
 | 🎂 Feste | Ostern · Geburtstag · Weihnachten · Silvester |
+| 🐄 Bauernhof | Hof mit Pferd, Kuh, Huhn und Schwein (4 Aufgaben) |
+| 🦌 Wald | Pilze, Eichhörnchen, Reh und Fuchs (3 Aufgaben) |
+| 🚜 Baustelle | Bagger, Kipplaster, Helm und Hütchen (3 Aufgaben) |
+| 🐢 Unterwasser | Perle, Clownfisch, Schildkröte, Luftblasen (4 Aufgaben) |
+| 🚀 Weltraum | Astronauten-Helm, Außerirdischer, Raketenstart (3 Aufgaben) |
 
-Insgesamt 14 Bilder mit 27 Aufgaben. Neue Kapitel lassen sich einfach
+Insgesamt 9 Kapitel, 19 Bilder und 44 Aufgaben. Neue Kapitel lassen sich einfach
 ergänzen (siehe `ARCHITEKTUR.md`) — die Struktur ist bereits auf
 per In-App-Kauf freischaltbare Kapitel vorbereitet.
 
