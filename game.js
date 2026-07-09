@@ -702,13 +702,18 @@
     AudioKit.play("fanfare");
     const colors = ["#ffd23e", "#ff8fab", "#79c850", "#5eb3d8", "#b892e0", "#f5a340"];
     for (let i = 0; i < 26; i++) {
+      /* Äußere Gruppe trägt die Position, die innere die Fall-Animation –
+         die CSS-transform-Animation würde ein transform-Attribut auf
+         demselben Element überschreiben (alle Sterne landeten links). */
       const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
       const x = Math.random() * 1000;
       g.setAttribute("transform", `translate(${x},-30) scale(${0.8 + Math.random() * 1.2})`);
-      g.innerHTML = `<path d="M 0 -12 L 3.5 -3.5 L 12 -3 L 5.5 3 L 7.5 12 L 0 7 L -7.5 12 L -5.5 3 L -12 -3 L -3.5 -3.5 Z"
+      const inner = document.createElementNS("http://www.w3.org/2000/svg", "g");
+      inner.innerHTML = `<path d="M 0 -12 L 3.5 -3.5 L 12 -3 L 5.5 3 L 7.5 12 L 0 7 L -7.5 12 L -5.5 3 L -12 -3 L -3.5 -3.5 Z"
         fill="${colors[i % colors.length]}"/>`;
-      g.classList.add("confettiStar");
-      g.style.animationDelay = `${Math.random() * 1.4}s`;
+      inner.classList.add("confettiStar");
+      inner.style.animationDelay = `${Math.random() * 1.4}s`;
+      g.appendChild(inner);
       svg.appendChild(g);
       setTimeout(() => g.remove(), 4400);
     }
@@ -822,7 +827,7 @@
       b.classList.toggle("selected", b.dataset.mode === mode);
     });
     const versionEl = document.getElementById("versionInfo");
-    versionEl.textContent = "Version: 09.07.2026 04:54:28";
+    versionEl.textContent = "Version: 09.07.2026 04:58";
   }
 
   document.getElementById("btnSettings").addEventListener("click", () => {

@@ -7,8 +7,6 @@
 const AudioKit = (() => {
   let ctx = null;
   let master = null;
-  let ambientGain = null;
-  let ambientOscillators = [];
   let muted = false;
   let ambientTimer = null;
   let musicGain = null;
@@ -271,39 +269,17 @@ const AudioKit = (() => {
   /* Sanfte Hintergrund-Atmosphäre: leiser Akkord-Teppich
      und ab und zu ein Vogelzwitschern. */
   function stopAmbient() {
-    ambientOscillators.forEach((o) => {
-      try { o.stop(); } catch (e) { /* bereits gestoppt */ }
-    });
-    ambientOscillators = [];
     if (ambientTimer) {
       clearTimeout(ambientTimer);
       ambientTimer = null;
     }
   }
 
+  /* Früher lief hier zusätzlich ein leiser Dauer-Akkord ("Teppich") –
+     der klang auf vielen Lautsprechern wie ein Brummen und ist raus.
+     Übrig bleibt nur das gelegentliche Vogelzwitschern. */
   function startAmbient() {
     stopAmbient();
-    ambientGain = ctx.createGain();
-    ambientGain.gain.value = 0.045;
-    ambientGain.connect(master);
-
-    [130.8, 196.0, 261.6].forEach((f, i) => {
-      const osc = ctx.createOscillator();
-      osc.type = "sine";
-      osc.frequency.value = f;
-      const g = ctx.createGain();
-      g.gain.value = 0.5;
-      const lfo = ctx.createOscillator();
-      lfo.frequency.value = 0.07 + i * 0.03;
-      const lfoGain = ctx.createGain();
-      lfoGain.gain.value = 0.25;
-      lfo.connect(lfoGain).connect(g.gain);
-      osc.connect(g).connect(ambientGain);
-      osc.start();
-      lfo.start();
-      ambientOscillators.push(osc, lfo);
-    });
-
     scheduleBird();
   }
 
