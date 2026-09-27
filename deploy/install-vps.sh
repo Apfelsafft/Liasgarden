@@ -6,6 +6,11 @@
 #  Richtet einen nginx-Webserver ein, der das Spiel ausliefert, damit es
 #  von jedem Rechner oder Tablet im Browser gespielt werden kann.
 #
+#  Schnellstart (Skript laden und starten, es holt das Spiel selbst):
+#
+#    curl -fsSLO https://raw.githubusercontent.com/apfelsafft/liasgarden/HEAD/deploy/install-vps.sh
+#    sudo bash install-vps.sh
+#
 #  Aufruf (als root bzw. mit sudo):
 #
 #    sudo bash install-vps.sh                        # Zugriff über http://<IP>/
@@ -23,7 +28,7 @@
 #    --password PW     Passwort für Passwortschutz
 #    --no-auth         vorhandenen Passwortschutz wieder entfernen
 #    --repo URL        Git-Repository (Standard: GitHub-Repo von Lia's Garten)
-#    --branch NAME     Git-Branch (Standard: der Haupt-Branch des Repos)
+#    --branch NAME     Git-Branch (Standard: Haupt-Branch des Repos)
 #    --update          nur Spieldateien aktualisieren (gespeicherte Einstellungen)
 #    -h, --help        diese Hilfe
 #
@@ -31,13 +36,9 @@
 #  seine eigene Konfiguration. Einstellungen werden in
 #  /etc/liasgarten.conf gespeichert und bei späteren Läufen übernommen.
 #
-#  Das Repository ist privat. Zwei Wege:
-#   a) Repo auf dem VPS klonen und das Skript von dort starten – dann
-#      werden die Dateien aus diesem Klon genommen (empfohlen):
-#        git clone https://<TOKEN>@github.com/apfelsafft/liasgarden.git
-#        sudo bash liasgarden/deploy/install-vps.sh
-#   b) Skript einzeln starten und klonen lassen:
-#        --repo https://<TOKEN>@github.com/apfelsafft/liasgarden.git
+#  Einzeln gestartet klont das Skript das Repo nach /opt/liasgarten/src.
+#  Wird es aus einem bereits geklonten Repo gestartet, nimmt es die
+#  Dateien von dort (git pull beim Update).
 # =====================================================================
 
 set -euo pipefail
@@ -53,7 +54,7 @@ UPDATE_CMD=/usr/local/sbin/liasgarten-update
 
 # Standardwerte (werden von /etc/liasgarten.conf und Optionen überschrieben)
 REPO_URL="https://github.com/apfelsafft/liasgarden.git"
-BRANCH="claude/lias-garden-game-design-tfrfzw"
+BRANCH=""               # leer = Haupt-Branch des Repos
 DOMAIN=""
 EMAIL=""
 PORT="80"
@@ -131,16 +132,17 @@ fetch_sources() {
   else
     SRC="$SRC_DIR"
     mkdir -p "$APP_DIR"
+    local ref="${BRANCH:-HEAD}"
     if [[ -d $SRC/.git ]]; then
-      info "Hole neueste Version ($BRANCH) …"
+      info "Hole neueste Version (${BRANCH:-Haupt-Branch}) …"
       git -C "$SRC" remote set-url origin "$REPO_URL"
-      git -C "$SRC" fetch --depth 1 origin "$BRANCH"
-      git -C "$SRC" checkout -q -B "$BRANCH" FETCH_HEAD
+      git -C "$SRC" fetch -q --depth 1 origin "$ref"
+      git -C "$SRC" reset -q --hard FETCH_HEAD
     else
-      info "Lade Lia's Garten herunter ($BRANCH) …"
+      info "Lade Lia's Garten herunter (${BRANCH:-Haupt-Branch}) …"
       rm -rf "$SRC"
-      git clone -q --depth 1 --branch "$BRANCH" "$REPO_URL" "$SRC" \
-        || die "Klonen fehlgeschlagen. Ist das Repo privat? Dann --repo https://<TOKEN>@github.com/… verwenden oder das Skript aus einem geklonten Repo starten."
+      git clone -q --depth 1 ${BRANCH:+--branch "$BRANCH"} "$REPO_URL" "$SRC" \
+        || die "Klonen fehlgeschlagen. Stimmen --repo/--branch und ist GitHub erreichbar?"
     fi
   fi
   [[ -f $SRC/index.html ]] || die "In $SRC wurde keine index.html gefunden."
@@ -298,7 +300,9 @@ EOF
 chmod 600 "$CONF_FILE"   # kann einen Token in REPO_URL enthalten
 
 mkdir -p "$APP_DIR"
-install -m 755 "$(readlink -f "$0")" "$APP_DIR/install-vps.sh"
+if [[ "$(readlink -f "$0")" != "$APP_DIR/install-vps.sh" ]]; then
+  install -m 755 "$(readlink -f "$0")" "$APP_DIR/install-vps.sh"
+fi
 cat > "$UPDATE_CMD" <<EOF
 #!/usr/bin/env bash
 exec bash $APP_DIR/install-vps.sh --update "\$@"
