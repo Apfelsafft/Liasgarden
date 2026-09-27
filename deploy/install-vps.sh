@@ -223,6 +223,31 @@ if [[ -f /proc/net/if_inet6 ]]; then
 fi
 
 # Bei vorhandenem Zertifikat trägt certbot seine HTTPS-Blöcke unten erneut ein.
+# Ist der Port schon von einem anderen Programm belegt, kann nginx nicht starten.
+check_port_free() {
+  local port="$1" users
+  users="$(ss -Hltnp "sport = :$port" 2>/dev/null | grep -o 'users:(("[^"]*"' | cut -d'"' -f2 | sort -u | grep -vx nginx || true)"
+  [[ -z $users ]] && return 0
+  printf '\033[1;31m✗ Port %s ist schon belegt durch: %s\033[0m\n' "$port" "$(echo "$users" | paste -sd, -)" >&2
+  cat >&2 <<HILFE
+
+  Möglichkeiten:
+   • Anderen Port nehmen:   sudo bash $0 --port 8080
+                            (Port 8080 dann ggf. in der Firewall des Anbieters freigeben)
+   • Das andere Programm beenden, falls es nicht gebraucht wird, z. B.:
+       sudo systemctl disable --now apache2
+     und danach dieses Skript erneut starten.
+   • Wer genau lauscht:     sudo ss -ltnp 'sport = :$port'
+HILFE
+  exit 1
+}
+if [[ -n $DOMAIN ]]; then
+  check_port_free 80
+  check_port_free 443
+else
+  check_port_free "$PORT"
+fi
+
 info "Schreibe nginx-Konfiguration …"
 cat > "$NGINX_SITE" <<EOF
 # Lia's Garten – erzeugt von install-vps.sh (wird bei erneutem Lauf überschrieben)
@@ -255,7 +280,13 @@ ln -sf "$NGINX_SITE" "$NGINX_LINK"
 
 nginx -t -q || die "nginx-Konfiguration fehlerhaft (siehe oben)."
 systemctl enable nginx >/dev/null 2>&1 || true
-systemctl reload nginx 2>/dev/null || systemctl restart nginx 2>/dev/null || nginx -s reload 2>/dev/null || nginx
+if systemctl is-active --quiet nginx 2>/dev/null; then
+  systemctl reload nginx || die "nginx konnte nicht neu geladen werden (journalctl -u nginx)."
+elif command -v systemctl >/dev/null && systemctl list-unit-files nginx.service >/dev/null 2>&1 && [[ -d /run/systemd/system ]]; then
+  systemctl restart nginx || die "nginx startet nicht (journalctl -u nginx)."
+else
+  { pgrep -x nginx >/dev/null && nginx -s reload; } || nginx || die "nginx startet nicht."
+fi
 
 # ---------------------------------------------------------------------
 #  HTTPS per Let's Encrypt (nur mit Domain)
