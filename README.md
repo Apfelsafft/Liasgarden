@@ -19,6 +19,28 @@ npx serve .
 python3 -m http.server 8000
 ```
 
+### Auf einem eigenen Server (Linux-VPS)
+
+Damit das Spiel von jedem Rechner oder Tablet aus erreichbar ist, richtet
+`deploy/install-vps.sh` auf einem Debian-/Ubuntu-VPS einen nginx-Webserver
+ein. Da das Repo privat ist, wird es mit einem GitHub-Token geklont
+(„Fine-grained token“ mit Leserecht auf *Contents* genügt):
+
+```bash
+git clone https://<TOKEN>@github.com/apfelsafft/liasgarden.git
+cd liasgarden
+
+sudo bash deploy/install-vps.sh                  # → http://<IP-des-VPS>/
+# oder mit eigener Domain und HTTPS (DNS muss auf den VPS zeigen):
+sudo bash deploy/install-vps.sh --domain garten.example.de --email ich@example.de
+# optional mit Passwortschutz:
+sudo bash deploy/install-vps.sh --user lia --password geheim
+```
+
+Später genügt `sudo liasgarten-update`, um die neueste Version einzuspielen.
+Alle Optionen: `bash deploy/install-vps.sh --help`. Hat der VPS-Anbieter
+eine eigene Firewall, dort Port 80 (und 443 für HTTPS) freigeben.
+
 ## Kapitel und Bilder
 
 Das Spiel ist in **Kapitel** gegliedert; jedes Kapitel enthält mehrere
