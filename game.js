@@ -7,6 +7,19 @@
 (() => {
   const SAVE_KEY = "liasGartenSave";
 
+  /* ---------- Sichtbare Fensterhöhe (siehe style.css, --app-h) ---------- */
+
+  function fitViewport() {
+    const vv = window.visualViewport;
+    const h = Math.round(vv ? Math.min(vv.height, window.innerHeight) : window.innerHeight);
+    if (h > 0) document.documentElement.style.setProperty("--app-h", `${h}px`);
+    window.scrollTo(0, 0);
+  }
+  fitViewport();
+  window.addEventListener("resize", fitViewport);
+  window.addEventListener("orientationchange", () => setTimeout(fitViewport, 300));
+  if (window.visualViewport) window.visualViewport.addEventListener("resize", fitViewport);
+
   /* ---------- Spielstand ---------- */
 
   let save = { done: {}, muted: false, musicOff: false, unlocked: {}, celebrated: {} };
