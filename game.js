@@ -79,31 +79,46 @@
   const cardOverlay = document.getElementById("cardOverlay");
 
   /* ---------- Sprachausgabe ----------
-     Wir suchen die menschlichste deutsche Stimme, die das Gerät
-     anbietet (Siri-, Premium- und Google-Stimmen klingen deutlich
-     natürlicher als die Roboter-Ersatzstimmen), und sprechen in zwei
-     Rollen: die Vorlesestimme wie eine Mama, Lia wie ein Kind. */
+     Wir suchen die natürlichste deutsche Frauenstimme, die das Gerät
+     anbietet. Premium-/Erweitert-Stimmen (Apple), „Natural“-Stimmen
+     (Microsoft) und Google-Stimmen klingen deutlich menschlicher als
+     die einfachen Standardstimmen; Spaß- und Roboterstimmen meiden wir.
+     In den Einstellungen lässt sich die Stimme auch selbst wählen. */
 
   let bestVoice = null;
+
+  const FEMALE_NAMES = /anna|petra|helena|katja|hedda|marlene|vicki|amala|seraphina|louisa|tanja|elke|gisela|klarissa|maja|ingrid|sabine|nicole|lena|lea\b|kerstin|eva\b/;
+  const MALE_NAMES = /markus|yannick|martin|viktor|conrad|stefan|killian|klaus|ralf|florian|bernd|christoph|jonas|kasper|thorsten|hans/;
+  const NOVELTY = /eddy|flo\b|grandma|grandpa|oma\b|opa\b|reed|rocko|sandy|shelley|eloquence|compact|espeak|robot|whisper|bad news|bells|bubbles|jester|organ|trinoids|zarvox|superstar|albert|fred|junior|ralph/;
 
   function rateVoice(v) {
     const n = v.name.toLowerCase();
     let score = 0;
-    if (/siri/.test(n)) score += 60;
-    if (/enhanced|premium|erweitert|natural|neural|plus/.test(n)) score += 50;
+    if (/premium/.test(n)) score += 70;
+    if (/natural|neural|online/.test(n)) score += 60;
+    if (/enhanced|erweitert|verbessert/.test(n)) score += 50;
     if (/google/.test(n)) score += 40;
-    if (/anna|petra|helena|katja|hedda|marlene|vicki|amala/.test(n)) score += 20;
-    if (/eloquence|compact|espeak|robot/.test(n)) score -= 40;
-    if (v.lang.toLowerCase() === "de-de") score += 5;
+    if (FEMALE_NAMES.test(n)) score += 20;
+    if (MALE_NAMES.test(n)) score -= 15;
+    if (NOVELTY.test(n)) score -= 80;
+    if (v.lang.toLowerCase().replace("_", "-") === "de-de") score += 5;
     return score;
   }
 
+  function germanVoices() {
+    if (!window.speechSynthesis) return [];
+    return speechSynthesis.getVoices()
+      .filter((v) => v.lang.toLowerCase().startsWith("de"))
+      .sort((a, b) => rateVoice(b) - rateVoice(a));
+  }
+
   function chooseVoice() {
-    if (!window.speechSynthesis) return;
-    const german = speechSynthesis.getVoices().filter((v) => v.lang.toLowerCase().startsWith("de"));
+    const german = germanVoices();
     if (!german.length) return;
-    german.sort((a, b) => rateVoice(b) - rateVoice(a));
-    bestVoice = german[0];
+    /* selbst gewählte Stimme hat Vorrang */
+    bestVoice = german.find((v) => v.name === save.voiceName) || german[0];
+    const so = document.getElementById("settingsOverlay");
+    if (so && so.classList.contains("show")) updateVoiceUI();
   }
 
   if (window.speechSynthesis) {
@@ -119,9 +134,11 @@
     speak(word, "kind");
   });
 
+  /* Nur leichte Unterschiede: starkes Verstellen der Tonhöhe
+     lässt jede Stimme sofort nach Roboter klingen. */
   const VOICE_ROLES = {
-    mama: { rate: 0.95, pitch: 1.05 },
-    kind: { rate: 1.05, pitch: 1.5 },
+    mama: { rate: 0.92, pitch: 1.0 },
+    kind: { rate: 1.0, pitch: 1.12 },
   };
 
   function speak(text, role = "mama") {
@@ -839,9 +856,51 @@
     settingsOverlay.querySelectorAll(".soundOpt").forEach((b) => {
       b.classList.toggle("selected", b.dataset.mode === mode);
     });
+    updateVoiceUI();
     const versionEl = document.getElementById("versionInfo");
-    versionEl.textContent = "Version: 09.07.2026 04:58";
+    versionEl.textContent = "Version: 28.09.2026";
   }
+
+  /* Vorlesestimme wählen und probehören */
+  const voiceSelect = document.getElementById("voiceSelect");
+  const VOICE_SAMPLE = "Hallo! So klinge ich, wenn ich dir die Aufgaben vorlese.";
+
+  function voiceLabel(v) {
+    const good = rateVoice(v) >= 40;
+    return `${good ? "★ " : ""}${v.name}`;
+  }
+
+  function updateVoiceUI() {
+    const voices = germanVoices();
+    const tip = document.getElementById("voiceTip");
+    voiceSelect.innerHTML = "";
+    voices.forEach((v) => {
+      const o = document.createElement("option");
+      o.value = v.name;
+      o.textContent = voiceLabel(v);
+      o.selected = bestVoice && v.name === bestVoice.name;
+      voiceSelect.appendChild(o);
+    });
+    voiceSelect.disabled = !voices.length;
+    if (!voices.length) {
+      tip.textContent = "Auf diesem Gerät wurde keine deutsche Stimme gefunden.";
+    } else if (!bestVoice || rateVoice(bestVoice) < 40) {
+      tip.textContent = "Tipp fürs iPad: Eine „Premium“- oder „Erweitert“-Stimme klingt viel natürlicher. "
+        + "Laden unter Einstellungen → Bedienungshilfen → Gesprochene Inhalte → Stimmen → Deutsch "
+        + "(z. B. Anna), danach den Browser neu starten.";
+    } else {
+      tip.textContent = "★ = besonders natürliche Stimme";
+    }
+  }
+
+  voiceSelect.addEventListener("change", () => {
+    save.voiceName = voiceSelect.value;
+    persist();
+    chooseVoice();
+    speak(VOICE_SAMPLE);
+  });
+
+  document.getElementById("btnVoiceTest").addEventListener("click", () => speak(VOICE_SAMPLE));
 
   document.getElementById("btnSettings").addEventListener("click", () => {
     AudioKit.play("pop");
