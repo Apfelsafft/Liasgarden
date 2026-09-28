@@ -224,21 +224,36 @@ fi
 
 # Bei vorhandenem Zertifikat trägt certbot seine HTTPS-Blöcke unten erneut ein.
 # Ist der Port schon von einem anderen Programm belegt, kann nginx nicht starten.
+port_in_use() { [[ -n "$(ss -Hltn "sport = :$1" 2>/dev/null)" ]]; }
+
 check_port_free() {
-  local port="$1" users
+  local port="$1" users free="" p
   users="$(ss -Hltnp "sport = :$port" 2>/dev/null | grep -o 'users:(("[^"]*"' | cut -d'"' -f2 | sort -u | grep -vx nginx || true)"
   [[ -z $users ]] && return 0
+  for p in 8080 8081 8088 8090 8888 9000; do
+    port_in_use "$p" || { free="$p"; break; }
+  done
   printf '\033[1;31m✗ Port %s ist schon belegt durch: %s\033[0m\n' "$port" "$(echo "$users" | paste -sd, -)" >&2
-  cat >&2 <<HILFE
-
-  Möglichkeiten:
-   • Anderen Port nehmen:   sudo bash $0 --port 8080
-                            (Port 8080 dann ggf. in der Firewall des Anbieters freigeben)
-   • Das andere Programm beenden, falls es nicht gebraucht wird, z. B.:
-       sudo systemctl disable --now apache2
-     und danach dieses Skript erneut starten.
-   • Wer genau lauscht:     sudo ss -ltnp 'sport = :$port'
-HILFE
+  {
+    echo
+    echo "  Möglichkeiten:"
+    if [[ -n $free ]]; then
+      echo "   • Freien Port nehmen:   sudo bash $0 --port $free"
+      echo "                           (Port $free dann ggf. in der Firewall des Anbieters freigeben)"
+    fi
+    if [[ $users == *docker* ]]; then
+      echo "   • Den Docker-Container beenden, falls er nicht gebraucht wird:"
+      echo "       docker ps --format '{{.Names}}  {{.Ports}}'"
+      echo "       docker update --restart=no NAME && docker stop NAME"
+    elif systemctl list-unit-files "$(echo "$users" | head -1).service" 2>/dev/null | grep -q '\.service'; then
+      echo "   • Das andere Programm beenden, falls es nicht gebraucht wird:"
+      echo "       sudo systemctl disable --now $(echo "$users" | head -1)"
+    else
+      echo "   • Das andere Programm ($(echo "$users" | paste -sd, -)) beenden, falls es nicht gebraucht wird,"
+    fi
+    echo "     und danach dieses Skript erneut starten."
+    echo "   • Wer genau lauscht:     sudo ss -ltnp 'sport = :$port'"
+  } >&2
   exit 1
 }
 if [[ -n $DOMAIN ]]; then
